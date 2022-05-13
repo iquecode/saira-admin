@@ -5,14 +5,12 @@ export default function Projects() {
 
     return (
         <Layout 
-            titulo='Projetos' 
+            titulo='Perguntas e Respostas' 
             subtitulo='Informações sobre os projetos!'
             
         >
             <div className='dark:text-zinc-300'>
-                <p>Lista dos projetos com link para entrar e ver detalhes.</p>
-                <p>Link para submeter novo projeto.</p>
-                <p>Possibilidade de doar (uma vez ou recorrente) de forma geral ou para projetos específicos</p>
+                <p>Perguntas e respostas das dúvidas mais comuns.</p>
             </div>
             
         </Layout>

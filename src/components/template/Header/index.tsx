@@ -5,10 +5,10 @@ import Link from 'next/link';
 import useAppData from '../../../data/hook/useAppData';
 
 const user = {
-    name: 'Tom Cook',
-    email: 'tom@example.com',
+    name: 'Fulano de Tal',
+    email: 'fulano@tal.com',
     imageUrl:
-      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+      'https://avatars.githubusercontent.com/iquecode',
   }
 
 
@@ -17,7 +17,7 @@ const user = {
     { name: 'Projetos', href: '/projects', current: false },
     { name: 'Governança', href: '/governance', current: false },
     { name: 'Biblioteca', href: '/library', current: false },
-    { name: 'Blog', href: '/bloq', current: false },
+    { name: 'Blog', href: '/blog', current: false },
     { name: 'FAQ', href: '/faq', current: false },
   ]; 
 
@@ -132,7 +132,7 @@ export function Header({menuIndex}) {
                     
                       <button
                         type="button"
-                        className="bg-zinc-50 dark:bg-zinc-900 p-1 rounded-full text-gray-400 dark:hover:text-white hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                        className="bg-zinc-50 dark:bg-zinc-800 p-1 rounded-full text-gray-400 dark:hover:text-white hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       >
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -181,7 +181,7 @@ export function Header({menuIndex}) {
                  
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="dark:bg-zinc-900 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white dark:hover:bg-gray-700 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <Disclosure.Button className="dark:bg-zinc-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white dark:hover:bg-gray-700 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XIcon className="block h-6 w-6" aria-hidden="true" />

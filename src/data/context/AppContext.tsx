@@ -1,6 +1,6 @@
 import { createContext, useEffect, Dispatch, useState } from "react";
 
-//type Tema = 'dark' | ''
+type Tema = 'dark' | ''
 
 interface AppContextProps {
     tema?: String
@@ -16,14 +16,15 @@ export function AppProvider(props) {
     const [menuIndex, setMenuIndex] = useState(0);
 
     function alternarTema() {
-        const novoTema = tema === '' ? 'dark' : ''
+        const novoTema = tema === 'ligth' ? 'dark' : 'ligth'
         setTema(novoTema)
         localStorage.setItem('tema', novoTema)
     }
 
     useEffect(() => {
-        const temaSalvo = localStorage.getItem('tema')
-        setTema(temaSalvo)
+
+        const temaSalvo = localStorage.getItem('tema') ? localStorage.getItem('tema') : 'dark';
+        setTema(temaSalvo);
     }, [])
 
     return (

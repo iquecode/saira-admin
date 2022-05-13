@@ -1,7 +1,8 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Link from 'next/link';
+import useAppData from '../../../data/hook/useAppData';
 
 const user = {
     name: 'Tom Cook',
@@ -9,15 +10,16 @@ const user = {
     imageUrl:
       'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
   }
-const nav = [
-    { name: 'Painel', href: '#', current: true },
-    { name: 'Projetos', href: '/projects', current: false },
-    { name: 'Governança', href: '#', current: false },
-    { name: 'Biblioteca', href: '#', current: false },
-    { name: 'Blog', href: '#', current: false },
-    { name: 'FAQ', href: '#', current: false },
-  ]
 
+
+  const nav = [
+    { name: 'Painel', href: '/', current: true },
+    { name: 'Projetos', href: '/projects', current: false },
+    { name: 'Governança', href: '/governance', current: false },
+    { name: 'Biblioteca', href: '/library', current: false },
+    { name: 'Blog', href: '/bloq', current: false },
+    { name: 'FAQ', href: '/faq', current: false },
+  ]; 
 
 
 
@@ -34,22 +36,48 @@ const userNavigation = [
 
 
 
+  interface HeaderProps {
+    menuIndex: number
+}
+
+
+
+export function Header({menuIndex}) {
+
+    const { setMenuIndex } = useAppData();
+
+    useEffect(() => {
+      if( menuIndex == 0 ) {
+        setNavigation(nav);
+      }
+     setCurrent(menuIndex)
+     setMenuIndex(menuIndex)
+    }, [])
+
+    const [navigation, setNavigation] = useState([]);
+
+    
 
 
 
 
 
-export function Header() {
-    const [navigation, setNavigation] = useState(nav);
+
+
+
+
+
 
 
 
     function setCurrent(index: number) {
-        const newNavigation = navigation.map((item, i) =>{
+        const newNavigation = nav.map((item, i) =>{
             if (index === i) return { name: item.name, href: item.href, current: true };
             return { name: item.name, href: item.href, current: false };
         });
+        console.log("olá!!!");
         setNavigation(newNavigation);
+
     }
 
 
@@ -72,15 +100,21 @@ export function Header() {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item, index) => (
-                          
+                        
+                        
+                        
+                        {
+                        
+
+                        navigation.map((item, index) => (
+                         
                           <Link 
                             key={item.name}
                             href={item.href}>
-                            <a onClick={()=>setCurrent(index)}    
+                            <a onClick={()=>setMenuIndex(index)}
                             className={classNames(
                               item.current
-                                ? 'bg-saira-blue text-white'
+                                ? 'bg-saira-blue text-white' 
                                 : 'text-zinc-900 hover:bg-zinc-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white',
                               'px-3 py-2 rounded-md text-sm font-medium'
                             )}

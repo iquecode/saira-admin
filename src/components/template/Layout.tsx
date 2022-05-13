@@ -9,12 +9,13 @@ import { Header } from './Header'
 interface LayoutProps {
   titulo: string
   subtitulo: string
+  setCurrent?: (name: string)=>void
   children?: any 
 }
 
 
 export default function Layout(props: LayoutProps) {
-    const { tema, alternarTema} = useAppData()
+    const { tema, alternarTema, menuIndex} = useAppData()
   return (
     <>
       {/*
@@ -29,13 +30,13 @@ export default function Layout(props: LayoutProps) {
 
         <div className='dark:bg-zinc-900 bg-zinc-100 min-h-screen'>
 
-        <Header />
+        <Header menuIndex = {menuIndex} />
 
         
 
         <header className="dark:bg-zinc-900 bg-zinc-100 dark:text-saira-blue shadow">
           <div className="max-w-7xl mx-auto py-6 pl-6 pr-2  sm:px-6 lg:px-8 flex">
-            <h1 className="text-3xl font-bold flex-1">Painel</h1>
+            <h1 className="text-3xl font-bold flex-1">{props.titulo}</h1>
             <BotaoAlternarTema tema={tema} alternarTema={alternarTema}/>
           
           </div>

@@ -17,29 +17,58 @@ export default function Login() {
 
         <div className={`${tema} min-h-screen`}>
 
-
-            <div className='dark:bg-zinc-900 bg-zinc-100 min-h-screen flex flex-col items-center justify-center p-2'>
+            <div className=' min-h-screen flex flex-col'>
+                
                 <div>
                     <img className='mb-4' src="/images/logo.png" alt="Instituto Saíra" />
-                    <span>Faça seu Login</span>
                 </div>
-                <div className='dark:bg-zinc-800 bg-zinc-300 w-full p-2 sm:w-96'>
-                    <form>
+                
+
+                <div className='flex flex-col items-center justify-center p-2 dark:bg-zinc-900 bg-zinc-100 flex-1'>
+                
+               
+                <p className='text-zinc-300 font-semibold text-4xl'>Faça o Login ;)</p>
+               
+                <div className='dark:bg-zinc-800 bg-zinc-300 w-full p-10 rounded-sm sm:w-[30rem]'>
+                    <form className='flex flex-col items-center'>
 
                             <Input icon={EnvelopeSimple} placeholder='E-mail'/>
                             <Input icon={LockSimple} placeholder='Senha' type='password'/>
 
-                            <span>
-                                Esqueci minha senha
+                            <span className='text-saira-blue mt-1 w-full'>
+                                <a href="http://">Esqueci minha senha</a>   
                             </span>
-                            <button>Entrar</button>
+                            <button className='mt-6 
+                                               w-full 
+                                               bg-saira-blue 
+                                               text-white
+                                               font-bold
+                                               rounded-sm
+                                               h-12'
+                            >
+                                ENTRAR
+                            </button>
                             <div>
-                                <span>Não tem conta?</span>
-                                <span>Registre-se</span>
+                                <span>Não tem conta? 
+                                    <a href="http://">Registre-se</a> 
+                                </span>
                             </div>
                     </form>
                 </div>
             </div>
+
+
+
+
+
+
+
+            </div>
+
+            
+
+
+           
 
         </div>
 

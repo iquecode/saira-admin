@@ -7,44 +7,78 @@ interface InputProps {
     icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>> ;
     placeholder?: string
     type?: HTMLInputElement["type"]
+    label?: string
+    value?: any
+    required?: boolean
+    notShowWhen?: boolean
+    labelAside?: boolean
+    valueChanged: (newValue: any) => void
 }
 
 
 
-export function Input({icon, placeholder, type = 'text'} : InputProps) {
+export function Input({icon, placeholder, type = 'text', label, value, required, notShowWhen, valueChanged, labelAside} : InputProps) {
 
    
     //console.log(icon);
 
     
 
-    const iconJSX = createElement(icon, {className:'mr-1 peer-focus:text-saira-yellow', size:24, weight:'bold'});
+    const iconJSX = createElement(icon, {className:'mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500', size:24, weight:'bold'});
+    const classLabelAside = labelAside ? 'flex' : '';
 
-    return (
-        <div className={`flex 
-                        flex-row-reverse 
-                        justify-end
-                        items-center
-                        dark:bg-zinc-900 
-                        dark:text-zinc-300
-                        bg-zinc-100  
-                        focus-within:border-2 
-                        focus-within:border-saira-yellow
-                        rounded-md p-2
-                        mt-3
-                        w-full
-                        h-12`}
-         >
-                               
-            <input 
-                className="peer bg-none bg-transparent focus:outline-none pl-3" 
-                type={type} 
-                placeholder={placeholder} 
-            />
-           
-            {iconJSX}
+    return notShowWhen ? null : (
+
+       <>
+       
+        <label 
+            className={`w-full 
+                        ${classLabelAside}
+                        dark:text-zinc-300 
+                        text-zinc-700
+                        text-xl
+                        
+                        
+                        `}
+        > 
+            {label} 
+       
+            <div className={`flex 
+                            flex-row-reverse 
+                            justify-end
+                            items-center
+                            dark:bg-zinc-900 
+                            bg-zinc-100
+                            dark:text-zinc-300 
+                            text-zinc-400
+                            focus-within:border-2 
+                            dark:focus-within:border-saira-yellow
+                            focus-within:border-brandBlue-500
+                            rounded-md p-2
+                            mb-3
+                            w-full
+                            h-12`}
+            >
+                            
+                <input 
+                
+                    type={type} 
+                    placeholder={placeholder} 
+                    className={`
+                        peer bg-none bg-transparent focus:outline-none pl-3
+                    `}
+                    required={required}
+                    value={value}
+                    onChange={e => valueChanged?.(e.target.value)}
+                
+                />
             
-            
-        </div>    
+                {iconJSX}
+                
+                
+            </div>    
+        </label>
+       
+        </>
     )
 }

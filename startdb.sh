@@ -1,0 +1,1 @@
+sudo docker run -p 5432:5432 -v /home/ique/Dropbox/dev/estudo/bd-saira:/var/lib/postgresql/data -e POSTGRES_PASSWORD=1234 -d postgres

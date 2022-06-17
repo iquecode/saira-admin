@@ -22,13 +22,13 @@ export default function Auth() {
             <div className='min-h-screen flex flex-col dark:bg-zinc-900 bg-zinc-300'>
                 
                 <div className='w-full h-40 flex justify-center items-center dark:bg-zinc-800 bg-zinc-100'>
-                    <div className='w-full flex items-center justify-between sm:w-[30rem]'>
+                    <div className='w-full flex items-center justify-center sm:justify-between sm:w-[30rem]'>
                         <img className='mb-4 h-32' src="/images/logo.png" alt="Instituto Saíra" />
-                        <BotaoAlternarTema tema={tema} alternarTema={alternarTema}/>
+                        <BotaoAlternarTema tema={tema} alternarTema={alternarTema} hideInSmall/>
                     </div>
                 </div>
                 
-                <div className='flex flex-col items-center justify-center p-2 mt-24 h-full'>
+                <div className='flex flex-col items-center justify-center p-2 sm:mt-24 mt-16 sm:flex-none h-full'>
                     <p className='dark:text-zinc-300 
                                   text-zinc-700 
                                   font-semibold 
@@ -38,7 +38,7 @@ export default function Auth() {
                         {mode === 'login' ? 'Entre com a sua conta' : 'Crie sua conta'}
                     </p>
                    
-                    <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-10 rounded-sm sm:w-[30rem]'>
+                    <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
                         <form className='flex flex-col items-center'>
                                 <Input 
                                     icon={EnvelopeSimple} 

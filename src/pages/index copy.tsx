@@ -1,15 +1,28 @@
-import { EnvelopeSimple, LockSimple } from 'phosphor-react';
+import axios from 'axios';
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { EnvelopeSimple, LockSimple, TrademarkRegistered } from 'phosphor-react';
 import { useState } from 'react';
 import { Input } from '../components/Input';
 import BotaoAlternarTema from '../components/template/BotaoAlternarTema';
 import useAppData from '../data/hook/useAppData';
 
+type Inputs = {
+    email: string,
+    password: string,
+    passwordConfirm: string,
+  };
+
 export default function Auth() {
+
     const { tema, alternarTema, menuIndex} = useAppData()
     const [mode, setMode] = useState<'login' | 'signup'>('login');
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [passwordConfirm, setPasswordConfirm] = useState('')
+
+    //const { register, handleSubmit, formState:{errors} } = useForm();
+    const methods = useForm();
+    const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+    // const [email, setEmail] = useState('')
+    // const [password, setPassword] = useState('')
+    // const [passwordConfirm, setPasswordConfirm] = useState('')
 
 
     
@@ -39,26 +52,40 @@ export default function Auth() {
                     </p>
                    
                     <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                        <form className='flex flex-col items-center'>
+                       
+                       
+                       <FormProvider {...methods}>
+
+                       
+                       
+                        <form onSubmit={methods.handleSubmit(onSubmit)} className='flex flex-col items-center'>
                                 <Input 
                                     icon={EnvelopeSimple} 
                                     placeholder='E-mail'
                                     type='email'
-                                    valueChanged={setEmail}
+                                    // valueChanged={setEmail}
+                                    registerName='email'
                                 />
                                 <Input 
                                     icon={LockSimple} 
                                     placeholder='Senha' 
                                     type='password'
-                                    valueChanged={setPassword}
+                                    // valueChanged={setPassword}
+                                    registerName='password'
                                 />
                                 <Input 
                                     icon={LockSimple} 
                                     placeholder='Confirme a senha' 
                                     type='password'
-                                    valueChanged={setPasswordConfirm}
+                                    //valueChanged={setPasswordConfirm}
                                     notShowWhen={mode === 'login'}
+                                    registerName='passwordConfirm'
                                 />
+
+
+                                {/* <input {...register('email')} />
+                                <input {...register('password') } />  */}
+
 
                                 <span className='dark:text-saira-yellow 
                                                  text-brandPink-500 
@@ -69,7 +96,22 @@ export default function Auth() {
                                 '>
                                     <a href="http://">{mode==='login' ? 'Esqueci minha senha' : ''}</a>   
                                 </span>
-                                <button className='mt-6 
+
+                                <input type='submit' className='mt-6 
+                                                w-full 
+                                                bg-saira-blue 
+                                                text-white
+                                                font-bold
+                                                rounded-sm
+                                                h-12
+                                                hover:brightness-110
+                                                duration-200'
+                                />
+                                    
+                               
+
+
+                                {/* <button type='submit' className='mt-6 
                                                 w-full 
                                                 bg-saira-blue 
                                                 text-white
@@ -80,7 +122,7 @@ export default function Auth() {
                                                 duration-200'
                                 >
                                     {mode==='login' ? 'ENTRAR' : 'CADASTRAR'}
-                                </button>
+                                </button> */}
                                 <div className='mt-5'>
                                     <span className='dark:text-zinc-300 text-zinc-700'>
                                         {mode==='login' ? 'Não tem uma conta?' : 'Já tem cadastro?'}  
@@ -99,6 +141,7 @@ export default function Auth() {
                                     </span>
                                 </div>
                         </form>
+                        </FormProvider>
                     </div>
 
                 </div>

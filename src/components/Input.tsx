@@ -1,10 +1,10 @@
 
 import { IconProps } from "phosphor-react";
 import { createElement } from "react";
-
+import { useForm, SubmitHandler, FormProvider, useFormContext } from "react-hook-form";
 
 interface InputProps {
-    icon: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>> ;
+    icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>> ;
     placeholder?: string
     type?: HTMLInputElement["type"]
     label?: string
@@ -12,12 +12,13 @@ interface InputProps {
     required?: boolean
     notShowWhen?: boolean
     labelAside?: boolean
-    valueChanged: (newValue: any) => void
+    registerName?: string
+    valueChanged?: (newValue: any) => void
 }
 
 
 
-export function Input({icon, placeholder, type = 'text', label, value, required, notShowWhen, valueChanged, labelAside} : InputProps) {
+export function Input({icon, placeholder, type = 'text', label, value, required, notShowWhen, valueChanged, labelAside, registerName } : InputProps) {
 
    
     //console.log(icon);
@@ -26,6 +27,8 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
 
     const iconJSX = createElement(icon, {className:'mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500', size:24, weight:'bold'});
     const classLabelAside = labelAside ? 'flex' : '';
+    //const { register, handleSubmit } = useForm();
+    const { register } = useFormContext(); // retrieve all hook methods
 
     return notShowWhen ? null : (
 
@@ -62,6 +65,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                             
                 <input 
                 
+                    {...register(registerName)}
                     type={type} 
                     placeholder={placeholder} 
                     className={`
@@ -70,6 +74,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                     required={required}
                     value={value}
                     onChange={e => valueChanged?.(e.target.value)}
+                    
                 
                 />
             

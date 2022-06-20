@@ -118,7 +118,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
     });
     user.password = undefined;
-    res.status(200).json({ message: "Login ok", user:user });
+    res.status(200).json({ message: "Login ok", user:user, serialised });
 
     
 
@@ -132,7 +132,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     //         password: passwordHash,
     //     }
     // })
-    return res.status(200).json({user: {id: user.id, email: user.email}});
+    //return res.status(200).json({user: {id: user.id, email: user.email}});
     
   } catch (error) {
     return res.json({error: error.message});

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
 }
 
 datasource db {
@@ -11,79 +12,82 @@ datasource db {
 }
 
 model User {
-  id                  String    @id @default(uuid())
-  email               String    @unique
-  password            String 
-  name                String?  
-  nickname            String? 
-  occupation          String?
-  birthDate           DateTime? @map("birth_date")
-  documentTypeId      Int?      @map("document_type_id")  
-  documentNumber      String?   @map("document_number")
-  documentPhotoURL1   String?   @map("document_photo_url1")
-  documentPhotoURL2   String?   @map("document_photo_url2") 
-  motherName          String?   @map("mother_name")
-  fatherName          String?   @map("father_name")  
-  avatarURL           String?   @map("avatar_url")
-  countryId           Int?      @map("country_id")
-  cityId              Int?      @map("city_id") 
-  cep                 Int?
-  addressLine1        String?   @map("address_line1")
-  addressLine2        String?   @map("address_line2") 
-  type                String?   @default("user") //'admin' 'user' 'member'   
-  active              Boolean   @default(true)
-  emailVerified       Boolean   @default(false) @map("email_verified")
-  loginAttempts       Int       @default(0) @map("login_attempts")
-  loginBlocked        Boolean   @default(false) @map("login_blocked")
-  loginBlockedReason  String?   @map("login_blocked_reason")
-  loginBlockedDate    DateTime? @map("login_blocked_date")
-  note                String?
-  circles             Circle[]
-  contacts            Contact[]
-  documentType        DocumentType? @relation(fields: [documentTypeId], references: [id]) 
-  country             Country? @relation(fields: [countryId], references: [id])
-  city                City?    @relation(fields: [cityId], references: [id])
-  roles               Role[]
-  tokensHash          TokenHash[]
-  createdAt           DateTime            @default(now()) @map("created_at")
-  updatedAt           DateTime?           @updatedAt @map("updated_at")
-  deletable           Boolean @default(true)
-  deleted             Boolean   @default(false)
+  id                 String        @id @default(uuid())
+  email              String        @unique
+  password           String
+  name               String?
+  nickname           String?
+  occupation         String?
+  birthDate          DateTime?     @map("birth_date")
+  documentTypeId     Int?          @map("document_type_id")
+  documentNumber     String?       @map("document_number")
+  documentPhotoURL1  String?       @map("document_photo_url1")
+  documentPhotoURL2  String?       @map("document_photo_url2")
+  motherName         String?       @map("mother_name")
+  fatherName         String?       @map("father_name")
+  avatarURL          String?       @map("avatar_url")
+  countryId          Int?          @map("country_id")
+  cityId             Int?          @map("city_id")
+  cep                Int?
+  addressLine1       String?       @map("address_line1")
+  addressLine2       String?       @map("address_line2")
+  type               String?       @default("user") //'admin' 'user' 'member'   
+  active             Boolean       @default(true)
+  emailVerified      Boolean       @default(false) @map("email_verified")
+  loginAttempts      Int           @default(0) @map("login_attempts")
+  loginBlocked       Boolean       @default(false) @map("login_blocked")
+  loginBlockedReason String?       @map("login_blocked_reason")
+  loginBlockedDate   DateTime?     @map("login_blocked_date")
+  note               String?
+  circles            Circle[]
+  contacts           Contact[]
+  documentType       DocumentType? @relation(fields: [documentTypeId], references: [id])
+  country            Country?      @relation(fields: [countryId], references: [id])
+  city               City?         @relation(fields: [cityId], references: [id])
+  roles              Role[]
+  tokensHash         TokenHash[]
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime?     @updatedAt @map("updated_at")
+  deletable          Boolean       @default(true)
+  deleted            Boolean       @default(false)
+
   @@map("users")
 }
 
 model Circle {
-  id                  String  @id @default(uuid())
-  name                String  @unique
-  parentId            String? @map("parent_id")    
-  note                String?
-  members             User[]   
-  roles               Role[]  
-  parent              Circle?  @relation("CircleToCircle", fields: [parentId], references: [id])
-  childrens           Circle[] @relation("CircleToCircle")
-  createdAt           DateTime            @default(now()) @map("created_at")
-  updatedAt           DateTime?           @updatedAt @map("updated_at")
-  deletable           Boolean @default(true)
-  deleted             Boolean   @default(false)
+  id        String    @id @default(uuid())
+  name      String    @unique
+  parentId  String?   @map("parent_id")
+  note      String?
+  members   User[]
+  roles     Role[]
+  parent    Circle?   @relation("CircleToCircle", fields: [parentId], references: [id])
+  childrens Circle[]  @relation("CircleToCircle")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletable Boolean   @default(true)
+  deleted   Boolean   @default(false)
+
   @@map("circles")
 }
 
 model RoleType {
-  id                       Int    @id @default(autoincrement())
-  name                     String @unique
-  description              String?
-  note                     String?
-  createdAt                DateTime            @default(now()) @map("created_at")
-  updatedAt                DateTime?           @updatedAt @map("updated_at")
-  deletable                Boolean @default(true)
-  deleted                  Boolean   @default(false)
-  roles                    Role[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  description String?
+  note        String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletable   Boolean   @default(true)
+  deleted     Boolean   @default(false)
+  roles       Role[]
+
   @@map("role_types")
 }
 
 model Role {
   id          String    @id @default(uuid())
-  roleType    RoleType  @relation(fields: [roleTypeId], references: [id]) 
+  roleType    RoleType  @relation(fields: [roleTypeId], references: [id])
   roleTypeId  Int       @map("role_type_id")
   member      User      @relation(fields: [memberId], references: [id])
   memberId    String    @map("member_id")
@@ -96,77 +100,83 @@ model Role {
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletable   Boolean   @default(true)
   deleted     Boolean   @default(false)
-  @@map("roles") 
+
+  @@map("roles")
 }
 
 model Contact {
-  id         String    @id @default(uuid())
-  name       String
-  value      String
-  userId     String    @map("user_id")
-  user       User      @relation(fields: [userId], references: [id])
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime? @updatedAt @map("updated_at")
-  deletable  Boolean   @default(true)
-  deleted    Boolean   @default(false)
+  id        String    @id @default(uuid())
+  name      String
+  value     String
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletable Boolean   @default(true)
+  deleted   Boolean   @default(false)
+
   @@map("contacts")
 }
 
 model DocumentType {
-  id              Int       @id @default(autoincrement())
-  name            String
-  users User[]
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime? @updatedAt @map("updated_at")
-  deletable       Boolean   @default(true)
-  deleted         Boolean   @default(false)
-  @@map("document_types") 
+  id        Int       @id @default(autoincrement())
+  name      String
+  users     User[]
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  deletable Boolean   @default(true)
+  deleted   Boolean   @default(false)
+
+  @@map("document_types")
 }
 
 model Country {
-  id           Int       @id @default(autoincrement())
-  namePt       String    @map("name_pt")
-  nameEn       String    @map("name_en")
-  nameEs       String    @map("name_es")
-  numCode      Int?      @map("num_code")
-  iso          String?
-  iso3         String?
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime? @updatedAt @map("updated_at")
-  users User[]
+  id        Int       @id @default(autoincrement())
+  namePt    String    @map("name_pt")
+  nameEn    String    @map("name_en")
+  nameEs    String    @map("name_es")
+  numCode   Int?      @map("num_code")
+  iso       String?
+  iso3      String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  users     User[]
+
   @@map("countries")
 }
 
 model State {
-  id              Int       @id
-  name            String 
-  uf              String 
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime? @updatedAt @map("updated_at")
-  cities City[]
+  id        Int       @id
+  name      String
+  uf        String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  cities    City[]
+
   @@map("states")
 }
 
 model City {
-  id             Int       @id
-  name           String 
-  codIbge        Int       @map("cod_ibge")
-  stateId        Int       @map("state_id")
-  state          State     @relation(fields: [stateId], references: [id])
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime? @updatedAt @map("updated_at")
-  users User[]
-  @@map("cities")     
+  id        Int       @id
+  name      String
+  codIbge   Int       @map("cod_ibge")
+  stateId   Int       @map("state_id")
+  state     State     @relation(fields: [stateId], references: [id])
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  users     User[]
+
+  @@map("cities")
 }
 
-
 model TokenHash {
-  id             String    @id @default(uuid())
-  hash           String 
-  userId         String    @map("user_id")
-  dispositive    String?
-  user           User      @relation(fields: [userId], references: [id])
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime? @updatedAt @map("updated_at")
-  @@map("tokens_hash")     
+  id          String    @id @default(uuid())
+  hash        String
+  userId      String    @map("user_id")
+  dispositive String?
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("tokens_hash")
 }

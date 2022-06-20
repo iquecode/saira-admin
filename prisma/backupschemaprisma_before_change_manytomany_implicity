@@ -38,12 +38,12 @@ model User {
   loginBlockedReason  String?   @map("login_blocked_reason")
   loginBlockedDate    DateTime? @map("login_blocked_date")
   note                String?
-  circles             Circle[]
+  circles             MembersInCircles[]
   contacts            Contact[]
   documentType        DocumentType? @relation(fields: [documentTypeId], references: [id]) 
   country             Country? @relation(fields: [countryId], references: [id])
   city                City?    @relation(fields: [cityId], references: [id])
-  roles               Role[]
+  roles               RolesOfMembersInCircles[]
   tokensHash          TokenHash[]
   createdAt           DateTime            @default(now()) @map("created_at")
   updatedAt           DateTime?           @updatedAt @map("updated_at")
@@ -57,8 +57,8 @@ model Circle {
   name                String  @unique
   parentId            String? @map("parent_id")    
   note                String?
-  members             User[]   
-  roles               Role[]  
+  members             MembersInCircles[]   
+  rolesOfMembersInCircles RolesOfMembersInCircles[]  
   parent              Circle?  @relation("CircleToCircle", fields: [parentId], references: [id])
   childrens           Circle[] @relation("CircleToCircle")
   createdAt           DateTime            @default(now()) @map("created_at")
@@ -68,35 +68,46 @@ model Circle {
   @@map("circles")
 }
 
-model RoleType {
+model Role {
   id                       Int    @id @default(autoincrement())
   name                     String @unique
   description              String?
-  note                     String?
+  rolesOfMembersInCircles  RolesOfMembersInCircles[]
   createdAt                DateTime            @default(now()) @map("created_at")
   updatedAt                DateTime?           @updatedAt @map("updated_at")
   deletable                Boolean @default(true)
   deleted                  Boolean   @default(false)
-  roles                    Role[]
-  @@map("role_types")
+  @@map("roles")
 }
 
-model Role {
-  id          String    @id @default(uuid())
-  roleType    RoleType  @relation(fields: [roleTypeId], references: [id]) 
-  roleTypeId  Int       @map("role_type_id")
+model MembersInCircles {
+  member              User   @relation(fields: [memberId], references: [id])
+  memberId            String @map("member_id")
+  circle              Circle @relation(fields: [circleId], references: [id])
+  circleId            String @map("circle_id")
+  roleId              Int?   @map("role_id")
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime?           @updatedAt @map("updated_at")
+  deletable           Boolean @default(true)
+  deleted             Boolean   @default(false)
+  @@id([memberId, circleId])
+  @@map("members_in_circles")     
+}
+
+model RolesOfMembersInCircles {
   member      User      @relation(fields: [memberId], references: [id])
   memberId    String    @map("member_id")
-  circle      Circle?   @relation(fields: [circleId], references: [id])
-  circleId    String?   @map("circle_id")
-  description String?
+  role        Role      @relation(fields: [roleId], references: [id])
+  roleId      Int       @map("role_id")
+  circle      Circle    @relation(fields: [circleId], references: [id])
+  circleId    String    @map("circle_id")
   note        String?
-  validate    DateTime?
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletable   Boolean   @default(true)
   deleted     Boolean   @default(false)
-  @@map("roles") 
+  @@id([memberId, roleId, circleId])
+  @@map("roles_of_members") 
 }
 
 model Contact {

@@ -1,5 +1,5 @@
 
-import { client } from '../api/prisma/cliente';
+import { client } from '../api/lib/prisma/client';
 import { hash } from 'bcryptjs';
 
 

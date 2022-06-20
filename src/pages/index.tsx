@@ -1,25 +1,37 @@
-import axios from 'axios';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { EnvelopeSimple, LockSimple, TrademarkRegistered } from 'phosphor-react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Input } from '../components/Input';
 import BotaoAlternarTema from '../components/template/BotaoAlternarTema';
 import useAppData from '../data/hook/useAppData';
 import Form from '../components/Form';
+import { SubmitHandler } from "react-hook-form"; //necessário apenas para a tipagem
+import { AuthContext } from '../data/context/AuthContext';
 
-type Inputs = {
+interface IFormInput  {
     email: string,
     password: string,
     passwordConfirm: string,
   };
 
-export default function Auth() {
+export default function Auth(props) {
 
+    const ip = props.ip;
     const { tema, alternarTema, menuIndex} = useAppData()
     const [mode, setMode] = useState<'login' | 'signup'>('login');
    
-    const onSubmit = data => console.log(data); //debug
+    const { signIn, signUp, getAuthenticatedUser } = useContext(AuthContext);
+
+    //const onSubmit: SubmitHandler<IFormInput> = async data => await signIn(data); //debug
    
+    const onSubmit: SubmitHandler<IFormInput> = async function(data) {
+        if (mode==='signup') return await signUp(data);
+        if (mode==='login')  return await signIn(data);
+    } 
+    // usar getAuthenticatedUser na renderização do lado so servidor ou do lado do cliente
+    // para, no caso de existir usuário autenticado de forma válida, ir para a dashboard
+    //const onSubmit: SubmitHandler<IFormInput> = async data => await getAuthenticatedUser(); 
+
+    
     return (
 
 
@@ -109,7 +121,11 @@ export default function Auth() {
                                          </a> 
                                     </span>
                                 </div>
+
                         </Form>
+
+                    
+
                     </div>
 
                 </div>
@@ -124,3 +140,8 @@ export default function Auth() {
 
    
 }
+
+
+
+
+

@@ -105,7 +105,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     res.setHeader("Set-Cookie", serialised);
 
-    const tokenHash = await hash(serialised, 8);
+    const pureStringToken = serialised.split(';')[0].split('=')[1];  
+    const tokenHash = await hash(pureStringToken , 8);
     //const tokenHash = await hash(uuidv4(), 8);
     
     const updateTokenHashRegister = await client.tokenHash.update({
@@ -121,6 +122,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json({ message: "Login ok", user:user, serialised });
 
     
+  
+
+    
+
+
 
 
 

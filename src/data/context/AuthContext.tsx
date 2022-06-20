@@ -2,6 +2,7 @@ import route from "next/router";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { User } from "../../model/User"
+import { AxiosResponse } from "axios";
 
 type AuthCredentials = {
     email: string;
@@ -13,7 +14,7 @@ interface IAuthContext {
     signIn(credentials: AuthCredentials): Promise<void>;
     signUp(credentials: AuthCredentials): Promise<void>;
     isAuthenticated: boolean;
-    getAuthenticatedUser():Promise<void>;
+    getAuthenticatedUser():Promise<AxiosResponse>;
 }
 
 type AuthProvideProps = {

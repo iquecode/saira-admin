@@ -3,6 +3,7 @@
 import useAppData from '../../data/hook/useAppData'
 import BotaoAlternarTema from './BotaoAlternarTema'
 
+
 import { Header } from './Header'
 
 
@@ -26,6 +27,13 @@ export default function Layout(props: LayoutProps) {
         <body class="h-full">
         ```
       */}
+
+
+   
+      
+   
+
+
       <div className={`${tema} min-h-screen`}>
 
         <div className='dark:bg-zinc-900 bg-zinc-100 min-h-screen'>
@@ -54,6 +62,8 @@ export default function Layout(props: LayoutProps) {
         </main>
       </div>
       </div>
+
+    
     </>
   )
 }

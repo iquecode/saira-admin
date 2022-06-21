@@ -35,16 +35,13 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       // se for, bloquear usuário por 1 hora
       if ( user.loginAttempts >= 4 ) {
 
-         let dt = new Date();
-         dt.setHours( dt.getHours() + 1 );
-
         const updateUser = await client.user.update({
           where: {
             id: user.id,
           },
           data: {
             loginBlocked: true,
-            loginBlockedDate: dt,
+            loginBlockedDate: Date.now() + 60*60*30,  //30minutos
             loginAttempts: 0,
           },
         });

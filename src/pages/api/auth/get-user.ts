@@ -57,9 +57,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       const newToken = await generateTokenAndSaveInDB(tokenData.userId, req.headers['user-agent']);
       res.setHeader("Set-Cookie", newToken);
 
-      return res.json({ jwt, data, match, newToken  }); // autenticado - mudar retorno
+      return res.json({ jwt, data, match, newToken, status:'dsdsdfs'  }); // autenticado - mudar retorno
     } else {
-      return res.json({ jwt, data, match });  // não autenticar - mudar retorno
+      
+      return res.json({ jwt, data, match, status: false });  // não autenticar - mudar retorno
     }
 
   }

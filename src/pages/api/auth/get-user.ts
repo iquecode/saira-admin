@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import a from 'jsonwebtoken';
 import { client } from '../lib/prisma/client'
 import { compare } from 'bcryptjs';
+import { generateTokenAndSaveInDB } from './lib/functions';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
     const { cookies } = req;
@@ -17,26 +18,48 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const data = a.verify(jwt, process.env.SECRET);
     //return res.json({ data: "Top secret data!" });
     const tokenData = JSON.parse(JSON.stringify(data));  
-
+    //const tokenId = tokenData.id;
+    //const teste = data['userId'];
+    
 
     const tokenDB = await client.tokenHash.findUnique({
        where: {
          id: tokenData.id,
        },
     });
-
+    if (!tokenDB) {
+      return res.json({ message: "Invalid token!" });
+    }
 
     //compara o jwt com o tokenDB.hash
-    const tokenMatch = await compare(jwt, tokenDB.hash);
+    const tokenMatch = await compare(jwt, tokenDB?.hash);
 
     const match = tokenMatch ? 'COMPARAÇÃO BEM SUCEDIDA' : 'COMPARAÇÃO SEM SUCESSO';
-    //console.log(tokenHashReg.hash);
-
-
-
-    //return res.json({ data: data, match });
-    return res.json({ jwt, data, match });
-
     
-    //return res.json({ data: jwt });
+
+    if (tokenMatch) {
+
+
+
+      // apagar token atual do banco de dados 
+      const deleteToken = await client.tokenHash.delete({
+        where: {
+          id: tokenDB.id,
+        },
+      });
+      
+      // gerar novo token-deve substituir o antigo nos cookies- e o gravar no banco de dados
+      // limpar apagar token nos cookies 
+     
+      // const jsonParceStringfy = JSON.parse(JSON.stringify(data));
+     
+      //a504fe7b-6442-4ebf-8b9b-869a6bad4904   id  iquecode@gmail.com
+      const newToken = await generateTokenAndSaveInDB(tokenData.userId, req.headers['user-agent']);
+      res.setHeader("Set-Cookie", newToken);
+
+      return res.json({ jwt, data, match, newToken  }); // autenticado - mudar retorno
+    } else {
+      return res.json({ jwt, data, match });  // não autenticar - mudar retorno
+    }
+
   }

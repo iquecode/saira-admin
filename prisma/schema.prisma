@@ -18,7 +18,7 @@ model User {
   name               String?
   nickname           String?
   occupation         String?
-  birthDate          DateTime?     @map("birth_date")
+  birthDate          Int?          @map("birth_date")
   documentTypeId     Int?          @map("document_type_id")
   documentNumber     String?       @map("document_number")
   documentPhotoURL1  String?       @map("document_photo_url1")
@@ -37,7 +37,7 @@ model User {
   loginAttempts      Int           @default(0) @map("login_attempts")
   loginBlocked       Boolean       @default(false) @map("login_blocked")
   loginBlockedReason String?       @map("login_blocked_reason")
-  loginBlockedDate   DateTime?     @map("login_blocked_date")
+  loginBlockedDate   Int?          @map("login_blocked_date")
   note               String?
   circles            Circle[]
   contacts           Contact[]
@@ -95,7 +95,7 @@ model Role {
   circleId    String?   @map("circle_id")
   description String?
   note        String?
-  validate    DateTime?
+  validate    Int?
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletable   Boolean   @default(true)
@@ -174,7 +174,8 @@ model TokenHash {
   hash        String
   userId      String    @map("user_id")
   dispositive String?
-  user        User      @relation(fields: [userId], references: [id])
+  expiration  Int
+  user        User?      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
 

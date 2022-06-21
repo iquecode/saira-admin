@@ -27,10 +27,6 @@ export const validateSignIn = async ( email: string, password: string, passwordC
 }
 
 
-
-
-
-
 export const sanitizeInputs = (inputs:{}) => {
     let sanitizedInputs = {};
     for (const [key, value] of Object.entries<string | Node>(inputs)) {
@@ -39,3 +35,4 @@ export const sanitizeInputs = (inputs:{}) => {
       }
     return sanitizedInputs;
 }
+

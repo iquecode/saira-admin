@@ -1,7 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { serialize } from "cookie";
+import { client } from '../lib/prisma/client';
+import { generateAutoDeleteToken } from './lib/functions';
+import { verify } from 'jsonwebtoken';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   const { cookies } = req;
@@ -11,17 +13,30 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (!jwt) {
     return res.json({ message: "Bro you are already not logged in..." });
   } else {
-    const serialised = serialize("OursiteJWT", null, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      maxAge: -1,
-      path: "/",
-    });
-
+    const serialised = generateAutoDeleteToken();
     res.setHeader("Set-Cookie", serialised);
 
-    res.status(200).json({ message: "Successfuly logged out!" });
+    const data = verify(jwt, process.env.SECRET);
+    const tokenData = JSON.parse(JSON.stringify(data));  
+    const tokenId = tokenData.id;
+
+
+    const tokenInDB = await client.tokenHash.findUnique({
+      where: {
+        id: tokenId,
+      },
+    });
+    let t;
+    if ( tokenInDB ) {
+      const tokenDeleteInDB = await client.tokenHash.delete({
+        where: {
+          id: tokenId,
+        },
+      });
+      t = tokenDeleteInDB
+    }
+    
+    res.status(200).json({ message: "Successfuly logged out!", tokenId, t });
   }
 }
 

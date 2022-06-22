@@ -5,17 +5,6 @@ import route from "next/router";
 
 export default function Dashboard(props) {
 
-  // const { isAuthenticated } = useContext(AuthContext);
-
-  // useEffect(() => {
-
-  //   if ( !isAuthenticated ) {
-  //     route.push('/');
-      
-  //   }
-  
-  //   }
-  // , []);
 
 
 

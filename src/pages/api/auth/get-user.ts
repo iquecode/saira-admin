@@ -41,7 +41,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 
 
-      // apagar token atual do banco de dados 
+      //apagar token atual do banco de dados 
       const deleteToken = await client.tokenHash.delete({
         where: {
           id: tokenDB.id,

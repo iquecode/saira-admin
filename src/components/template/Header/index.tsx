@@ -30,7 +30,7 @@ const user = {
 const userNavigation = [
     { name: 'Seu Perfil', href: '#' },
     { name: 'Preferências', href: '#' },
-    { name: 'Sair',  },
+    { name: 'Sair', href: '#'  },
   ]
   
   function classNames(...classes) {
@@ -165,6 +165,7 @@ export function Header({menuIndex}) {
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <a
+                                    onClick={logout}
                                     href={item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
@@ -201,11 +202,14 @@ export function Header({menuIndex}) {
               <Disclosure.Panel className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                   {navigation.map((item) => (
+
+                   
+
                     <Disclosure.Button
                       key={item.name}
                       as="a"
-                      // href={item.href}
-                      onClick={logout()}
+                      href={item.href}
+                      //onClick={async () =>logout()}
                       className={classNames(
                         item.current ? 'bg-saira-blue text-white' : 'dark:text-gray-400 text-zinc-600 dark:hover:bg-gray-700 dark:hover:text-white hover:bg-zinc-200',
                         'block px-3 py-2 rounded-md text-base font-medium'

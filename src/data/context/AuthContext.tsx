@@ -64,7 +64,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
             setUser(response.data.user);
             route.push('/dashboard');
         }
-        console.log(response.data);
+        //console.log(response.data);
     }
 
 

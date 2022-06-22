@@ -1,6 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
 
+import route from "next/router";
+import { useEffect } from 'react'
 import useAppData from '../../data/hook/useAppData'
+import useAuth from '../../data/hook/useAuth'
 import BotaoAlternarTema from './BotaoAlternarTema'
 
 
@@ -16,8 +19,18 @@ interface LayoutProps {
 
 
 export default function Layout(props: LayoutProps) {
-    const { tema, alternarTema, menuIndex} = useAppData()
-  return (
+  const { tema, alternarTema, menuIndex} = useAppData()
+  const { isAuthenticated } = useAuth()
+
+  useEffect( () => {
+
+    if (!isAuthenticated) {
+      route.push('/');
+    }
+    }, [])
+
+  return !isAuthenticated ? null :  (
+
     <>
       {/*
         This example requires updating your template:

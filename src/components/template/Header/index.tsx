@@ -3,6 +3,10 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Link from 'next/link';
 import useAppData from '../../../data/hook/useAppData';
+import useAuth from '../../../data/hook/useAuth';
+
+
+
 
 const user = {
     name: 'Fulano de Tal',
@@ -13,7 +17,7 @@ const user = {
 
 
   const nav = [
-    { name: 'Painel', href: '/', current: true },
+    { name: 'Painel', href: '/dashboard', current: true },
     { name: 'Projetos', href: '/projects', current: false },
     { name: 'Governança', href: '/governance', current: false },
     { name: 'Biblioteca', href: '/library', current: false },
@@ -26,7 +30,7 @@ const user = {
 const userNavigation = [
     { name: 'Seu Perfil', href: '#' },
     { name: 'Preferências', href: '#' },
-    { name: 'Sair', href: '#' },
+    { name: 'Sair',  },
   ]
   
   function classNames(...classes) {
@@ -45,6 +49,7 @@ const userNavigation = [
 export function Header({menuIndex}) {
 
     const { setMenuIndex } = useAppData();
+    const { logout } = useAuth();
 
     useEffect(() => {
       if( menuIndex == 0 ) {
@@ -199,7 +204,8 @@ export function Header({menuIndex}) {
                     <Disclosure.Button
                       key={item.name}
                       as="a"
-                      href={item.href}
+                      // href={item.href}
+                      onClick={logout()}
                       className={classNames(
                         item.current ? 'bg-saira-blue text-white' : 'dark:text-gray-400 text-zinc-600 dark:hover:bg-gray-700 dark:hover:text-white hover:bg-zinc-200',
                         'block px-3 py-2 rounded-md text-base font-medium'

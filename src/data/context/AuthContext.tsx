@@ -4,6 +4,7 @@ import { api } from "../../services/api";
 import { User } from "../../model/User"
 import { AxiosResponse } from "axios";
 
+
 type AuthCredentials = {
     email: string;
     password: string;
@@ -13,8 +14,10 @@ type AuthCredentials = {
 interface IAuthContext {
     signIn(credentials: AuthCredentials): Promise<void>;
     signUp(credentials: AuthCredentials): Promise<void>;
+    logout(): Promise<void>,
     isAuthenticated: boolean;
     getAuthenticatedUser():Promise<AxiosResponse>;
+    user: any;
 }
 
 type AuthProvideProps = {
@@ -31,7 +34,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
     useEffect( () => {
 
         api.get('auth/get-user').then(res=>{
-            setUser(res.data);
+            setUser(res.data.user);
 
             
 
@@ -57,6 +60,10 @@ export function AuthProvider({ children }: AuthProvideProps) {
             password,
         })
 
+        if(response.data.user) {
+            setUser(response.data.user);
+            route.push('/dashboard');
+        }
         console.log(response.data);
     }
 
@@ -73,6 +80,15 @@ export function AuthProvider({ children }: AuthProvideProps) {
     }
 
 
+    async function logout() {
+        //console.log({ email, password })
+        const response = await api.get('auth/logout');
+        route.push('/');
+
+        console.log(response.data);
+    }
+
+
 
 
     async function getAuthenticatedUser() {
@@ -83,7 +99,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
     }
 
     return (
-        <AuthContext.Provider value={{ signIn, signUp, isAuthenticated, getAuthenticatedUser}}>
+        <AuthContext.Provider value={{ signIn, signUp, logout, isAuthenticated, getAuthenticatedUser, user}}>
             {children}
         </AuthContext.Provider>
     )

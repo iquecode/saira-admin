@@ -15,6 +15,7 @@ interface LayoutProps {
   subtitulo: string
   setCurrent?: (name: string)=>void
   children?: any 
+  page: string
 }
 
 
@@ -26,6 +27,8 @@ export default function Layout(props: LayoutProps) {
 
     if (!isAuthenticated) {
       route.push('/');
+    } else {
+      localStorage.setItem('page', props.page);
     }
     }, [])
 

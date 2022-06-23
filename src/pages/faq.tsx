@@ -7,6 +7,7 @@ export default function Projects() {
         <Layout 
             titulo='Perguntas e Respostas' 
             subtitulo='Informações sobre os projetos!'
+            page = 'faq'
             
         >
             <div className='dark:text-zinc-300'>

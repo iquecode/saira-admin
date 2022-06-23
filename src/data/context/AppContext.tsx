@@ -11,7 +11,21 @@ interface AppContextProps {
 
 const AppContext = createContext<AppContextProps>({})
 
+
+
+
+const menu = { 'dashboard': 0, 
+               'projects': 1, 
+               'goverance': 2, 
+               'library': 3,
+               'blog': 4,
+               'faq': 5,}
+
+
+
 export function AppProvider(props) {
+
+    
     const [tema, setTema] = useState('dark');
     const [menuIndex, setMenuIndex] = useState(0);
 
@@ -25,6 +39,10 @@ export function AppProvider(props) {
 
         const temaSalvo = localStorage.getItem('tema') ? localStorage.getItem('tema') : 'dark';
         setTema(temaSalvo);
+
+        const page = localStorage.getItem('page')? localStorage.getItem('page') : 'dashboard';
+        const currentMenuIndex = menu[page];
+        setMenuIndex(currentMenuIndex);
     }, [])
 
     return (

@@ -7,6 +7,7 @@ export default function Projects() {
         <Layout 
             titulo='Projetos' 
             subtitulo='Informações sobre os projetos!'
+            page='projects'
             
         >
             <div className='dark:text-zinc-300'>

@@ -9,7 +9,7 @@ export default function Dashboard(props) {
 
 
   return (
-    <Layout titulo='Seu painel' subtitulo='template em construção'>
+    <Layout titulo='Seu painel' subtitulo='template em construção' page='dashboard'>
       <div className='dark:text-zinc-300'>
                 <p>Dashborad, infos resumidas e links.</p>
                 <p>Informação se é associado ao instituto ou não... caso não seja, link para form associação</p>

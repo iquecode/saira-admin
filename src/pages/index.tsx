@@ -1,11 +1,13 @@
 import { EnvelopeSimple, LockSimple, TrademarkRegistered } from 'phosphor-react';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Input } from '../components/Input';
 import BotaoAlternarTema from '../components/template/BotaoAlternarTema';
 import useAppData from '../data/hook/useAppData';
 import Form from '../components/Form';
 import { SubmitHandler } from "react-hook-form"; //necessário apenas para a tipagem
 import { AuthContext } from '../data/context/AuthContext';
+import route from "next/router";
+
 
 interface IFormInput  {
     email: string,
@@ -19,7 +21,7 @@ export default function Auth(props) {
     const { tema, alternarTema, menuIndex} = useAppData()
     const [mode, setMode] = useState<'login' | 'signup'>('login');
    
-    const { signIn, signUp, getAuthenticatedUser } = useContext(AuthContext);
+    const { signIn, signUp, getAuthenticatedUser, isAuthenticated } = useContext(AuthContext);
 
     //const onSubmit: SubmitHandler<IFormInput> = async data => await signIn(data); //debug
    
@@ -30,6 +32,19 @@ export default function Auth(props) {
     // usar getAuthenticatedUser na renderização do lado so servidor ou do lado do cliente
     // para, no caso de existir usuário autenticado de forma válida, ir para a dashboard
     //const onSubmit: SubmitHandler<IFormInput> = async data => await getAuthenticatedUser(); 
+
+    useEffect( () => {
+
+        if (isAuthenticated) {
+          let page = localStorage.getItem('page');
+          if(!page) page = ('/');
+          route.push(page);
+        } else {
+            localStorage.removeItem('page')
+        }
+        }, [])
+
+
 
     
     return (

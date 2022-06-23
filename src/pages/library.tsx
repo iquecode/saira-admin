@@ -7,6 +7,7 @@ export default function Library() {
         <Layout 
             titulo='Biblioteca' 
             subtitulo='Informações sobre os projetos!'
+            page='library'
             
         >
             <div className='dark:text-zinc-300'>

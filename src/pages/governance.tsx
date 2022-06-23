@@ -7,6 +7,7 @@ export default function Governance() {
         <Layout 
             titulo='Governança' 
             subtitulo='Informações sobre os projetos!'
+            page='governance'
             
         >
             <div className='dark:text-zinc-300'>

@@ -7,6 +7,7 @@ export default function Blog() {
         <Layout 
             titulo='Blog' 
             subtitulo='Informações sobre os projetos!'
+            page='blog'
             
         >
             <div className='dark:text-zinc-300'>

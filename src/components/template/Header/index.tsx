@@ -40,7 +40,7 @@ const userNavigation = [
 
 
 
-  interface HeaderProps {
+interface HeaderProps {
     menuIndex: number
 }
 
@@ -61,30 +61,16 @@ export function Header({menuIndex}) {
 
     const [navigation, setNavigation] = useState([]);
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
 
     function setCurrent(index: number) {
         const newNavigation = nav.map((item, i) =>{
             if (index === i) return { name: item.name, href: item.href, current: true };
-            return { name: item.name, href: item.href, current: false };
+            return  {name: item.name, href: item.href, current: false };
         });
-        console.log("olá!!!");
+        //console.log("olá!!!");
         setNavigation(newNavigation);
 
     }
-
 
 
     return (
@@ -144,7 +130,7 @@ export function Header({menuIndex}) {
                       </button>
 
                       {/* Profile dropdown */}
-                      <Menu as="div" className="ml-3 relative">
+                      <Menu  as="div" className="ml-3 relative">
                         <div>
                           <Menu.Button className="max-w-xs dark:bg-zinc-900     rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                             <span className="sr-only">Open user menu</span>
@@ -160,7 +146,7 @@ export function Header({menuIndex}) {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Items  className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
@@ -187,7 +173,7 @@ export function Header({menuIndex}) {
                  
                   <div className="-mr-2 flex md:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="dark:bg-zinc-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white dark:hover:bg-gray-700 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <Disclosure.Button  className="dark:bg-zinc-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white dark:hover:bg-gray-700 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -199,7 +185,7 @@ export function Header({menuIndex}) {
                 </div>
               </div>
 
-              <Disclosure.Panel className="md:hidden">
+              <Disclosure.Panel  className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                   {navigation.map((item) => (
 

@@ -82,6 +82,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
     async function logout() {
         //console.log({ email, password })
+        localStorage.removeItem('page');
         const response = await api.get('auth/logout');
         route.push('/');
 

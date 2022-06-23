@@ -80,6 +80,9 @@ export function AuthProvider({ children }: AuthProvideProps) {
             setLoading(false);
             route.push('/dashboard');
         }
+        else {
+            alert(response.data.error);
+        }
         //console.log(response.data);
     }
 

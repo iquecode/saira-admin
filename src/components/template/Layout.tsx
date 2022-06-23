@@ -25,14 +25,26 @@ export default function Layout(props: LayoutProps) {
 
   useEffect( () => {
 
-    getAuthenticatedUser().then(r => {
-      if(!!r.data.user) {
-        localStorage.setItem('page', props.page);
-      } else {
-        route.push('/');
-      }
-      
-    });
+
+    if (isAuthenticated) {
+      localStorage.setItem('page', props.page);
+    }  else {
+
+      getAuthenticatedUser().then(r => {
+        if(!!r.data.user) {
+          localStorage.setItem('page', props.page);
+        } else {
+          route.push('/');
+        }
+        
+      });
+
+
+
+
+    }
+
+  
 
     // if (!isAuthenticated) {
     //   route.push('/');

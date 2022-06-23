@@ -53,7 +53,7 @@ export default function Layout(props: LayoutProps) {
     // }
     }, [])
 
-  return !isAuthenticated ? null :  (
+  return   (
 
     <>
       {/*

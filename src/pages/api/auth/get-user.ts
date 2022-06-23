@@ -39,6 +39,15 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     if (tokenMatch) {
 
+      const user = await client.user.findUnique({
+        where: {
+          id: tokenDB.userId,
+        },
+        include: {
+          circles: true,
+          roles: true,
+        }
+      });
 
 
       //apagar token atual do banco de dados 
@@ -57,7 +66,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       const newToken = await generateTokenAndSaveInDB(tokenData.userId, req.headers['user-agent']);
       res.setHeader("Set-Cookie", newToken);
 
-      return res.json({ jwt, data, match, newToken, user:'dsdsdfs'  }); // autenticado - mudar retorno
+      return res.json({ jwt, data, match, newToken, user  }); // autenticado - mudar retorno
     } else {
       
       return res.json({ jwt, data, match });  // não autenticar - mudar retorno

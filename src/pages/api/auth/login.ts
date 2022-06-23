@@ -21,7 +21,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
       include: {
          circles: true,
-      }
+         roles: true,
+      },
     });
 
     if(!user) throw new Error("User or password incorrect");

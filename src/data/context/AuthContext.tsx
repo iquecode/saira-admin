@@ -3,6 +3,7 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { User } from "../../model/User"
 import { AxiosResponse } from "axios";
+import { normalize } from "path";
 
 
 type AuthCredentials = {
@@ -27,6 +28,8 @@ type AuthProvideProps = {
 export const AuthContext = createContext({} as IAuthContext)
 
 export function AuthProvider({ children }: AuthProvideProps) {
+
+    const [loading, setLoading] = useState(true)
     
     const [user, setUser] = useState<{} | null>(null)
     const isAuthenticated = !!user;
@@ -49,6 +52,18 @@ export function AuthProvider({ children }: AuthProvideProps) {
       }, [])
 
 
+    async function startSession(user) {
+    if(user.email) {
+        //const user = await normalizeUser(userAPI);
+        setUser(user);
+        setLoading(false);
+        return user.email;
+    } else {
+        setUser(null);
+        setLoading(false);
+        return false;
+    }
+}
 
 
 
@@ -62,6 +77,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
         if(response.data.user) {
             setUser(response.data.user);
+            setLoading(false);
             route.push('/dashboard');
         }
         //console.log(response.data);

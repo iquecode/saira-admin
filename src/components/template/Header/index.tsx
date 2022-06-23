@@ -204,11 +204,11 @@ export function Header({menuIndex}) {
                   {navigation.map((item) => (
 
                    
-
+                    <Link href={item.href}>
                     <Disclosure.Button
                       key={item.name}
                       as="a"
-                      href={item.href}
+                      // href={item.href}
                       //onClick={async () =>logout()}
                       className={classNames(
                         item.current ? 'bg-saira-blue text-white' : 'dark:text-gray-400 text-zinc-600 dark:hover:bg-gray-700 dark:hover:text-white hover:bg-zinc-200',
@@ -218,7 +218,9 @@ export function Header({menuIndex}) {
                     >
                       {item.name}
                     </Disclosure.Button>
-                  ))}
+                
+                  </Link>
+                    ))}
                 </div>
                 <div className="pt-4 pb-3 border-t border-gray-700">
               
@@ -243,6 +245,7 @@ export function Header({menuIndex}) {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
+                        onClick={logout}
                         href={item.href}
                         className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                       >

@@ -1,5 +1,6 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { client } from '../lib/prisma/client';
+import nodemailer from 'nodemailer';
 
 
 export const validateSignUp = async ( email: string, password: string, passwordConfirm: string) =>  {
@@ -36,3 +37,33 @@ export const sanitizeInputs = (inputs:{}) => {
     return sanitizedInputs;
 }
 
+
+export async function sendMail(from: string, to: string, subject: string, html?:string, text?:string) {
+
+
+    
+    
+    const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_USER,
+        port: Number(process.env.SMTP_PORT),
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.SMTP_USER, // generated ethereal user
+          pass: process.env.SMTP_PASS, // generated ethereal password
+        },
+      });
+
+    const message = {
+        from,
+        to,
+        subject,
+        text,
+        html,
+    };
+
+    transporter.sendMail(message, function (err) {
+        if (err) return false
+    });
+
+    return true;
+}

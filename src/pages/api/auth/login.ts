@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { compare } from 'bcryptjs';
 import { client } from '../lib/prisma/client';
-import { sanitizeInputs } from '../lib/util';
+import { sanitizeInputs, sendMail } from '../lib/util';
 import { generateTokenAndSaveInDB } from './lib/functions';
 
 const secret = process.env.SECRET;
@@ -54,6 +54,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     res.setHeader("Set-Cookie", tokenSerialised);
 
     user.password = undefined;
+
+    const email = sendMail('mailer@institutosaira.org','iquecode@gmail.com', 'Teste de Assunto', '<h1>TesteHTML</h1>', 'Mensagem de testo');
+
     res.status(200).json({ message: "Login ok", user:user, tokenSerialised });
 
   } catch (error) {

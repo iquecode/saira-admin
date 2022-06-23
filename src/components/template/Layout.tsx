@@ -21,15 +21,24 @@ interface LayoutProps {
 
 export default function Layout(props: LayoutProps) {
   const { tema, alternarTema, menuIndex} = useAppData()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, getAuthenticatedUser } = useAuth()
 
   useEffect( () => {
 
-    if (!isAuthenticated) {
-      route.push('/');
-    } else {
-      localStorage.setItem('page', props.page);
-    }
+    getAuthenticatedUser().then(r => {
+      if(!!r.data.user) {
+        localStorage.setItem('page', props.page);
+      } else {
+        route.push('/');
+      }
+      
+    });
+
+    // if (!isAuthenticated) {
+    //   route.push('/');
+    // } else {
+    //   localStorage.setItem('page', props.page);
+    // }
     }, [])
 
   return !isAuthenticated ? null :  (
@@ -83,3 +92,4 @@ export default function Layout(props: LayoutProps) {
     </>
   )
 }
+

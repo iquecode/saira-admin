@@ -1,6 +1,8 @@
 import DOMPurify from 'isomorphic-dompurify';
 import { client } from '../lib/prisma/client';
 import nodemailer from 'nodemailer';
+import path from 'path';
+import { promises as fs } from 'fs';
 
 
 export const validateSignUp = async ( email: string, password: string, passwordConfirm: string) =>  {
@@ -38,13 +40,13 @@ export const sanitizeInputs = (inputs:{}) => {
 }
 
 
-export async function sendMail(from: string, to: string, subject: string, html?:string, text?:string) {
+export function sendMail(from: string, to: string, subject: string, html?:string, text?:string) {
 
 
     
     
     const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_USER,
+        host: process.env.SMTP_HOST,
         port: Number(process.env.SMTP_PORT),
         secure: false, // true for 465, false for other ports
         auth: {
@@ -62,8 +64,27 @@ export async function sendMail(from: string, to: string, subject: string, html?:
     };
 
     transporter.sendMail(message, function (err) {
-        if (err) return false
+        if (err) return {status: 'erro', msg:'erro de envio' }
     });
 
-    return true;
+    return {status: 'sucess', msg:'email enviado' };
+}
+
+
+
+export async function generateMessageToSendMail():Promise<string>  {
+    const dirRelative = 'templatesEmail';
+    const dir = path.resolve('./src', dirRelative);
+    const fileWithDir = dir + '/validate.txt';
+    
+    try {
+        const data = await fs.readFile(fileWithDir, 'utf8');
+        return data;
+    } catch (error) {
+        return error.message;
+    }
+       
+
+        
+    
 }

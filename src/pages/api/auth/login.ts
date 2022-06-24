@@ -9,10 +9,12 @@ const secret = process.env.SECRET;
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   
-  const { email, password }:any = sanitizeInputs(req.body);
+  const { email, password}:any = sanitizeInputs(req.body);
+  //const { email, password} =req.body;
   // Check in the database
   // if a user with this username
   // and password exists
+  
 
   try {    
     const user = await client.user.findUnique({
@@ -55,9 +57,9 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     user.password = undefined;
 
-    const email = sendMail('mailer@institutosaira.org','iquecode@gmail.com', 'Teste de Assunto', '<h1>TesteHTML</h1>', 'Mensagem de testo');
+    //const testSendEmail = sendMail('mailer@institutosaira.org','iquecode@gmail.com', 'Teste de Assunto', '<h1>TesteHTML</h1>', 'Mensagem de testo');
 
-    res.status(200).json({ message: "Login ok", user:user, tokenSerialised });
+    return res.status(200).json({ message: "Login ok", user:user, tokenSerialised });
 
   } catch (error) {
     return res.json({error: error.message});

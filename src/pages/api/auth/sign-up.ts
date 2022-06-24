@@ -4,7 +4,10 @@ import { hash } from 'bcryptjs';
 import { client } from '../lib/prisma/client';
 import { sign } from "jsonwebtoken";
 import { serialize } from "cookie";
-import { validateSignUp, sanitizeInputs } from '../lib/util';
+import { validateSignUp, sanitizeInputs, sendMail, generateMessageToSendMail } from '../lib/util';
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 
 import DOMPurify from 'dompurify';
@@ -31,6 +34,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     return res.json(validate);
 
   try {
+
+
+    
+
+
     const passwordHash = await hash(password, 8);
     const user = await client.user.create({
         data: {
@@ -38,6 +46,29 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
             password: passwordHash,
         }
     })
+
+    if(!user) throw new Error('Erro no banco de dados. Tente novamente em instantes!');
+    
+    const tokenEmailVerify = uuidv4();
+    const userUpdate = await client.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        tokenEmailVerify,
+      },
+    });
+
+    //const msg = generateMessageToSendMail('validate.html'); 
+    
+    let template = await generateMessageToSendMail();
+    template = template.replace('{LINK}', process.env.DOMAIN+'/validate-email/'+tokenEmailVerify);
+    template = template.replace('{EMAIL}', userUpdate.email);
+    
+
+    sendMail('mailer@institutosaira.org',user.email,
+              'Instituto Saíra - validação de conta', template );
+
     return res.status(200).json({user: {id: user.id, email: user.email}});
     
   } catch (error) {

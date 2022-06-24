@@ -1,0 +1,7 @@
+Parabéns, <br/>
+Sua conta na plataforma do Instituto Saíra foi criada com o email {EMAIL} <br/>
+<br/>
+<br/>
+Clique no link abaixo para validar a sua conta e ser possível você se logar : ). <br/>
+<br/>
+{LINK}

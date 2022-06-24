@@ -78,6 +78,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
         if(response.data.user) {
             setUser(response.data.user);
             setLoading(false);
+            console.log('data: ' + response);
             route.push('/dashboard');
         }
         else {

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { client } from '../lib/prisma/client';
-import { sanitizeInputs, sendMail, generateMessageToSendMail } from '../lib/util';
+import { sanitizeInputs, sendMail, generateMessageToSendMail, sendMailNodeMailer } from '../lib/util';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -36,8 +36,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     let template = await generateMessageToSendMail();
     template = template.replace('{LINK}', process.env.DOMAIN+'/sign-up-flow/validate-email/'+newtokenEmailVerify);
     template = template.replace('{EMAIL}', userUpdate.email);
-    sendMail('mailer@institutosaira.org',userUpdate.email,
-              'Instituto Saíra - validação de conta', template );
+    const emailSended = await sendMail('mailer@institutosaira.org',userUpdate.email,
+               'Instituto Saíra - validação de conta', template );
+    // sendMailNodeMailer('mailer@institutosaira.org',userUpdate.email,
+    //      'Instituto Saíra - validação de conta', template );
     return res.status(200).json({tokenSignUpFlow: userUpdate.tokenSignUpFlow});
     
   } catch (error) {

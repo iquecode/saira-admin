@@ -3,6 +3,8 @@ import { client } from '../lib/prisma/client';
 import nodemailer from 'nodemailer';
 import path from 'path';
 import { promises as fs } from 'fs';
+import { apiSSR } from '../../../services/api';
+import { sendError } from 'next/dist/server/api-utils';
 
 
 export const validateSignUp = async ( email: string, password: string, passwordConfirm: string) =>  {
@@ -40,7 +42,7 @@ export const sanitizeInputs = (inputs:{}) => {
 }
 
 
-export function sendMail(from: string, to: string, subject: string, html?:string, text?:string) {
+export function sendMailNodeMailer(from: string, to: string, subject: string, html?:string, text?:string) {
 
 
     
@@ -68,6 +70,43 @@ export function sendMail(from: string, to: string, subject: string, html?:string
     });
 
     return {status: 'sucess', msg:'email enviado' };
+}
+
+
+
+export async function sendMail(from: string, to: string, subject: string, html?:string, text?:string) {
+
+    // apiSSR.defaults.headers['accept'] = 'application/json';
+    // apiSSR.defaults.headers['api-key'] = process.env.SENDBLUE_API_KEY;
+    // apiSSR.defaults.headers['content-type'] = 'application/json';
+
+    apiSSR.defaults.headers['accept'] = 'application/json';
+    apiSSR.defaults.headers['api-key'] = process.env.SMTP_API_KEY;
+    apiSSR.defaults.headers['content-type'] = 'application/json';
+
+    const data = {
+        sender: {
+            name: 'Instituto Saíra',
+            email: from,  
+        },
+        to: [
+            {
+                email: to,
+                name: to,
+            }
+        ],
+        subject:subject,
+        htmlContent: html,  
+    }
+    //const { sender, to, subject, htmlContent } = data;
+
+
+    const response = await apiSSR.post('https://api.sendinblue.com/v3/smtp/email',
+        {sender: data.sender, to: data.to, subject:data.subject, htmlContent: data.htmlContent,});
+
+    console.log('*****data :' + response)
+    return {status: 'sucess', msg:'email enviado', resp: response.data };
+
 }
 
 

@@ -5,7 +5,7 @@ import { apiSSR } from '../../services/api';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     
     apiSSR.defaults.headers['accept'] = 'application/json';
-    apiSSR.defaults.headers['api-key'] = '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';
+    apiSSR.defaults.headers['api-key'] = process.env.SMTP_API_KEY;
     apiSSR.defaults.headers['content-type'] = 'application/json';
 
     const data = {

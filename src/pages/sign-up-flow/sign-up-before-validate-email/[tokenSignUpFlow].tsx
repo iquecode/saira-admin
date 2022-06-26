@@ -24,6 +24,10 @@ export default function SignUpBeforeValidateEmail() {
         }).then((resp)=>{
             setEmail(resp.data.email);
             setLoading(false);
+        })
+        .catch(error => {
+            setLoading(false);
+            console.log(error);
         });
 
     }, [query]);

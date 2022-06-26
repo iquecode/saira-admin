@@ -28,7 +28,7 @@ export default function EmailValidation() {
         .catch(error => {
             setLoading(false);
             console.log(error);
-        })
+        });
 
     }, [query]);
 

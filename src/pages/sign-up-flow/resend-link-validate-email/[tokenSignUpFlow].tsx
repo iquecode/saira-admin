@@ -31,6 +31,10 @@ export default function ResendLinkValidateEmail() {
             setEmail(resp.data.email);
             setTokenEmailVerifyExpiration(resp.data.tokenEmailVerifyExpiration);
             setLoading(false);
+        })
+        .catch(error => {
+            setLoading(false);
+            console.log(error);
         });
 
     }, [query]);

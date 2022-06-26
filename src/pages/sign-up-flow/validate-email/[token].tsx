@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
-import ContainerTransactionEmailPages from '../../components/template/IsolatePagesContainers/ContainerTransactionsEmailPages';
-import { api } from '../../services/api';
-import { useQuery } from '../../util/util';
+import ContainerTransactionEmailPages from '../../../components/template/IsolatePagesContainers/ContainerTransactionsEmailPages';
+import { api } from '../../../services/api';
+import { useQuery } from '../../../util/util';
+import Link from 'next/link';
+
 
 export default function EmailValidation() {
     const query = useQuery();
     const [email, setEmail] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect( () => {
 
@@ -14,11 +17,14 @@ export default function EmailValidation() {
             return;
         }
         const {token} = query; 
-        console.log('Queri existe', token);
+        console.log('Query existe', token);
        
         api.post('auth/validate-email', {
             token
-        }).then((resp)=>setEmail(resp.data.email));
+        }).then((resp)=>{
+            setEmail(resp.data.email);
+            setLoading(false);
+        });
 
     }, [query]);
 
@@ -38,10 +44,19 @@ export default function EmailValidation() {
                             , junto com a senha que você cadastrou.
                         </p>
                         <p className='pt-10 font-semibold hover:brightness-125 cursor-pointer'>
-                            Clique aqui para ir ao login 
+                            <Link href="/">
+                                <a>Clique aqui para ir ao login</a>
+                            </Link>   
                         </p>
                     </div>
-                : <p>Ops. Algo deu Errado!</p> }
+                : 
+                
+                !loading?
+                <p>Ops. Esse link não é mais válido...</p>
+                :<p>... Espere um pouquinho... sua conta está sendo validada...</p>
+            
+            }
+                
             </div>
          
         </ContainerTransactionEmailPages>

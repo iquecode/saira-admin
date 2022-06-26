@@ -2,6 +2,9 @@ Parabéns, <br/>
 Sua conta na plataforma do Instituto Saíra foi criada com o email {EMAIL} <br/>
 <br/>
 <br/>
-Clique no link abaixo para validar a sua conta e ser possível você se logar : ). <br/>
+Clique no link abaixo para validar a sua conta : ). <br/>
 <br/>
 {LINK}
+<br/>
+<br/>
+Por questões de segurança, o link tem validade de 24 horas a partir do envio deste email.

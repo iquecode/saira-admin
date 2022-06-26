@@ -49,27 +49,30 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
     if(!user) throw new Error('Erro no banco de dados. Tente novamente em instantes!');
     
-    const tokenEmailVerify = uuidv4();
+    const now = Math.floor(Date.now());
+    const tokenEmailVerify = `${now}${'@@'}${uuidv4()}`; 
+    const tokenSignUpFlow  = `${now}${'@@'}${uuidv4()}`;
     const userUpdate = await client.user.update({
       where: {
         id: user.id,
       },
       data: {
         tokenEmailVerify,
+        tokenSignUpFlow,
       },
     });
 
     //const msg = generateMessageToSendMail('validate.html'); 
     
     let template = await generateMessageToSendMail();
-    template = template.replace('{LINK}', process.env.DOMAIN+'/validate-email/'+tokenEmailVerify);
+    template = template.replace('{LINK}', process.env.DOMAIN+'/sign-up-flow/validate-email/'+tokenEmailVerify);
     template = template.replace('{EMAIL}', userUpdate.email);
     
 
     sendMail('mailer@institutosaira.org',user.email,
               'Instituto Saíra - validação de conta', template );
 
-    return res.status(200).json({user: {id: user.id, email: user.email}});
+    return res.status(200).json({user: {id: userUpdate.id, email: userUpdate.email, tokenSignUpFlow: userUpdate.tokenSignUpFlow}});
     
   } catch (error) {
     return res.json({error: error.message});

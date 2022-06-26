@@ -1,9 +1,8 @@
 import route from "next/router";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { api } from "../../services/api";
-import { User } from "../../model/User"
 import { AxiosResponse } from "axios";
-import { normalize } from "path";
+
 
 
 type AuthCredentials = {
@@ -75,15 +74,33 @@ export function AuthProvider({ children }: AuthProvideProps) {
             password,
         })
 
-        if(response.data.user) {
-            setUser(response.data.user);
-            setLoading(false);
-            console.log('data: ' + response);
-            route.push('/dashboard');
+        const cod = response.data.cod;   
+        switch (cod) {
+            case 'success':
+                setUser(response.data.user);
+                setLoading(false);
+                route.push('/dashboard');
+                break;
+            case 'unverified':
+                //setUser(response.data.user);
+                setLoading(false);
+
+                route.push('/sign-up-flow/resend-link-validate-email/' + response.data.user.tokenSignUpFlow );
+                break;
+            default:
+                setLoading(false);
+                alert(response.data.error)
+                break;
         }
-        else {
-            alert(response.data.error);
-        }
+
+        // if(response.data.user) {
+        //     setUser(response.data.user);
+        //     setLoading(false);
+        //     console.log('data: ' + response);
+        //     route.push('/dashboard');
+        // } else {
+        //     alert(response.data.error);
+        // }
         //console.log(response.data);
     }
 
@@ -94,9 +111,18 @@ export function AuthProvider({ children }: AuthProvideProps) {
             email,
             password,
             passwordConfirm
-        })
+        });
+        if(response.data.user) {
+            setUser(response.data.user);
+            setLoading(false);
+            console.log('data: ' + response);
+            route.push('/sign-up-flow/sign-up-before-validate-email/' + response.data.user.tokenSignUpFlow);
+        }
+        else {
+            alert(response.data.error);
+        }
 
-        console.log(response.data);
+        //console.log(response.data);
     }
 
 

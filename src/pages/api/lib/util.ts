@@ -84,7 +84,4 @@ export async function generateMessageToSendMail():Promise<string>  {
         return error.message;
     }
        
-
-        
-    
 }

@@ -35,13 +35,30 @@ export default function Auth(props) {
 
     useEffect( () => {
 
-        if (isAuthenticated) {
-          let page = localStorage.getItem('page');
-          if(!page) page = ('/');
-          route.push(page);
-        } else {
-            localStorage.removeItem('page')
-        }
+        // if (isAuthenticated) {
+        //   let page = localStorage.getItem('page');
+        //   if(!page) page = ('/');
+        //   route.push(page);
+        // } else {
+        //     //localStorage.removeItem('page')
+        // }
+
+        getAuthenticatedUser().then(r => {
+            if(!!r.data.user) {
+                let page = localStorage.getItem('page');
+                if(!page) page = ('/');
+                route.push(page);
+            } else {
+              route.push('/');
+            }
+            
+          });
+
+
+
+
+
+
         }, [])
 
 

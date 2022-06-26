@@ -73,3 +73,4 @@ export function generateMessageToSendMail() {
         return data;
     });
 }
+

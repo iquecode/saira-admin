@@ -16,7 +16,7 @@ const AppContext = createContext<AppContextProps>({})
 
 const menu = { 'dashboard': 0, 
                'projects': 1, 
-               'goverance': 2, 
+               'governance': 2, 
                'library': 3,
                'blog': 4,
                'faq': 5,}

@@ -35,12 +35,13 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
     useEffect( () => {
 
-        api.get('auth/get-user').then(res=>{
-            setUser(res.data.user);
-
-            
-
-        })
+        if (!isAuthenticated) {
+            api.get('auth/get-user').then(res=>{
+                setUser(res.data.user);
+            })
+            .catch(error => console.log('error...!!!!aqui..: ' + error));
+        }
+       
         //const { 'nextauth.token': token } = parseCookies()
     
         // if (token) {

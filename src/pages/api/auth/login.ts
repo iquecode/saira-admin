@@ -4,6 +4,7 @@ import { compare } from 'bcryptjs';
 import { client } from '../lib/prisma/client';
 import { sanitizeInputs, sendMail } from '../lib/util';
 import { generateTokenAndSaveInDB } from './lib/functions';
+import { normalizedUser } from './lib/normalizedUser';
 
 
 const secret = process.env.SECRET;
@@ -111,11 +112,12 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const tokenSerialised = await generateTokenAndSaveInDB(user.id, req.headers['user-agent']);
     res.setHeader("Set-Cookie", tokenSerialised);
 
-    user.password = undefined;
+    //user.password = undefined;
+
 
     //const testSendEmail = sendMail('mailer@institutosaira.org','iquecode@gmail.com', 'Teste de Assunto', '<h1>TesteHTML</h1>', 'Mensagem de testo');
 
-    return res.status(200).json({ cod:'success', message: "Login ok", user:user, tokenSerialised });
+    return res.status(200).json({ cod:'success', message: "Login ok", user:normalizedUser(user), tokenSerialised });
 
   } catch (error) {
     return res.json({cod: 'error', error: error.message});

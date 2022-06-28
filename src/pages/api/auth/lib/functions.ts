@@ -74,3 +74,44 @@ export function generateMessageToSendMail() {
     });
 }
 
+
+
+
+export const validateSignIn = async ( email: string, password: string, passwordConfirm: string) =>  {
+    
+}
+
+
+
+export function validatePassword(password:string, length:number, patterToEscape:string[], 
+                                 caseSensitivty: boolean, numericDigits: boolean):boolean  {
+
+
+    if (password.length < length) {
+        return false;
+    }                
+    
+    if (caseSensitivty) {
+
+        const hasUpperCase =  /[A-Z]/.test(password);
+        const hasLowerCase =  /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+
+        const patternsToEscape = [
+            '123',
+            '1234',
+            '12345',
+            '12345678',
+
+            
+    ]
+
+
+    }
+
+
+
+
+    return true;
+
+}

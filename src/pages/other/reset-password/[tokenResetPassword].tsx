@@ -20,7 +20,8 @@ export default function ResetPassword({email, tokenResetPassword}) {
     const onSubmit: SubmitHandler<IFormInput> = async function(data) {
         return api.post('auth/reset-password', {
             tokenResetPassword,
-            data,
+            password: data.password,
+            passwordConfirm: data.passwordConfirm,
         })
         .then(resp=> {
 
@@ -37,14 +38,12 @@ export default function ResetPassword({email, tokenResetPassword}) {
             {!email ? 
             <div className='dark:bg-zinc-800 bg-zinc-200 w-full xl:w-2/3 p-2 sm:p-10 rounded-sm text-brandBlue-500'>
                        
-               {/* <h1>{email ? `Email ${email} encontrado. Renderizar form reset de senha` 
-                          : 'Email não encontrado.. link inválido ou expirado'}
-                </h1>  */}
+               <h1>Ops... Esse link não é valido. </h1> 
              </div>
 
             :
 
-            <div className='flex flex-col items-center justify-center p-2 sm:mt-24 mt-16 sm:flex-none h-full'>
+            <div className='flex flex-col items-center justify-center p-2 sm:mt-12 mt-12 sm:flex-none h-full'>
                 <p className='dark:text-zinc-300 
                                 text-zinc-700 
                                 font-semibold 

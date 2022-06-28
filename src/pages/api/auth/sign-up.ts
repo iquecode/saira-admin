@@ -16,10 +16,10 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     return res.json(validate);
   
   try {
-    const passwordHash = await hash('12345678', 8);
+    const passwordHash = await hash(password, 8);
     const user = await client.user.create({
         data: {
-            email: 'iquecode@gmail.com',
+            email: email,
             password: passwordHash,
         }
     })

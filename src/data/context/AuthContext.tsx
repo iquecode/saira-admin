@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 
 type AuthCredentials = {
     email: string;
-    password: string;
+    password?: string;
     passwordConfirm?: string;
 }
 
@@ -15,6 +15,7 @@ interface IAuthContext {
     signIn(credentials: AuthCredentials): Promise<void>;
     signUp(credentials: AuthCredentials): Promise<void>;
     logout(): Promise<void>,
+    sendLinkResetPassword(credentials: AuthCredentials): Promise<void>,
     isAuthenticated: boolean;
     getAuthenticatedUser():Promise<AxiosResponse>;
     user: any;
@@ -128,6 +129,34 @@ export function AuthProvider({ children }: AuthProvideProps) {
     }
 
 
+
+    
+    async function sendLinkResetPassword( { email }: AuthCredentials) {
+        //console.log({ email, password })
+        const response = await api.post('auth/send-link-reset-password', {
+            email,
+        });
+        const cod = response.data.cod; 
+        let msg = '';  
+        switch (cod) {
+            case 'success':
+                msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
+                break;
+            case 'notfound':
+                //setUser(response.data.user);
+                msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
+                break;
+            default:
+                msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
+                //alert(response.data.error)
+                break;
+        }
+        alert(msg);
+    }
+
+
+
+
     async function logout() {
         //console.log({ email, password })
         localStorage.removeItem('page');
@@ -151,7 +180,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
     }
 
     return (
-        <AuthContext.Provider value={{ signIn, signUp, logout, isAuthenticated, getAuthenticatedUser, user}}>
+        <AuthContext.Provider value={{ signIn, signUp, logout, sendLinkResetPassword, isAuthenticated, getAuthenticatedUser, user}}>
             {children}
         </AuthContext.Provider>
     )

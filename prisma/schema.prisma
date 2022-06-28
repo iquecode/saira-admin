@@ -12,46 +12,47 @@ datasource db {
 }
 
 model User {
-  id                      String        @id @default(uuid())
-  email                   String        @unique
-  password                String
-  name                    String?
-  nickname                String?
-  occupation              String?
-  birthDate               Int?          @map("birth_date")
-  documentTypeId          Int?          @map("document_type_id")
-  documentNumber          String?       @map("document_number")
-  documentPhotoURL1       String?       @map("document_photo_url1")
-  documentPhotoURL2       String?       @map("document_photo_url2")
-  motherName              String?       @map("mother_name")
-  fatherName              String?       @map("father_name")
-  avatarURL               String?       @map("avatar_url")
-  countryId               Int?          @map("country_id")
-  cityId                  Int?          @map("city_id")
-  cep                     Int?
-  addressLine1            String?       @map("address_line1")
-  addressLine2            String?       @map("address_line2")
-  type                    String?       @default("user") //'admin' 'user' 'member'   
-  active                  Boolean       @default(true)
-  emailVerified           Boolean       @default(false) @map("email_verified")
-  tokenEmailVerify        String?       @unique 
-  tokenSignUpFlow         String?       @unique
-  loginAttempts           Int           @default(0) @map("login_attempts")
-  loginBlocked            Boolean       @default(false) @map("login_blocked")
-  loginBlockedReason      String?       @map("login_blocked_reason")
-  loginBlockedExpiration  Int?          @map("login_blocked_expiration")
-  note                    String?
-  circles                 Circle[]
-  contacts                Contact[]
-  documentType            DocumentType? @relation(fields: [documentTypeId], references: [id])
-  country                 Country?      @relation(fields: [countryId], references: [id])
-  city                    City?         @relation(fields: [cityId], references: [id])
-  roles                   Role[]
-  tokensHash              TokenHash[]
-  createdAt               DateTime      @default(now()) @map("created_at")
-  updatedAt               DateTime?     @updatedAt @map("updated_at")
-  deletable               Boolean       @default(true)
-  deleted                 Boolean       @default(false)
+  id                     String        @id @default(uuid())
+  email                  String        @unique
+  password               String
+  name                   String?
+  nickname               String?
+  occupation             String?
+  birthDate              Int?          @map("birth_date")
+  documentTypeId         Int?          @map("document_type_id")
+  documentNumber         String?       @map("document_number")
+  documentPhotoURL1      String?       @map("document_photo_url1")
+  documentPhotoURL2      String?       @map("document_photo_url2")
+  motherName             String?       @map("mother_name")
+  fatherName             String?       @map("father_name")
+  avatarURL              String?       @map("avatar_url")
+  countryId              Int?          @map("country_id")
+  cityId                 Int?          @map("city_id")
+  cep                    Int?
+  addressLine1           String?       @map("address_line1")
+  addressLine2           String?       @map("address_line2")
+  type                   String?       @default("user") //'admin' 'user' 'member'   
+  active                 Boolean       @default(true)
+  emailVerified          Boolean       @default(false) @map("email_verified")
+  tokenEmailVerify       String?       @unique @map("token_email_verify")
+  tokenSignUpFlow        String?       @unique @map("token_signup_flow")
+  tokenResetPassword     String?       @unique @map("token_reset_password")
+  loginAttempts          Int           @default(0) @map("login_attempts")
+  loginBlocked           Boolean       @default(false) @map("login_blocked")
+  loginBlockedReason     String?       @map("login_blocked_reason")
+  loginBlockedExpiration Int?          @map("login_blocked_expiration")
+  note                   String?
+  circles                Circle[]
+  contacts               Contact[]
+  documentType           DocumentType? @relation(fields: [documentTypeId], references: [id])
+  country                Country?      @relation(fields: [countryId], references: [id])
+  city                   City?         @relation(fields: [cityId], references: [id])
+  roles                  Role[]
+  tokensHash             TokenHash[]
+  createdAt              DateTime      @default(now()) @map("created_at")
+  updatedAt              DateTime?     @updatedAt @map("updated_at")
+  deletable              Boolean       @default(true)
+  deleted                Boolean       @default(false)
 
   @@map("users")
 }
@@ -177,7 +178,7 @@ model TokenHash {
   userId      String    @map("user_id")
   dispositive String?
   expiration  Int
-  user        User?      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
 

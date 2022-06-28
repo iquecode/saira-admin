@@ -5,8 +5,9 @@ import BotaoAlternarTema from '../components/template/BotaoAlternarTema';
 import useAppData from '../data/hook/useAppData';
 import Form from '../components/Form';
 import { SubmitHandler } from "react-hook-form"; //necessário apenas para a tipagem
-import { AuthContext } from '../data/context/AuthContext';
 import route from "next/router";
+import useAuth from '../data/hook/useAuth';
+
 
 
 interface IFormInput  {
@@ -19,15 +20,16 @@ export default function Auth(props) {
 
     const ip = props.ip;
     const { tema, alternarTema, menuIndex} = useAppData()
-    const [mode, setMode] = useState<'login' | 'signup'>('login');
+    const [mode, setMode] = useState<'login' | 'signup' | 'reset' >('login');
    
-    const { signIn, signUp, getAuthenticatedUser, isAuthenticated } = useContext(AuthContext);
+    const { signIn, signUp, getAuthenticatedUser, sendLinkResetPassword, isAuthenticated } = useAuth();
 
     //const onSubmit: SubmitHandler<IFormInput> = async data => await signIn(data); //debug
    
     const onSubmit: SubmitHandler<IFormInput> = async function(data) {
         if (mode==='signup') return await signUp(data);
         if (mode==='login')  return await signIn(data);
+        if (mode==='reset')  return await sendLinkResetPassword(data);
     } 
     // usar getAuthenticatedUser na renderização do lado so servidor ou do lado do cliente
     // para, no caso de existir usuário autenticado de forma válida, ir para a dashboard
@@ -90,8 +92,24 @@ export default function Auth(props) {
                                   text-4xl 
                                   mb-3'
                     >
-                        {mode === 'login' ? 'Entre com a sua conta' : 'Crie sua conta'}
+                        {mode === 'login' ? 'Entre com a sua conta' : mode==='signup' ? 'Crie sua conta' : 'Redefinição de senha'}
                     </p>
+                    {mode === 'reset' ? 
+                        
+                        <p className='dark:text-zinc-300 
+                                      text-zinc-700 
+                                      font-semibold 
+                                      text-lg
+                                      mb-3
+                                      mt-7
+                                      max-w-4xl
+                                      text-center'
+                        >
+                             Informe seu email e clique no botão para receber uma mensagem com o link para redefinir sua senha.
+                        </p>
+                       
+                        
+                        : ''}
                    
                     <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
                         <Form className='flex flex-col items-center' onSubmit={onSubmit}>
@@ -106,6 +124,7 @@ export default function Auth(props) {
                                     icon={LockSimple} 
                                     placeholder='Senha' 
                                     type='password'
+                                    notShowWhen={mode === 'reset'}
                                     // valueChanged={setPassword}
                                     registerName='password'
                                 />
@@ -114,7 +133,7 @@ export default function Auth(props) {
                                     placeholder='Confirme a senha' 
                                     type='password'
                                     //valueChanged={setPasswordConfirm}
-                                    notShowWhen={mode === 'login'}
+                                    notShowWhen={mode === 'login' || mode === 'reset'}
                                     registerName='passwordConfirm'
                                 />
 
@@ -126,7 +145,7 @@ export default function Auth(props) {
                                                  hover:brightness-125
                                                  duration-200
                                 '>
-                                    <a href="http://">{mode==='login' ? 'Esqueci minha senha' : ''}</a>   
+                                    <a onClick={() => setMode('reset')} className='cursor-pointer'>{mode==='login' ? 'Esqueci minha senha' : ''}</a>   
                                 </span>
 
                                 <button type='submit' className='mt-6 
@@ -139,11 +158,12 @@ export default function Auth(props) {
                                                 hover:brightness-110
                                                 duration-200'
                                 >
-                                    {mode==='login' ? 'ENTRAR' : 'CADASTRAR'}
+                                    {mode==='login' ? 'ENTRAR' : mode==='signup' ? 'CADASTRAR' : 'ENVIAR LINK DE REDEFINIÇÃO DE SENHA'}
                                 </button>
                                 <div className='mt-5'>
                                     <span className='dark:text-zinc-300 text-zinc-700'>
-                                        {mode==='login' ? 'Não tem uma conta?' : 'Já tem cadastro?'}  
+                                        {mode==='login' ? 'Não tem uma conta?' : 
+                                        mode === 'signup' ? 'Já tem cadastro?' : 'Já redefiniu a senha?'}  
                                         <a className='dark:text-saira-yellow 
                                                       text-brandPink-500 
                                                       font-semibold

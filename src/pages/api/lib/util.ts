@@ -111,10 +111,12 @@ export async function sendMail(from: string, to: string, subject: string, html?:
 
 
 
-export async function generateMessageToSendMail():Promise<string>  {
+export async function generateMessageToSendMail(file?:string):Promise<string>  {
+    
+    const fileTemplate = file ? file : 'validate.txt';
     const dirRelative = 'templatesEmail';
     const dir = path.resolve('./src', dirRelative);
-    const fileWithDir = dir + '/validate.txt';
+    const fileWithDir = dir + '/' + fileTemplate;
     
     try {
         const data = await fs.readFile(fileWithDir, 'utf8');

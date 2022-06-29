@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContainerTransactionEmailPages from '../../../components/template/IsolatePagesContainers/ContainerTransactionsEmailPages';
 import { api } from '../../../services/api';
 import { useQuery } from '../../../util/util';;
 import route from "next/router";
 import { client } from '../../api/lib/prisma/client';
 import Form from '../../../components/Form';
+//import { resetForm } from '../../../components/Form';
 import { Input } from '../../../components/Input';
 import { LockSimple } from 'phosphor-react';
 import { appendErrors, SubmitHandler } from 'react-hook-form';
@@ -22,13 +23,20 @@ interface IFormInput  {
 
 
 export default function ResetPassword({email, tokenResetPassword}) {
+
+    const componentOneRef = useRef(null);
+    const [resetForm, setResetForm] = useState<boolean>(true);
+   
     
     const onSubmit: SubmitHandler<FormValues> = async function(data) {
         return api.post('auth/reset-password',data)
         .then(resp=> {
+
+            setResetForm(true);
             alert(resp.data.message);
         })
         .catch(error=> {
+            setResetForm(true);
             alert('erro: ' + error.message);
         })
         //alert(JSON.stringify(data));
@@ -39,6 +47,7 @@ export default function ResetPassword({email, tokenResetPassword}) {
         alert(JSON.stringify(data));
     } 
 
+    
     return (
 
         <ContainerTransactionEmailPages>
@@ -72,7 +81,7 @@ export default function ResetPassword({email, tokenResetPassword}) {
                         {email}
                 </p>
                 <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                    <Form className='flex flex-col items-center' onSubmit={onSubmit}>
+                    <Form className='flex flex-col items-center' onSubmit={onSubmit} reset={resetForm} >
                             
                             <Input 
                                 icon={LockSimple} 

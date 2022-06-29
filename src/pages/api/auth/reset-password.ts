@@ -41,11 +41,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       },
       data: {
         password: passwordHash,
-        // tokenResetPassword: null, 
-        // emailVerified: true,
-        // loginAttempts: 0,
-        // loginBlocked: false,
-        // loginBlockedReason: null,
+        tokenResetPassword: null, 
+        emailVerified: true,
+        loginAttempts: 0,
+        loginBlocked: false,
+        loginBlockedReason: null,
       },
    });
 

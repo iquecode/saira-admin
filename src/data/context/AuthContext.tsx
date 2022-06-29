@@ -121,8 +121,13 @@ export function AuthProvider({ children }: AuthProvideProps) {
             route.push('/sign-up-flow/sign-up-before-validate-email/' + response.data.user.tokenSignUpFlow);
         }
         else {
-            console.log('aqui deu problema: ' +response.data)
-            alert('aqui deu problema: '+ response.data);
+            if(response.data.error) {
+                alert(response.data.error);
+            } else {
+                alert(response.data.msg);
+            }
+            //console.log('aqui deu problema: ' +response.data)
+            //alert('aqui deu problema: '+ JSON.stringify(response.data));
         }
 
         //console.log(response.data);

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native"]
@@ -16,43 +13,43 @@ model User {
   email                  String        @unique
   password               String
   name                   String?
+  cep                    Int?
   nickname               String?
+  note                   String?
   occupation             String?
-  birthDate              Int?          @map("birth_date")
-  documentTypeId         Int?          @map("document_type_id")
+  addressLine1           String?       @map("address_line1")
+  addressLine2           String?       @map("address_line2")
+  avatarURL              String?       @map("avatar_url")
+  cityId                 Int?          @map("city_id")
+  countryId              Int?          @map("country_id")
+  createdAt              DateTime      @default(now()) @map("created_at")
   documentNumber         String?       @map("document_number")
   documentPhotoURL1      String?       @map("document_photo_url1")
   documentPhotoURL2      String?       @map("document_photo_url2")
-  motherName             String?       @map("mother_name")
+  documentTypeId         Int?          @map("document_type_id")
   fatherName             String?       @map("father_name")
-  avatarURL              String?       @map("avatar_url")
-  countryId              Int?          @map("country_id")
-  cityId                 Int?          @map("city_id")
-  cep                    Int?
-  addressLine1           String?       @map("address_line1")
-  addressLine2           String?       @map("address_line2")
-  type                   String?       @default("user") //'admin' 'user' 'member'   
+  motherName             String?       @map("mother_name")
+  updatedAt              DateTime?     @updatedAt @map("updated_at")
   active                 Boolean       @default(true)
+  deletable              Boolean       @default(true)
+  deleted                Boolean       @default(false)
   emailVerified          Boolean       @default(false) @map("email_verified")
-  tokenEmailVerify       String?       @unique @map("token_email_verify")
-  tokenSignUpFlow        String?       @unique @map("token_signup_flow")
-  tokenResetPassword     String?       @unique @map("token_reset_password")
   loginAttempts          Int           @default(0) @map("login_attempts")
   loginBlocked           Boolean       @default(false) @map("login_blocked")
   loginBlockedReason     String?       @map("login_blocked_reason")
+  type                   String?       @default("user")
+  birthDate              Int?          @map("birth_date")
   loginBlockedExpiration Int?          @map("login_blocked_expiration")
-  note                   String?
-  circles                Circle[]
-  contacts               Contact[]
-  documentType           DocumentType? @relation(fields: [documentTypeId], references: [id])
-  country                Country?      @relation(fields: [countryId], references: [id])
+  tokenEmailVerify       String?       @unique @map("token_email_verify")
+  tokenResetPassword     String?       @unique @map("token_reset_password")
+  tokenSignUpFlow        String?       @unique @map("token_signup_flow")
   city                   City?         @relation(fields: [cityId], references: [id])
+  country                Country?      @relation(fields: [countryId], references: [id])
+  documentType           DocumentType? @relation(fields: [documentTypeId], references: [id])
+  contacts               Contact[]
   roles                  Role[]
   tokensHash             TokenHash[]
-  createdAt              DateTime      @default(now()) @map("created_at")
-  updatedAt              DateTime?     @updatedAt @map("updated_at")
-  deletable              Boolean       @default(true)
-  deleted                Boolean       @default(false)
+  circles                Circle[]
 
   @@map("users")
 }
@@ -62,14 +59,14 @@ model Circle {
   name      String    @unique
   parentId  String?   @map("parent_id")
   note      String?
-  members   User[]
-  roles     Role[]
-  parent    Circle?   @relation("CircleToCircle", fields: [parentId], references: [id])
-  childrens Circle[]  @relation("CircleToCircle")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletable Boolean   @default(true)
   deleted   Boolean   @default(false)
+  parent    Circle?   @relation("CircleToCircle", fields: [parentId], references: [id])
+  childrens Circle[]  @relation("CircleToCircle")
+  roles     Role[]
+  members   User[]
 
   @@map("circles")
 }
@@ -90,19 +87,19 @@ model RoleType {
 
 model Role {
   id          String    @id @default(uuid())
-  roleType    RoleType  @relation(fields: [roleTypeId], references: [id])
-  roleTypeId  Int       @map("role_type_id")
-  member      User      @relation(fields: [memberId], references: [id])
-  memberId    String    @map("member_id")
-  circle      Circle?   @relation(fields: [circleId], references: [id])
-  circleId    String?   @map("circle_id")
   description String?
-  note        String?
-  validate    Int?
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletable   Boolean   @default(true)
   deleted     Boolean   @default(false)
+  circleId    String?   @map("circle_id")
+  memberId    String    @map("member_id")
+  note        String?
+  roleTypeId  Int       @map("role_type_id")
+  validate    Int?
+  circle      Circle?   @relation(fields: [circleId], references: [id])
+  member      User      @relation(fields: [memberId], references: [id])
+  roleType    RoleType  @relation(fields: [roleTypeId], references: [id])
 
   @@map("roles")
 }
@@ -111,12 +108,12 @@ model Contact {
   id        String    @id @default(uuid())
   name      String
   value     String
-  userId    String    @map("user_id")
-  user      User      @relation(fields: [userId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
+  userId    String    @map("user_id")
   deletable Boolean   @default(true)
   deleted   Boolean   @default(false)
+  user      User      @relation(fields: [userId], references: [id])
 
   @@map("contacts")
 }
@@ -124,23 +121,23 @@ model Contact {
 model DocumentType {
   id        Int       @id @default(autoincrement())
   name      String
-  users     User[]
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   deletable Boolean   @default(true)
   deleted   Boolean   @default(false)
+  users     User[]
 
   @@map("document_types")
 }
 
 model Country {
   id        Int       @id @default(autoincrement())
-  namePt    String    @map("name_pt")
-  nameEn    String    @map("name_en")
-  nameEs    String    @map("name_es")
-  numCode   Int?      @map("num_code")
   iso       String?
   iso3      String?
+  nameEn    String    @map("name_en")
+  nameEs    String    @map("name_es")
+  namePt    String    @map("name_pt")
+  numCode   Int?      @map("num_code")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   users     User[]
@@ -164,9 +161,9 @@ model City {
   name      String
   codIbge   Int       @map("cod_ibge")
   stateId   Int       @map("state_id")
-  state     State     @relation(fields: [stateId], references: [id])
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
+  state     State     @relation(fields: [stateId], references: [id])
   users     User[]
 
   @@map("cities")
@@ -177,10 +174,10 @@ model TokenHash {
   hash        String
   userId      String    @map("user_id")
   dispositive String?
-  expiration  Int
-  user        User?     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime? @updatedAt @map("updated_at")
+  expiration  Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens_hash")
 }

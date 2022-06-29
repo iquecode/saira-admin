@@ -7,28 +7,36 @@ import { client } from '../../api/lib/prisma/client';
 import Form from '../../../components/Form';
 import { Input } from '../../../components/Input';
 import { LockSimple } from 'phosphor-react';
-import { SubmitHandler } from 'react-hook-form';
+import { appendErrors, SubmitHandler } from 'react-hook-form';
 
 interface IFormInput  {
+    tokenResetPassword: string,
     password: string,
-    passwordConfirm: string,
+  };
+
+  type FormValues = {
+    password: string;
+    passwordConfirm: string;
+    tokenResetPassword: string;
   };
 
 
 export default function ResetPassword({email, tokenResetPassword}) {
     
-    const onSubmit: SubmitHandler<IFormInput> = async function(data) {
-        return api.post('auth/reset-password', {
-            tokenResetPassword,
-            password: data.password,
-            passwordConfirm: data.passwordConfirm,
-        })
+    const onSubmit: SubmitHandler<FormValues> = async function(data) {
+        return api.post('auth/reset-password',data)
         .then(resp=> {
-
+            alert(resp.data.message);
         })
         .catch(error=> {
-
+            alert('erro: ' + error.message);
         })
+        //alert(JSON.stringify(data));
+    } 
+
+    const onSubmitTEST: SubmitHandler<FormValues> = function(data) {
+       
+        alert(JSON.stringify(data));
     } 
 
     return (
@@ -64,7 +72,7 @@ export default function ResetPassword({email, tokenResetPassword}) {
                         {email}
                 </p>
                 <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                    <Form className='flex flex-col items-center' onSubmit={() => onSubmit(email)}>
+                    <Form className='flex flex-col items-center' onSubmit={onSubmit}>
                             
                             <Input 
                                 icon={LockSimple} 
@@ -80,6 +88,14 @@ export default function ResetPassword({email, tokenResetPassword}) {
                                 //valueChanged={setPasswordConfirm}
                                 registerName='passwordConfirm'
                             />
+                            <Input
+                                hidden
+                                registerName='tokenResetPassword'
+                                value={tokenResetPassword}
+                            />
+
+                            
+                            
                             <button type='submit' className='mt-6 
                                             w-full 
                                             bg-saira-blue 

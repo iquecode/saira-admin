@@ -7,6 +7,7 @@ interface InputProps {
     icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>> ;
     placeholder?: string
     type?: HTMLInputElement["type"]
+    hidden?: boolean
     label?: string
     value?: any
     required?: boolean
@@ -18,7 +19,7 @@ interface InputProps {
 
 
 
-export function Input({icon, placeholder, type = 'text', label, value, required, notShowWhen, valueChanged, labelAside, registerName } : InputProps) {
+export function Input({icon, placeholder, type = 'text', label, value, required, notShowWhen, valueChanged, labelAside, registerName, hidden = false } : InputProps) {
 
    
     //console.log(icon);
@@ -30,7 +31,15 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
     //const { register, handleSubmit } = useForm();
     const { register } = useFormContext(); // retrieve all hook methods
 
-    return notShowWhen ? null : (
+    return notShowWhen ? null : hidden ? 
+    <input 
+                
+                    {...register(registerName)}
+                    type='hidden' 
+                    value={value}
+                /> :
+    
+(
 
        <>
        

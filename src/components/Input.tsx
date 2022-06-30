@@ -2,7 +2,6 @@
 import { IconProps } from "phosphor-react";
 import { createElement, useEffect } from "react";
 import { useForm, SubmitHandler, FormProvider, useFormContext } from "react-hook-form";
-import { Icon } from "./Icon";
 import { InputError } from "./InputErros";
 
 interface InputProps {

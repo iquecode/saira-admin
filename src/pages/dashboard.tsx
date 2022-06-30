@@ -17,42 +17,59 @@ export default function Dashboard(props) {
       
       
      
-      <div className='dark:text-zinc-300'>
+      <div className='dark:text-zinc-300 text-lg leading-relaxed'>
+ 
 
-               
-                  Olá{' '}{user.nickname? user.nickname 
-                        :  user.name? user.name
-                        :  <>
-                              user.email
-                              <p>..bom, chamei você pelo seu email, pois não sei seu nome hehe</p>
-                              <p>Se quiser se apresentar, você pode atualizar seus danos em perfil.</p>
-                           </>
-                  }
+                  <div className='bg-zinc-800 p-6 rounded-md shadow-brandOrange-400 shadow-sm mb-8'>
+                      <p className='text-xl mb-6 font-semibold' >
+                          Olá{' '}{user.nickname? user.nickname 
+                            :  user.name? user.name : user.email}
+                            {' '} : )
+                      </p>
+                      {!user.name && !user.nickname ? 
+                    <div className='mb-4'>
+                        <p>..bom, chamei você pelo seu email, pois não sei seu nome hehe.
+                        Se quiser se apresentar, você pode atualizar seus danos em <a className='text-brandOrange-400'>perfil</a>.</p>
+                    </div>
+                      : null
+                      }
+                      <p>Eu sou a plataforma - versão beta - do Instituto Saíra e ainda estou sendo construída.</p>
+                      <p>Então, toda a ajuda é bem vinda para me deixar bem legal e inteligente : )</p>
+                  </div>
 
-                  <p>Eu sou a plataforma - versão beta - do Instituto Saíra e ainda estou não estou pronta</p>
-                  <p>Toda a ajuda é bem vinda para me deixar bem legal e inteligente : )</p>
+
+                  <div className='bg-zinc-800 p-6 mb-8 rounded-md shadow-sm shadow-brandBlue-500' >
+                        <p>A idéia é reunir aqui as pessoas associadas e parceiras do Instituto, as informações e funcionalidades sobre a governança,
+                          sobre os projetos, atividades e círculos, além de tudo o mais que quisermos : )
+                        </p>
+                  </div>
+                
                   
+
+
+
+
                   { user.circles.filter(circle => circle.name == 'Assembléia Geral').length >= 1 
                     ? 
                       <>
                         Associado
                       </>
                     : 
-                      <>
-                        <p>vejo que você ainda não é uma pessoa associada ao Instituto</p> 
-                        <p>A primeira funcionalidade da plataforma é justamente possibilitar as pessoas a solicitarem a associação</p>
-                        <p>Se associando, você poderá participar das decisões estratégias e da auto-gestão do instituto : )</p>
-                        <p>Independente disso, você pode compor os círculos, aplicar projetos e apoiar de diversas formas</p>
-                        <p>Mas é claro que eu ficarei muito contente se você se associar. Para isso, clique no botão abaixo e siga as instruções (
-                        será preciso apenas preencher um formulário com seus dados, submetendo o pedido de associação.
-                        </p>
+                      <> 
+                        <div className='bg-zinc-800 p-6 hover:bg-zinc-700 rounded-sm shadow-sm shadow-brandPink-500 cursor-pointer' >
+                        <p>Você ainda não é pessoa associada do Instituto Ainda e pode participar ter parceria conosco</p>
+                        <p>Mas seria muito bom ter você como membro formal. Assim nos fortalecemos e você terá direito de participar das decisões estratégias :)</p>
+                        <p>Se quiser, clique neste card para submeter a seu pedido de associação</p>
+                        </div>
                       </>
                       }
                 
-              
+                {/* <div>
                 <p>Informação se é associado ao instituto ou não... caso não seja, link para form associação</p>
                 <p>Possibilidade de doar - recorrente ou uma vez</p>
                 <p>Informações sobre Tokens Saira do usuário   {props.dataServerSide}</p>
+                </div> */}
+                
             </div>  
             : null } 
     </Layout>

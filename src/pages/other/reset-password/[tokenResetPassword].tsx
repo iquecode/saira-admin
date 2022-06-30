@@ -8,6 +8,9 @@ import Form from '../../../components/Form';
 import { Input } from '../../../components/Input';
 import { LockSimple } from 'phosphor-react';
 import { appendErrors, SubmitHandler } from 'react-hook-form';
+import * as yup from "yup";
+import YupPassword from 'yup-password'
+YupPassword(yup) // extend yup
 
 
 
@@ -31,6 +34,12 @@ export default function ResetPassword({email, tokenResetPassword}) {
 
     const [toggleResetForm, setToggleResetForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const schema = yup.object(
+        {password: yup.string().min(8).max(60).minLowercase(1).minUppercase(1).minNumbers(1).minRepeating(2).required(),
+        
+        passwordConfirm: yup.string().oneOf([yup.ref('password')], 'As senhas não conferem').required()}
+    );
     
     
     function setLoading(loading: boolean) {
@@ -48,13 +57,13 @@ export default function ResetPassword({email, tokenResetPassword}) {
         setLoading(true);
         return api.post('auth/reset-password',data)
         .then(resp=> {
-            setToggleResetForm(!toggleResetForm);
+            //setToggleResetForm(!toggleResetForm);
             setLoading(false);
             alert(resp.data.message);
           
         })
         .catch(error=> {
-            setToggleResetForm(!toggleResetForm);
+            //setToggleResetForm(!toggleResetForm);
             NProgress.done();
             alert('erro: ' + error.message);
         })
@@ -95,7 +104,10 @@ export default function ResetPassword({email, tokenResetPassword}) {
                         {email}
                 </p>
                 <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                    <Form className='flex flex-col items-center' onSubmit={onSubmit} resetOnSubmit toggleReset={toggleResetForm}  >
+
+                    
+  
+                    <Form className='flex flex-col items-center' onSubmit={onSubmit} resetOnSubmit toggleReset={toggleResetForm} schema={schema}  >
                             
                             <Input 
                                 icon={LockSimple} 
@@ -172,6 +184,7 @@ export default function ResetPassword({email, tokenResetPassword}) {
                                 </span>
                             </div>
                     </Form>
+                   
                 </div>
             </div> 
             }

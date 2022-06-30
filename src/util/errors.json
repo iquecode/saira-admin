@@ -10,5 +10,9 @@
       "minLowercase": "A senha deve ter ao menos 1 letra maiúscula, 1 letra minúscula e 1 número",
       "minUppercase": "A senha deve ter ao menos 1 letra maiúscula, 1 letra minúscula e 1 número", 
       "matches": "Digite uma senha mais forte (sem sequências ou repetições, no mínimo 8 caracteres, com maiúsculas, minúsculas e números)"
+    },
+    "passwordConfirm": {
+      "oneOf": "Senha e confirmar senha não conferem"
     }
+     
   }

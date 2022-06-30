@@ -31,17 +31,18 @@ export default function Auth(props) {
 
     const emailRules    =    yup.string().email().required();
     const passwordRules = yup.string().min(8).max(60).minLowercase(1).minUppercase(1).minNumbers(1).minRepeating(2).required();
+    //const passworConfirmdRules = yup.string().oneOf([yup.ref('password')], 'As senhas não conferem').required();
 
-    let schema = yup.object().shape({email: emailRules});
+    let schema = yup.object({email: emailRules});
     if(mode === 'signup' ) {
-        schema = yup.object().shape({
+        schema = yup.object({
             email: emailRules,
             password:  passwordRules,
-            passwordConfirm: passwordRules,
+            passwordConfirm: yup.string().oneOf([yup.ref('password')], 'As senhas não conferem').required(),
         });
     }
     if(mode === 'login' ) {
-        schema = yup.object().shape({
+        schema = yup.object({
             email: emailRules,
             password:  passwordRules,
         });

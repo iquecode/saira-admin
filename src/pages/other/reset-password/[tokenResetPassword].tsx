@@ -5,10 +5,14 @@ import { useQuery } from '../../../util/util';;
 import route from "next/router";
 import { client } from '../../api/lib/prisma/client';
 import Form from '../../../components/Form';
-//import { resetForm } from '../../../components/Form';
 import { Input } from '../../../components/Input';
 import { LockSimple } from 'phosphor-react';
 import { appendErrors, SubmitHandler } from 'react-hook-form';
+
+
+
+import NProgress from 'nprogress';
+//import { useForm, SubmitHandler, FormProvider, useFormContext } from "react-hook-form";
 
 interface IFormInput  {
     tokenResetPassword: string,
@@ -24,34 +28,44 @@ interface IFormInput  {
 
 export default function ResetPassword({email, tokenResetPassword}) {
 
-    const componentOneRef = useRef(null);
-    const [resetForm, setResetForm] = useState<boolean>(true);
+
+    const [toggleResetForm, setToggleResetForm] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    
+    
+    function setLoading(loading: boolean) {
+        setIsLoading(loading);
+        if(loading) {
+            NProgress.start();
+        } else {
+            NProgress.done();
+        }
+    }
+   
    
     
     const onSubmit: SubmitHandler<FormValues> = async function(data) {
+        setLoading(true);
         return api.post('auth/reset-password',data)
         .then(resp=> {
-
-            setResetForm(true);
+            setToggleResetForm(!toggleResetForm);
+            setLoading(false);
             alert(resp.data.message);
+          
         })
         .catch(error=> {
-            setResetForm(true);
+            setToggleResetForm(!toggleResetForm);
+            NProgress.done();
             alert('erro: ' + error.message);
         })
         //alert(JSON.stringify(data));
     } 
-
-    const onSubmitTEST: SubmitHandler<FormValues> = function(data) {
-       
-        alert(JSON.stringify(data));
-    } 
-
     
     return (
 
         <ContainerTransactionEmailPages>
 
+            
             {!email ? 
             <div className='dark:bg-zinc-800 bg-zinc-200 w-full xl:w-2/3 p-2 sm:p-10 rounded-sm text-brandBlue-500'>
                        
@@ -81,7 +95,7 @@ export default function ResetPassword({email, tokenResetPassword}) {
                         {email}
                 </p>
                 <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                    <Form className='flex flex-col items-center' onSubmit={onSubmit} reset={resetForm} >
+                    <Form className='flex flex-col items-center' onSubmit={onSubmit} resetOnSubmit toggleReset={toggleResetForm}  >
                             
                             <Input 
                                 icon={LockSimple} 
@@ -105,7 +119,21 @@ export default function ResetPassword({email, tokenResetPassword}) {
 
                             
                             
-                            <button type='submit' className='mt-6 
+                            <button type='submit' className={`mt-6 
+                                            w-full 
+                                            bg-saira-blue 
+                                            text-white
+                                            font-bold
+                                            rounded-sm
+                                            h-12
+                                            hover:brightness-110
+                                            ${isLoading?'cursor-not-allowed':''}
+                                            duration-200`}
+                            >
+                                REDEFINIR SENHA
+                            </button>
+
+                            <button type='button' className='mt-6 
                                             w-full 
                                             bg-saira-blue 
                                             text-white
@@ -114,9 +142,18 @@ export default function ResetPassword({email, tokenResetPassword}) {
                                             h-12
                                             hover:brightness-110
                                             duration-200'
+                                    onClick={() => {
+                                        setToggleResetForm(!toggleResetForm);;
+                                        //setResetForm(false);
+                                    }}
                             >
-                                REDEFINIR SENHA
+                                RESET
                             </button>
+
+
+
+
+
                             <div className='mt-5'>
                                 <span className='dark:text-zinc-300 text-zinc-700'>
                                     Já redefiniu a senha?  

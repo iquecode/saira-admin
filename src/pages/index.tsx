@@ -4,9 +4,12 @@ import { Input } from '../components/Input';
 import BotaoAlternarTema from '../components/template/BotaoAlternarTema';
 import useAppData from '../data/hook/useAppData';
 import Form from '../components/Form';
-import { SubmitHandler } from "react-hook-form"; //necessário apenas para a tipagem
+import { SubmitHandler,  useFormContext } from "react-hook-form"; //necessário apenas para a tipagem
 import route from "next/router";
 import useAuth from '../data/hook/useAuth';
+import * as yup from "yup";
+import YupPassword from 'yup-password'
+YupPassword(yup) // extend yup
 
 
 
@@ -24,6 +27,27 @@ export default function Auth(props) {
    
     const { signIn, signUp, getAuthenticatedUser, sendLinkResetPassword, isAuthenticated } = useAuth();
 
+
+
+    const emailRules    =    yup.string().email().required();
+    const passwordRules = yup.string().min(8).max(60).minLowercase(1).minUppercase(1).minNumbers(1).minRepeating(2).required();
+
+    let schema = yup.object().shape({email: emailRules});
+    if(mode === 'signup' ) {
+        schema = yup.object().shape({
+            email: emailRules,
+            password:  passwordRules,
+            passwordConfirm: passwordRules,
+        });
+    }
+    if(mode === 'login' ) {
+        schema = yup.object().shape({
+            email: emailRules,
+            password:  passwordRules,
+        });
+    }
+    
+    
     //const onSubmit: SubmitHandler<IFormInput> = async data => await signIn(data); //debug
    
     const onSubmit: SubmitHandler<IFormInput> = async function(data) {
@@ -112,14 +136,15 @@ export default function Auth(props) {
                         : ''}
                    
                     <div className='dark:bg-zinc-800 bg-zinc-200 w-full p-2 sm:p-10 rounded-sm sm:w-[30rem]'>
-                        <Form className='flex flex-col items-center' onSubmit={onSubmit}>
+                        <Form className='flex flex-col items-center' onSubmit={onSubmit} resetOnSubmit schema={schema}>
                                 <Input 
                                     icon={EnvelopeSimple} 
                                     placeholder='E-mail'
-                                    type='email'
+                                    type='text'
                                     // valueChanged={setEmail}
                                     registerName='email'
                                 />
+                               
                                 <Input 
                                     icon={LockSimple} 
                                     placeholder='Senha' 
@@ -128,6 +153,7 @@ export default function Auth(props) {
                                     // valueChanged={setPassword}
                                     registerName='password'
                                 />
+                               
                                 <Input 
                                     icon={LockSimple} 
                                     placeholder='Confirme a senha' 
@@ -136,6 +162,7 @@ export default function Auth(props) {
                                     notShowWhen={mode === 'login' || mode === 'reset'}
                                     registerName='passwordConfirm'
                                 />
+                                 
 
 
                                 <span className='dark:text-saira-yellow 

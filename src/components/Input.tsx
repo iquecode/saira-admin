@@ -1,12 +1,15 @@
 
 import { IconProps } from "phosphor-react";
-import { createElement } from "react";
+import { createElement, useEffect } from "react";
 import { useForm, SubmitHandler, FormProvider, useFormContext } from "react-hook-form";
+import { Icon } from "./Icon";
+import { InputError } from "./InputErros";
 
 interface InputProps {
     icon?: React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>> ;
     placeholder?: string
     type?: HTMLInputElement["type"]
+    //type?: string
     hidden?: boolean
     label?: string
     value?: any
@@ -29,7 +32,13 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
     const iconJSX = createElement(icon, {className:'mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500', size:24, weight:'bold'});
     const classLabelAside = labelAside ? 'flex' : '';
     //const { register, handleSubmit } = useForm();
-    const { register } = useFormContext(); // retrieve all hook methods
+    const { register, formState:{errors} } = useFormContext(); // retrieve all hook methods
+
+
+    // useEffect(() => {
+    //     errors[registerName]? alert(errors[registerName]?.message) : null;
+        
+    // }, [errors]);
 
     return notShowWhen ? null : hidden ? 
     <input 
@@ -49,7 +58,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                         dark:text-zinc-300 
                         text-zinc-700
                         text-xl
-                        
+                        mb-4
                         
                         `}
         > 
@@ -67,7 +76,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                             dark:focus-within:border-saira-yellow
                             focus-within:border-brandBlue-500
                             rounded-md p-2
-                            mb-3
+                            
                             w-full
                             h-12`}
             >
@@ -87,11 +96,13 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                 
                 />
             
+               
                 {iconJSX}
-                
-                
             </div>    
+            {!errors? null : errors[registerName]?.type && <InputError type={errors[registerName].type} field={registerName} />}
         </label>
+       
+       
        
         </>
     )

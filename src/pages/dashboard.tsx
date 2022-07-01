@@ -1,77 +1,67 @@
 import { GetServerSideProps } from 'next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../components/template/Layout';
 import useAuth from '../data/hook/useAuth';
 import route from "next/router";
+import  Geral  from '../components/pages/dashboard/Geral';
+import Schedule from '../components/pages/dashboard/Schedule';
 
 export default function Dashboard(props) {
 
   const  { user }  = useAuth();
 
+  const nav = [
+    { name: 'Geral', ref: 'geral', current: true },
+    { name: 'Agenda', ref: 'schedule', current: false },
+    { name: 'Seus círculos e papeis', ref: 'circlesAndRoles', current: false },
+    { name: 'Pedido de associação', ref: 'membershipRequest', current: false },
+    { name: 'Perfil', ref: 'profile', current: false },
+  ]; 
+  const classNameCurrent = "inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500";
+  const classNameNotCurrent = "inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300";
+  
+  const elements =  [<Geral user={user}/>,<Schedule user={user}/>];
+
+  const [navigation, setNavigation] = useState(nav);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  console.log(navigation);
+
+  function setCurrent(index: number) {
+    const newNavigation = nav.map((item, i) =>{
+      if (index === i) {
+        setCurrentIndex(index);
+        return { name: item.name, ref: item.ref, current: true }; 
+      }
+      return  {name: item.name,ref: item.ref, current: false };
+      });
+      setNavigation(newNavigation);
+  }
 
   return (
     <Layout titulo='Seu painel' subtitulo='template em construção' page='dashboard'>
+
+
+
+<ul className="mb-8 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
+  { 
+    navigation.map((item, index) => (
+      <li key={item.name} className="mr-2">
+        <a href="#" onClick={()=>setCurrent(index)} className={`${item.current ? classNameCurrent : classNameNotCurrent}`}>
+              {item.name}
+         </a>
+      </li>
+    )) 
+  }
+</ul>
      
      
       {user ?
-      
-      
-     
       <div className='dark:text-zinc-300 text-lg leading-relaxed'>
- 
-
-                  <div className='bg-zinc-800 p-6 rounded-md shadow-brandOrange-400 shadow-sm mb-8'>
-                      <p className='text-xl mb-6 font-semibold' >
-                          Olá{' '}{user.nickname? user.nickname 
-                            :  user.name? user.name : user.email}
-                            {' '} : )
-                      </p>
-                      {!user.name && !user.nickname ? 
-                    <div className='mb-4'>
-                        <p>..bom, chamei você pelo seu email, pois não sei seu nome hehe.
-                        Se quiser se apresentar, você pode atualizar seus danos em <a className='text-brandOrange-400'>perfil</a>.</p>
-                    </div>
-                      : null
-                      }
-                      <p>Eu sou a plataforma - versão beta - do Instituto Saíra e ainda estou sendo construída.</p>
-                      <p>Então, toda a ajuda é bem vinda para me deixar bem legal e inteligente : )</p>
-                  </div>
-
-
-                  <div className='bg-zinc-800 p-6 mb-8 rounded-md shadow-sm shadow-brandBlue-500' >
-                        <p>A idéia é reunir aqui as pessoas associadas e parceiras do Instituto, as informações e funcionalidades sobre a governança,
-                          sobre os projetos, atividades e círculos, além de tudo o mais que quisermos : )
-                        </p>
-                  </div>
-                
-                  
-
-
-
-
-                  { user.circles.filter(circle => circle.name == 'Assembléia Geral').length >= 1 
-                    ? 
-                      <>
-                        Associado
-                      </>
-                    : 
-                      <> 
-                        <div className='bg-zinc-800 p-6 hover:bg-zinc-700 rounded-sm shadow-sm shadow-brandPink-500 cursor-pointer' >
-                        <p>Você ainda não é pessoa associada do Instituto Ainda e pode participar ter parceria conosco</p>
-                        <p>Mas seria muito bom ter você como membro formal. Assim nos fortalecemos e você terá direito de participar das decisões estratégias :)</p>
-                        <p>Se quiser, clique neste card para submeter a seu pedido de associação</p>
-                        </div>
-                      </>
-                      }
-                
-                {/* <div>
-                <p>Informação se é associado ao instituto ou não... caso não seja, link para form associação</p>
-                <p>Possibilidade de doar - recorrente ou uma vez</p>
-                <p>Informações sobre Tokens Saira do usuário   {props.dataServerSide}</p>
-                </div> */}
-                
-            </div>  
-            : null } 
+          
+          {elements[currentIndex]}      
+      </div>  
+      : null } 
     </Layout>
 
   )

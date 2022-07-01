@@ -1,6 +1,5 @@
-
-import { IconProps } from "phosphor-react";
-import { createElement, useEffect } from "react";
+import { Eye, IconProps } from "phosphor-react";
+import { createElement, useEffect, useState } from "react";
 import { useForm, SubmitHandler, FormProvider, useFormContext } from "react-hook-form";
 import { InputError } from "./InputErros";
 
@@ -32,6 +31,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
     const classLabelAside = labelAside ? 'flex' : '';
     //const { register, handleSubmit } = useForm();
     const { register, formState:{errors} } = useFormContext(); // retrieve all hook methods
+    const [typeInput, setTypeInput] = useState<string>(type);
 
 
     // useEffect(() => {
@@ -79,11 +79,15 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                             w-full
                             h-12`}
             >
+                <div className="w-full flex justify-end -ml-9">
+                    {/* <Eye className={`cursor-pointer mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} />  */}
+                    {type==='password' ? <Eye onClick={() => typeInput==='password' ? setTypeInput('text') : setTypeInput('password')   } className={`cursor-pointer ${typeInput==='text' ? 'opacity-100' : 'opacity-40'} mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} /> : null}
+                </div>
                             
                 <input 
                 
                     {...register(registerName)}
-                    type={type} 
+                    type={typeInput} 
                     placeholder={placeholder} 
                     className={`
                         peer bg-none bg-transparent focus:outline-none pl-3
@@ -95,8 +99,10 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                 
                 />
             
+                 <div className="w=full">
+                 {iconJSX}
+                 </div>
                
-                {iconJSX}
             </div>    
             {!errors? null : errors[registerName]?.type && <InputError type={errors[registerName].type} field={registerName} />}
         </label>

@@ -13,8 +13,11 @@ export default function Dashboard(props) {
   const nav = [
     { name: 'Geral', ref: 'geral', current: true },
     { name: 'Agenda', ref: 'schedule', current: false },
-    { name: 'Seus círculos e papeis', ref: 'circlesAndRoles', current: false },
-    { name: 'Pedido de associação', ref: 'membershipRequest', current: false },
+    { name: 'Círculos/papeis', ref: 'circlesAndRoles', current: false },
+    { name: 'Associe-se', ref: 'membershipRequest', current: false },
+    { name: 'Sugestões', ref: 'developmentPlataform', current: false },
+    { name: 'Anotações', ref: 'notes', current: false },
+    { name: 'Preferências', ref: 'preferences', current: false },
     { name: 'Perfil', ref: 'profile', current: false },
   ]; 
   const classNameCurrent = "inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500";

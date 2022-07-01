@@ -1,9 +1,27 @@
+import { SimpleCard } from "./components/SimpleCard"
+
 export default function Geral({user}:any) {
 
         return (
     
         <>
-                    <div className='bg-zinc-800 p-6 rounded-md mb-8 border-zinc-100 border-solid border-2'>
+
+        <div className="w-full flex flex-col sm:flex-row flex-wrap gap-8">
+
+          <SimpleCard title="Olá iquecode@gmail.com :)" text="...bom, chamei você pelo seu email, pois não sei seu nome hehe.
+                          Se quiser se apresentar, você pode atualizar seus danos em perfil." />  
+
+          <SimpleCard title="Envie sua sugestão" text="Eu sou uma plataforma que ainda está sendo construída e toda a ajuda é bem vinda para me deixar bem legal e inteligente..." />
+
+          <SimpleCard title="Se associe ao Instituto" text="Vai ser muito bom ter você como membro formal. Assim, nos fortalecemos e você terá direito de participar das decisões estratégias :)" />
+
+
+
+        </div>
+
+
+
+                    <div className='bg-brandBlue-500 dark:bg-zinc-800 dark:shadow-none shadow-xl shadow-zinc-500 dark:border-2 dark:border-brandBlue-500 dark:border-none p-6 rounded-xl dark:text-zinc-300 text-zinc-50 mb-8'>
                         <p className='text-xl mb-6 font-semibold' >
                             Olá{' '}{user.nickname? user.nickname 
                               :  user.name? user.name : user.email}

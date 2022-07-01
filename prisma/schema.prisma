@@ -13,10 +13,11 @@ model User {
   email                  String        @unique
   password               String
   name                   String?
-  cep                    Int?
+  socialName             String?       @map("social_name")
   nickname               String?
   note                   String?
   occupation             String?
+  cep                    String?
   addressLine1           String?       @map("address_line1")
   addressLine2           String?       @map("address_line2")
   avatarURL              String?       @map("avatar_url")
@@ -38,6 +39,7 @@ model User {
   loginBlocked           Boolean       @default(false) @map("login_blocked")
   loginBlockedReason     String?       @map("login_blocked_reason")
   type                   String?       @default("user")
+  associated             Boolean       @default(false) 
   birthDate              Int?          @map("birth_date")
   loginBlockedExpiration Int?          @map("login_blocked_expiration")
   tokenEmailVerify       String?       @unique @map("token_email_verify")

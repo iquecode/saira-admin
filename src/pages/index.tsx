@@ -62,11 +62,11 @@ export default function Auth(props) {
 
     useEffect( () => {
 
-        if (isAuthenticated) {
-          let page = localStorage.getItem('page');
-          if(!page) page = ('/dashboard');
-          route.push(page);
-        } else {
+        // if (isAuthenticated) {
+        //   let page = localStorage.getItem('page');
+        //   if(!page) page = ('/dashboard');
+        //   route.push(page);
+        // } else {
             getAuthenticatedUser().then(r => {
                 if(!!r.data.user) {
                     let page = localStorage.getItem('page');
@@ -82,7 +82,7 @@ export default function Auth(props) {
 
 
 
-        }
+        // }
 
        
 

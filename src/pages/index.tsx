@@ -64,13 +64,13 @@ export default function Auth(props) {
 
         if (isAuthenticated) {
           let page = localStorage.getItem('page');
-          if(!page) page = ('/');
+          if(!page) page = ('/dashboard');
           route.push(page);
         } else {
             getAuthenticatedUser().then(r => {
                 if(!!r.data.user) {
                     let page = localStorage.getItem('page');
-                    if(!page) page = ('/');
+                    if(!page) page = ('/dashboard');
                     route.push(page);
                 } else {
                   route.push('/');

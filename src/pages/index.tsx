@@ -24,6 +24,7 @@ export default function Auth(props) {
     const ip = props.ip;
     const { tema, alternarTema, menuIndex} = useAppData()
     const [mode, setMode] = useState<'login' | 'signup' | 'reset' >('login');
+    const [loading, setLoading] = useState<boolean>(true);
    
     const { signIn, signUp, getAuthenticatedUser, sendLinkResetPassword, isAuthenticated } = useAuth();
 
@@ -71,9 +72,11 @@ export default function Auth(props) {
                 if(!!r.data.user) {
                     let page = localStorage.getItem('page');
                     if(!page) page = ('/dashboard');
+                    //setLoading(false);
                     route.push(page);
                 } else {
-                  route.push('/');
+                    setLoading(false);
+                  //route.push('/');
                 }
                 
               });
@@ -100,6 +103,11 @@ export default function Auth(props) {
 
 
         <div className={`${tema} min-h-screen`}>
+
+            {loading ? <h1>Carregando...</h1>
+            
+            :
+
 
             <div className='min-h-screen flex flex-col dark:bg-zinc-900 bg-zinc-300'>
                 
@@ -216,6 +224,15 @@ export default function Auth(props) {
                 </div>
 
             </div>
+
+
+        
+        
+        
+        
+        
+            }
+
 
         </div>
 

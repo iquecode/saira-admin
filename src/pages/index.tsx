@@ -26,6 +26,8 @@ export default function Auth(props) {
     const { tema, alternarTema, menuIndex} = useAppData()
     const [mode, setMode] = useState<'login' | 'signup' | 'reset' >('login');
     const [loading, setLoading] = useState<boolean>(true);
+    const [msgError, setMsgError] = useState<string | null>(null);
+    
    
     const { signIn, signUp, getAuthenticatedUser, sendLinkResetPassword, isAuthenticated } = useAuth();
 
@@ -69,18 +71,28 @@ export default function Auth(props) {
         //   if(!page) page = ('/dashboard');
         //   route.push(page);
         // } else {
+
+            setMsgError(localStorage.getItem('msgErrorLoading'));
+
             getAuthenticatedUser().then(r => {
                 if(!!r.data.user) {
                     let page = localStorage.getItem('page');
+                    localStorage.removeItem('msgErrorLoading');
                     if(!page) page = ('/dashboard');
                     //setLoading(false);
                     route.push(page);
                 } else {
+                    localStorage.removeItem('msgErrorLoading');
                     setLoading(false);
                   //route.push('/');
                 }
                 
-              });
+              })
+              .catch((error) => {
+                localStorage.setItem('msgErrorLoading', 'Erro de comunicação com o servidor... recarregando...');
+                // setMsgError('Erro de comunicação com o servidor... recarregando...')
+                route.push('/');
+              })
 
 
 
@@ -105,7 +117,7 @@ export default function Auth(props) {
 
         <div className={`${tema} min-h-screen`}>
 
-            {loading ? <Loading />
+            {loading ? <Loading msg={msgError} />
             
             :
 

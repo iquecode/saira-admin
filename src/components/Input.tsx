@@ -88,24 +88,38 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                 }
               
               
-                            
-                <input 
-                
-                    {...register(registerName)}
-                    type={typeInput === 'date' ? 'text' : typeInput} 
-                    onFocus={typeInput==='date' ? (e)=>(e.target.type='date') : undefined} 
-                    onBlur={typeInput==='date' ? (e)=>(e.target.type='text')  : undefined}
-                   
-                    placeholder={placeholder} 
-                    className={`
-                        peer bg-none bg-transparent focus:outline-none pl-3 w-full
-                    `}
-                    required={required}
-                    value={value}
-                    onChange={e => valueChanged?.(e.target.value)}
-                    
-                
-                />
+                { typeInput === 'date' ?
+                     <input 
+                     {...register(registerName)}
+                     type={typeInput === 'date' ? 'text' : typeInput} 
+                     onFocus={(e)=>(e.target.type='date')} 
+                     onBlur={(e)=>(e.target.type='text')}
+                     placeholder={placeholder} 
+                     className={`
+                         peer bg-none bg-transparent focus:outline-none pl-3 w-full
+                     `}
+                     required={required}
+                     value={value}
+                     onChange={e => valueChanged?.(e.target.value)}
+                 />
+                 :
+                 <input 
+                 {...register(registerName)}
+                 type={typeInput === 'date' ? 'text' : typeInput} 
+                 placeholder={placeholder} 
+                 className={`
+                     peer bg-none bg-transparent focus:outline-none pl-3 w-full
+                 `}
+                 required={required}
+                 value={value}
+                 onChange={e => valueChanged?.(e.target.value)}
+             />
+
+
+
+
+                }           
+               
 
 
                 {!iconJSX ? null :

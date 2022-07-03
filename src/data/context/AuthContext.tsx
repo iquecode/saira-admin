@@ -1,5 +1,5 @@
 import route from "next/router";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import { api } from "../../services/api";
 import { AxiosResponse } from "axios";
 
@@ -9,6 +9,7 @@ type AuthCredentials = {
     email: string;
     password?: string;
     passwordConfirm?: string;
+    setLoading:Dispatch<SetStateAction<boolean>>;
 }
 
 interface IAuthContext {
@@ -29,62 +30,27 @@ export const AuthContext = createContext({} as IAuthContext)
 
 export function AuthProvider({ children }: AuthProvideProps) {
 
-    const [loading, setLoading] = useState(true)
+    // const [loading, setLoading] = useState(true)
     
     const [user, setUser] = useState<{} | null>(null)
     const isAuthenticated = !!user;
 
     useEffect( () => {
 
-        // if (!user) {
-        //     api.get('auth/get-user').then(res=>{
-        //         // if(!res.data.user.email) {
-        //         //     //alert(JSON.stringify(res.data));
-        //         // }
-        //         // else {
-        //         //     //alert(JSON.stringify(res.data));
-        //         //     setUser(res.data.user);
-        //         // }
-        //         if(res.data.user) {
-        //             setUser(res.data.user);
-        //         }
-               
-        //     })
-        //     .catch(error => console.log('error...!!!!aqui..: ' + error));
-        // }
+        
 
-        if(!isAuthenticated) {
-            route.push('/');
-        } 
+        // if(!isAuthenticated) {
+        //     route.push('/');
+        // } 
        
-        //const { 'nextauth.token': token } = parseCookies()
     
-        // if (token) {
-        //   recoverUserInformation().then(response => {
-        //     setUser(response.user)
-        //   })
-        // }
+       
       }, [])
 
 
-    async function startSession(user) {
-    if(user.email) {
-        //const user = await normalizeUser(userAPI);
-        setUser(user);
-        setLoading(false);
-        return user.email;
-    } else {
-        setUser(null);
-        setLoading(false);
-        return false;
-    }
-}
-
-
-
-
-    async function signIn({ email, password}: AuthCredentials) {
+    async function signIn({ email, password, setLoading}: AuthCredentials) {
         //console.log({ email, password })
+        setLoading(true);
         const response = await api.post('auth/login', {
             email,
             password,
@@ -121,8 +87,9 @@ export function AuthProvider({ children }: AuthProvideProps) {
     }
 
 
-    async function signUp({ email, password, passwordConfirm }: AuthCredentials) {
+    async function signUp({ email, password, passwordConfirm, setLoading }: AuthCredentials) {
         //console.log({ email, password })
+        setLoading(true);
         const response = await api.post('auth/sign-up', {
             email,
             password,
@@ -135,6 +102,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
             route.push('/sign-up-flow/sign-up-before-validate-email/' + response.data.user.tokenSignUpFlow);
         }
         else {
+            setLoading(false);
             if(response.data.error) {
                 alert(response.data.error);
             } else {
@@ -150,8 +118,9 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
 
     
-    async function sendLinkResetPassword( { email }: AuthCredentials) {
+    async function sendLinkResetPassword( { email, setLoading }: AuthCredentials) {
         //console.log({ email, password })
+        setLoading(true);
         const response = await api.post('auth/send-link-reset-password', {
             email,
         });
@@ -159,13 +128,16 @@ export function AuthProvider({ children }: AuthProvideProps) {
         let msg = '';  
         switch (cod) {
             case 'success':
+                setLoading(false);
                 msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
                 break;
             case 'notfound':
+                setLoading(false);
                 //setUser(response.data.user);
                 msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
                 break;
             default:
+                setLoading(false);
                 msg = 'Se seu email de acesso estiver correto, você receberá em instantes o link para redefinir a sua senha. Verifique sua caixa postal.';
                 //alert(response.data.error)
                 break;

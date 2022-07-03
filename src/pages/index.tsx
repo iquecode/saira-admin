@@ -56,9 +56,11 @@ export default function Auth(props) {
     //const onSubmit: SubmitHandler<IFormInput> = async data => await signIn(data); //debug
    
     const onSubmit: SubmitHandler<IFormInput> = async function(data) {
-        if (mode==='signup') return await signUp(data);
-        if (mode==='login')  return await signIn(data);
-        if (mode==='reset')  return await sendLinkResetPassword(data);
+        //const {email, password, passwordConfirm} = data;
+        const params = {...data, setLoading}; 
+        if (mode==='signup') return await signUp(params);
+        if (mode==='login')  return await signIn(params);
+        if (mode==='reset')  return await sendLinkResetPassword(params);
     } 
     // usar getAuthenticatedUser na renderização do lado so servidor ou do lado do cliente
     // para, no caso de existir usuário autenticado de forma válida, ir para a dashboard

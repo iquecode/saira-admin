@@ -66,10 +66,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       // const jsonParceStringfy = JSON.parse(JSON.stringify(data));
      
       //a504fe7b-6442-4ebf-8b9b-869a6bad4904   id  iquecode@gmail.com
-      const newToken = await generateTokenAndSaveInDB(tokenData.userId, req.headers['user-agent']);
-      res.setHeader("Set-Cookie", newToken);
-
-
+      let newToken = null;
+      if (deleteToken) {
+        newToken = await generateTokenAndSaveInDB(tokenData.userId, req.headers['user-agent']);
+        res.setHeader("Set-Cookie", newToken);
+      }
       
 
       return res.json({ jwt, data, match, newToken, user: normalizedUser(user), 

@@ -3,6 +3,9 @@ import { sign } from "jsonwebtoken";
 import { client } from "../../lib/prisma/client";
 import { serialize } from "cookie";
 import { readFile } from 'fs';
+import jsonwebtoken from 'jsonwebtoken';
+
+
 
 
 export async function generateTokenAndSaveInDB(userId: string, dispositive: string)  {

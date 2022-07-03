@@ -179,7 +179,7 @@ export function AuthProvider({ children }: AuthProvideProps) {
         //console.log({ email, password })
         const response = await api.get('auth/get-user');
         //console.log(response.data);
-        if (!!response.data.user && !isAuthenticated) {
+        if (!!response.data.user) {
             setUser(response.data.user);
         }
         return response;

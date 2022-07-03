@@ -9,6 +9,7 @@ import route from "next/router";
 import useAuth from '../data/hook/useAuth';
 import * as yup from "yup";
 import YupPassword from 'yup-password'
+import Loading from '../components/Loading';
 YupPassword(yup) // extend yup
 
 
@@ -104,7 +105,7 @@ export default function Auth(props) {
 
         <div className={`${tema} min-h-screen`}>
 
-            {loading ? <h1>Carregando...</h1>
+            {loading ? <Loading />
             
             :
 

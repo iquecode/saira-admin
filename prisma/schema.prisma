@@ -51,6 +51,7 @@ model User {
   contacts               Contact[]
   roles                  Role[]
   tokensHash             TokenHash[]
+  Applications           UserApplication[]
   circles                Circle[]
 
   @@map("users")
@@ -182,4 +183,48 @@ model TokenHash {
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("tokens_hash")
+}
+
+
+
+//Ex. Pedido de associação ao instituto 
+//
+model TypeUserApplication {
+  id          String    @id @default(uuid())
+  name        String    
+  note        String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletable   Boolean   @default(true)
+  deleted     Boolean   @default(false)
+  userApplications UserApplication[]
+}
+
+//Ex. compromisso com os princípios fundamentais em
+// dispositivo compromisso com os princípios fundamentais
+//ip compromisso com os princípios fundamentais
+model DataUserApplication {
+  id      String    @id @default(uuid())
+  name    String
+  value   String
+  userApplicationId String @map("user_application_id")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime? @updatedAt @map("updated_at")
+  deletable             Boolean   @default(true)
+  deleted               Boolean   @default(false)
+  userApplication UserApplication @relation(fields: [userApplicationId], references: [id], onDelete: Cascade)
+}
+
+model UserApplication {
+  id                    String    @id @default(uuid())
+  userId                String    @map("user_id") @unique
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  typeUserApplicationId String    @map("type_user_application_id")
+  type                  TypeUserApplication @relation(fields: [typeUserApplicationId], references: [id])
+  status                String    @map("status")
+  DataUserApplication   DataUserApplication[]
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime? @updatedAt @map("updated_at")
+  deletable             Boolean   @default(true)
+  deleted               Boolean   @default(false)
 }

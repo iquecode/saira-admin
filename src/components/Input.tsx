@@ -27,7 +27,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
 
     
 
-    const iconJSX = createElement(icon, {className:'mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500', size:24, weight:'bold'});
+    const iconJSX = icon ? createElement(icon, {className:'mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500', size:24, weight:'bold'}) : null;
     const classLabelAside = labelAside ? 'flex' : '';
     //const { register, handleSubmit } = useForm();
     const { register, formState:{errors} } = useFormContext(); // retrieve all hook methods
@@ -79,18 +79,26 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                             w-full
                             h-12`}
             >
-                <div className="w-full flex justify-end -ml-9">
-                    {/* <Eye className={`cursor-pointer mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} />  */}
-                    {type==='password' ? <Eye onClick={() => typeInput==='password' ? setTypeInput('text') : setTypeInput('password')   } className={`cursor-pointer ${typeInput==='text' ? 'opacity-100' : 'opacity-40'} mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} /> : null}
-                </div>
+
+                {type !== 'password' ? null :
+                      <div className="w-full flex justify-end -ml-9">
+                      {/* <Eye className={`cursor-pointer mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} />  */}
+                      {type==='password' ? <Eye onClick={() => typeInput==='password' ? setTypeInput('text') : setTypeInput('password')   } className={`cursor-pointer ${typeInput==='text' ? 'opacity-100' : 'opacity-40'} mr-1 dark:peer-focus:text-saira-yellow peer-focus:text-brandBlue-500`} weight="bold" size={24} /> : null}
+                  </div>
+                }
+              
+              
                             
                 <input 
                 
                     {...register(registerName)}
-                    type={typeInput} 
+                    type={typeInput === 'date' ? 'text' : typeInput} 
+                    onFocus={typeInput==='date' ? (e)=>(e.target.type='date') : undefined} 
+                    onBlur={typeInput==='date' ? (e)=>(e.target.type='text')  : undefined}
+                   
                     placeholder={placeholder} 
                     className={`
-                        peer bg-none bg-transparent focus:outline-none pl-3
+                        peer bg-none bg-transparent focus:outline-none pl-3 w-full
                     `}
                     required={required}
                     value={value}
@@ -98,10 +106,15 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                     
                 
                 />
-            
-                 <div className="w=full">
-                 {iconJSX}
-                 </div>
+
+
+                {!iconJSX ? null :
+                     <div className="w=full">
+                     {iconJSX}
+                     </div>
+
+                }
+                
                
             </div>    
             {!errors? null : errors[registerName]?.type && <InputError type={errors[registerName].type} field={registerName} />}

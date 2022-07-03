@@ -1,4 +1,11 @@
-export default function Schedule({user}:any) {
+import { UserNormalized } from "../../../model/User"
+
+type SheduleProps = {
+    user: UserNormalized
+  }
+
+
+export default function Schedule({user}:SheduleProps) {
 
     return (
 

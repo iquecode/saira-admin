@@ -1,11 +1,11 @@
 import { UserNormalized } from "../../../model/User"
 
-type ProfileProps = {
+type PreferencesProps = {
     user: UserNormalized
   }
 
 
-export default function Profile({user}:ProfileProps) {
+export default function Preferences({user}:PreferencesProps) {
        
     return (
 

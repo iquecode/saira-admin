@@ -48,30 +48,63 @@ export default function Dashboard(props) {
   }
 
   return (
+
+
+    <>
+
+      
     <Layout titulo='Seu painel' subtitulo='template em construção' page='dashboard'>
 
 
 
-<ul className="mb-8 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
-  { 
-    navigation.map((item, index) => (
-      <li key={item.name} className="mr-2">
-        <a href="#" onClick={()=>setCurrent(index)} className={`${item.current ? classNameCurrent : classNameNotCurrent}`}>
-              {item.name}
-         </a>
-      </li>
-    )) 
-  }
-</ul>
-     
-     
-      {user ?
-      <div className='dark:text-zinc-300 text-lg leading-relaxed'>
-          
-          {navigation[currentIndex].element}      
-      </div>  
-      : null } 
-    </Layout>
+    <ul className="mb-8 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
+      { 
+        navigation.map((item, index) => (
+          <li key={item.name} className="mr-2">
+            <a href="#" onClick={()=>setCurrent(index)} className={`${item.current ? classNameCurrent : classNameNotCurrent}`}>
+                  {item.name}
+            </a>
+          </li>
+        )) 
+      }
+    </ul>
+
+
+    {user ?
+    <div className='dark:text-zinc-300 text-lg leading-relaxed'>
+        
+        {navigation[currentIndex].element}      
+    </div>  
+    : null } 
+  </Layout>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    </>
+
 
   )
 }

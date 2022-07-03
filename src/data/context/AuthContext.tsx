@@ -36,12 +36,26 @@ export function AuthProvider({ children }: AuthProvideProps) {
 
     useEffect( () => {
 
-        if (!isAuthenticated) {
-            api.get('auth/get-user').then(res=>{
-                setUser(res.data.user);
-            })
-            .catch(error => console.log('error...!!!!aqui..: ' + error));
-        }
+        // if (!user) {
+        //     api.get('auth/get-user').then(res=>{
+        //         // if(!res.data.user.email) {
+        //         //     //alert(JSON.stringify(res.data));
+        //         // }
+        //         // else {
+        //         //     //alert(JSON.stringify(res.data));
+        //         //     setUser(res.data.user);
+        //         // }
+        //         if(res.data.user) {
+        //             setUser(res.data.user);
+        //         }
+               
+        //     })
+        //     .catch(error => console.log('error...!!!!aqui..: ' + error));
+        // }
+
+        if(!isAuthenticated) {
+            route.push('/');
+        } 
        
         //const { 'nextauth.token': token } = parseCookies()
     

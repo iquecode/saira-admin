@@ -7,6 +7,7 @@ import useAuth from '../../data/hook/useAuth'
 import BotaoAlternarTema from './BotaoAlternarTema'
 
 
+
 import { Header } from './Header'
 
 
@@ -22,23 +23,26 @@ interface LayoutProps {
 export default function Layout(props: LayoutProps) {
   const { tema, alternarTema, menuIndex} = useAppData()
   const { isAuthenticated, getAuthenticatedUser } = useAuth()
+  const  { user }  = useAuth();
 
   useEffect( () => {
 
 
-    if (isAuthenticated) {
+    if (user?.email) {
       localStorage.setItem('page', props.page);
     }  else {
 
-      getAuthenticatedUser().then(r => {
-        if(!!r.data.user) {
-          localStorage.setItem('page', props.page);
-        } else {
-          route.push('/');
-        }
+      // getAuthenticatedUser().then(r => {
+      //   if(!!r.data.user) {
+      //     localStorage.setItem('page', props.page);
+      //   } else {
+      //     route.push('/');
+      //   }
         
-      });
+      // });
 
+    //  alert('null');
+     route.push('/');
 
 
 
@@ -68,37 +72,58 @@ export default function Layout(props: LayoutProps) {
 
    
       
-   
-
-
-      <div className={`${tema} min-h-screen`}>
-
-        <div className='dark:bg-zinc-900 bg-zinc-100 min-h-screen'>
-
-        <Header menuIndex = {menuIndex} />
-
+      {!user ? null : 
+      
+      
         
 
-        <header className="dark:bg-zinc-900 bg-zinc-100 dark:text-saira-blue shadow">
-          <div className="max-w-7xl mx-auto py-4 pl-6 pr-2  sm:px-6 lg:px-8 flex">
-            <h1 className="text-2xl font-bold flex-1">{props.titulo}</h1>
-            <BotaoAlternarTema tema={tema} alternarTema={alternarTema}/>
+          <div className={`${tema} min-h-screen`}>
+
+          <div className='dark:bg-zinc-900 bg-zinc-100 min-h-screen'>
+
+          <Header menuIndex = {menuIndex} />
+
           
-          </div>
-        </header>
-        <main>
-          <div className="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8">
-            {/* Replace with your content */}
-            <div className="px-4 py-4 sm:px-0">
-              {/* <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
-               */}
-               {props.children} 
+
+          <header className="dark:bg-zinc-900 bg-zinc-100 dark:text-saira-blue shadow">
+            <div className="max-w-7xl mx-auto py-4 pl-6 pr-2  sm:px-6 lg:px-8 flex">
+              <h1 className="text-2xl font-bold flex-1">{props.titulo}</h1>
+              <BotaoAlternarTema tema={tema} alternarTema={alternarTema}/>
+            
             </div>
-            {/* /End replace */}
-          </div>
-        </main>
-      </div>
-      </div>
+          </header>
+          <main>
+            <div className="max-w-7xl mx-auto py-4 sm:px-6 lg:px-8">
+              {/* Replace with your content */}
+              <div className="px-4 py-4 sm:px-0">
+                {/* <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
+                */}
+                {props.children} 
+              </div>
+              {/* /End replace */}
+            </div>
+          </main>
+        </div>
+        </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      }
+
 
     
     </>

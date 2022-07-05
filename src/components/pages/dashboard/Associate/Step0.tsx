@@ -23,7 +23,8 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
 
             <ul className="ml-8">
                 <li>1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias.</li>
-                <li>2. Você preenche os dados requeridos e submete seu pedido de associação.</li>
+                <li>2. Você envia foto de seu documento (identidade, CNH ou Passaporte).</li>
+                <li>3. Você preenche os demais dados requeridos</li>
                 <li>3. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.</li>
             </ul>
             

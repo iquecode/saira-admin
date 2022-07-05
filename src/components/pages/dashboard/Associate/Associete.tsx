@@ -11,9 +11,10 @@ Como membro associado, você tem voz nas decisões e espera-se que possa contrib
 
 O processo de associação é feito pela plataforma e segue estes passos:
 
-1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias.
-2. Você preenche os dados requeridos e envie submete seu pedido de associação
-3. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.
+1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias
+2. Você envia foto de seu documento (identidade, CNH ou Passaporte)
+3. Você preenche os demais dados requeridos
+4. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.
 
 Então : ). Vamos começar.
 
@@ -41,6 +42,7 @@ import Step0 from "./Step0";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import Step4 from "./Step4";
 
 
 type AssocieteProps = {
@@ -52,7 +54,8 @@ export default function Associate({user}:AssocieteProps) {
     const steps = [ <Step0 user={user} setCurrentStep={setCurrentStep}/>,
                     <Step1 user={user} setCurrentStep={setCurrentStep}/>,
                     <Step2 user={user} setCurrentStep={setCurrentStep}/>,
-                    <Step3 user={user} setCurrentStep={setCurrentStep}/>];
+                    <Step3 user={user} setCurrentStep={setCurrentStep}/>,
+                    <Step4 user={user} setCurrentStep={setCurrentStep}/>];
 
        
     return (

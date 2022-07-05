@@ -4,8 +4,8 @@
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Saira Inst",
-    "short_name": "Saira",
+    "name": "Instituto Saíra",
+    "short_name": "Saíra",
     "icons": [
         {
             "src": "/icon_x192.png",

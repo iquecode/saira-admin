@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { UserNormalized } from "../../../../model/User";
+import { api } from "../../../../services/api";
 import Loading from "../../../Loading";
 
 type AssocieteProps = {
@@ -7,21 +8,56 @@ type AssocieteProps = {
   setCurrentStep:Dispatch<SetStateAction<number>>
 }
 
+
+function createImageCanvas(fileInput:any, maxSize=480, elementId="canvas"): string | null{
+  
+  let base64 = null;
+  let url = null;
+
+  var canvas=document.getElementById(elementId) as HTMLCanvasElement | null;
+  var ctx=canvas.getContext("2d");
+  var cw=canvas.width;
+  var ch=canvas.height;
+  const maxW = maxSize;
+  const maxH = maxSize;
+  let image = new Image();
+  
+  image.onload = function() {
+    let iw = image.width;
+    let ih = image.height;
+    let scale = Math.min((maxW/iw), (maxH/ih));
+    let iwScaled = iw*scale;
+    let ihScaled = ih*scale;
+    canvas.width=iwScaled;
+    canvas.height=ihScaled;
+    ctx.drawImage(image,0,0,iwScaled,ihScaled);  
+    //base64 = canvas.toDataURL("image/jpeg", 0.5);
+    //console.log(base64);
+  }
+  base64 = canvas.toDataURL("image/webp", 0.9);
+  image.src = URL.createObjectURL(fileInput);
+  return base64;
+}
+
+
+
 export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const [imageFront, setImageFront] = useState(null);
   const [imageBack, setImageBack] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
   const [createObjectURLback, setCreateObjectURLback] = useState(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [base64, setBase64] = useState<string | null>(null);
   
   const uploadToClientFront = (event:any) => {
     if (event.target.files && event.target.files[0]) {
-      const i = event.target.files[0];
-      console.log('Filename: ' + i.name);
-      console.log('Type: ' + i.type);
-      console.log('Size: ' + i.size);
-      setImageFront(i);
-      setCreateObjectURLfront(URL.createObjectURL(i));
+      const fileInput = event.target.files[0];
+      setBase64(createImageCanvas(fileInput));
+      console.log('Filename: ' + fileInput.name);
+      console.log('Type: ' + fileInput.type);
+      console.log('Size: ' + fileInput.size);
+      setImageFront(fileInput);
+      setCreateObjectURLfront(URL.createObjectURL(fileInput));
     }
   };
 
@@ -35,16 +71,16 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
   const uploadToServer = async () => {        
     setLoading(true);
-    const body = new FormData();
-    // console.log("file", image)
-    body.append("file", imageFront); 
-    body.append("file2", imageBack);     
-    const response = await fetch("/api/upload/upload", {
-      method: "POST",
-      body
-    });
-    const responseData =  await response.json();
-    if (responseData.success) {
+    console.log('canvas-base64: ' + createImageCanvas(imageFront));
+    const response = await api.post('upload/upload', {
+      documentPhotoURL1: createImageCanvas(imageFront),
+      documentPhotoURL2: createImageCanvas(imageBack),
+    })
+
+
+    console.log('respose.data:');
+    console.log(response.data);
+    if (response.data.success) {
       setLoading(false);
       setCurrentStep(3);
     } else {
@@ -64,7 +100,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
             <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
       
             <p className="text-brandBlue-500 font-bold p-4 mb-10">2. Selecione (ou tire) a foto da frente e a foto do verso de seu documento (identidade, CNH ou Passaporte), clicando nas áreas correspondentes:</p>
-            {/* <div className="mt-6"> */}
+           
                  
                 <div className="flex flex-col gap-6 sm:flex-row items-center justify-around">
                 
@@ -150,6 +186,9 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                     ENVIAR IMAGENS E CONTINUAR
                   </button>  
                 </div>
+
+
+                <canvas id="canvas" width={480} height={480} className="hidden"></canvas>
                 
             </div> 
     

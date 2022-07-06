@@ -14,7 +14,7 @@ type AssocieteProps = {
   }
 export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
-    
+    const { register } = useFormContext(); // retrieve all hook methods
 
     type TypeCountry = {
         id: number,
@@ -33,10 +33,6 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     const [cities, setCities] = useState<TypeCity[]  | null>(null);
     const [states, setStates] = useState<TypeState[] | null>(null);
     const [errorMessage, setErrorMessage] = useState<string| null>(null);
-
-
-
-    const { register, handleSubmit } = useForm();
 
 
     useEffect( () => {
@@ -83,32 +79,99 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
             <p className="text-xl font-semibold mb-8">Quase acabando :) . Agora só falta preencher e enviar os dados abaixo:
             </p>
 
-            <form className="flex flex-col">
+            <Form className="flex flex-col">
                
-             
+                <Input 
+                    placeholder='conforme seu documento'
+                    type='text'
+                    registerName='name'
+                    label='Nome Completo*'
+                />
+                <Input 
+                    placeholder='se for o caso' 
+                    type='text'
+                    registerName='socialName'
+                    label='Nome social'
+                />
+                <Input 
+                    type='text'
+                    registerName='nickname'
+                    label='como quer ser chamad@?'
+                />
+                <Input 
+                    type='text'
+                    registerName='occupation'
+                    label='Profissão / ocupação'
+                />
+                <Input 
+                    type='date'
+                    registerName='birthDay'
+                    label='Data nascimento'
+                />
+                <Input 
+                    type='text'
+                    registerName='motherName'
+                    label='Nome da mãe'
+                />
+                <Input 
+                    type='text'
+                    registerName='fatherName'
+                    label='Nome do pai'
+                />
+                <Input 
+                    placeholder='caso seja estrangeir@ e não possua, deixe em branco' 
+                    type='text'
+                    registerName='cpf'
+                    label='CPF'
+                />
+                <Input 
+                    placeholder='Tipo do documento identificação' 
+                    type='check-box'
+                    registerName='documentTypeId'
+                    label='Tipo do documento'
+                />
+                <Input 
+                    placeholder='Nº do documento identificação' 
+                    type='check-box'
+                    registerName='documentNumber'
+                    label='Nº do documento'
+                />
                 
                 
                 <p>Endereço</p>
-                <select {...register('stateId', {
-                        onChange: (e) => { console.log(e.target.value)},
+                <select
+                    {...register('countyId', {
+                        onChange: (e) => {},
                     })}
-                    id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Escolha um estado</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="PR">Paraná</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                </select>
-
-                <div>
-                    <p>Mostra a mudança dinamica... repopular select das cidades</p>
-                </div>
-               
+                />
+                <Input 
+                    type='text'
+                    registerName='cep'
+                    label='Cep'
+                />
+                <Input 
+                    type='text'
+                    registerName='uf'
+                    label='UF'
+                />
+                <Input 
+                    type='text'
+                    registerName='city'
+                    label='Cidade'
+                />
+                <Input  
+                    type='text'
+                    registerName='addressLine1'
+                    label='Endereço - linha1'
+                />
+                 <Input 
+                    type='text'
+                    registerName='addressLine2'
+                    label='Endereço - linha2'
+                />
                 
-              
-               
 
-            </form>
+            </Form>
             
         
 

@@ -52,7 +52,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const uploadToClientFront = (event:any) => {
     if (event.target.files && event.target.files[0]) {
       const fileInput = event.target.files[0];
-      setBase64(createImageCanvas(fileInput));
+      createImageCanvas(fileInput);
       console.log('Filename: ' + fileInput.name);
       console.log('Type: ' + fileInput.type);
       console.log('Size: ' + fileInput.size);
@@ -64,6 +64,9 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const uploadToClientBack = (event:any) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
+      createImageCanvas(i,480,"canvas2");
+      
+      //setBase64(createImageCanvas(fileInput));
       setImageBack(i);
       setCreateObjectURLback(URL.createObjectURL(i));
     }
@@ -74,7 +77,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     console.log('canvas-base64: ' + createImageCanvas(imageFront));
     const response = await api.post('upload/upload', {
       documentPhotoURL1: createImageCanvas(imageFront),
-      documentPhotoURL2: createImageCanvas(imageBack),
+      documentPhotoURL2: createImageCanvas(imageBack, 480, "canvas2"),
     })
 
 
@@ -181,7 +184,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                     ${!(createObjectURLfront && createObjectURLback) ? 'opacity-30' : null }
                     `}
                     type="submit"
-                    onClick={uploadToServer}
+                    onClick={createObjectURLfront && createObjectURLback ? uploadToServer : null}
                   >
                     ENVIAR IMAGENS E CONTINUAR
                   </button>  
@@ -189,6 +192,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
 
                 <canvas id="canvas" width={480} height={480} className="hidden"></canvas>
+                <canvas id="canvas2" width={480} height={480} className="hidden"></canvas>
                 
             </div> 
     

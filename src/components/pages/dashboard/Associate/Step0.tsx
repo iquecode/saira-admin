@@ -25,7 +25,7 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
                 <li>1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias.</li>
                 <li>2. Você envia foto de seu documento (identidade, CNH ou Passaporte).</li>
                 <li>3. Você preenche os demais dados requeridos</li>
-                <li>3. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.</li>
+                <li>4. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.</li>
             </ul>
             
             <p className="mt-8 mb-8 font-semibold">Vamos começar? : )</p>
@@ -49,10 +49,14 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
 
 
         <div>
-            <p>aqui {user.documentPhotoURL1}</p>
+            {/* <p>aqui {user.documentPhotoURL1}</p> */}
             {/* <img src='https://avatars.githubusercontent.com/u/71681665?v=4' /> */}
 
+            <p>Imagem1</p>
             <img src={user.documentPhotoURL1} />
+
+            <p className="mt-6">Imagem2</p>
+            <img src={user.documentPhotoURL2} />
         </div>
     </>  
     )

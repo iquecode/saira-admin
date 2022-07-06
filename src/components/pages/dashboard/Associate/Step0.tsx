@@ -46,6 +46,14 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
                 </button>
             </div>
         </div>
+
+
+        <div>
+            <p>aqui {user.documentPhotoURL1}</p>
+            {/* <img src='https://avatars.githubusercontent.com/u/71681665?v=4' /> */}
+
+            <img src={user.documentPhotoURL1} />
+        </div>
     </>  
     )
           

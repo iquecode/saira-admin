@@ -186,6 +186,10 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                 </button>
             </div>
         </div>
+
+        <div>
+            <img src={user.documentPhotoURL1} />
+        </div>
        
     </>  
     )

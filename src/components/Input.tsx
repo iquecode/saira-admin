@@ -56,7 +56,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                         ${classLabelAside}
                         dark:text-zinc-300 
                         text-zinc-700
-                        
+                        text-xl
                         mb-4
                         
                         `}
@@ -75,7 +75,6 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                             dark:focus-within:border-saira-yellow
                             focus-within:border-brandBlue-500
                             rounded-md p-2
-                            text-xl
                             
                             w-full
                             h-12`}
@@ -132,6 +131,7 @@ export function Input({icon, placeholder, type = 'text', label, value, required,
                 
                
             </div>    
+           
             {!errors? null : errors[registerName]?.type && <InputError type={errors[registerName].type} field={registerName} />}
         </label>
        

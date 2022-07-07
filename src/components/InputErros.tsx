@@ -1,7 +1,7 @@
 import errors from '../util/errors.json';
 
 interface InputErrorProps {
-  type: string;
+  type: any;
   field: string;
 }
 

@@ -15,8 +15,7 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
 
       
         <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
-            <p className="mb-3">Cremos que o fato de você estar aqui já é uma demosntração da compatibilidade entre a sua visão com, toda ou parte, da visão de mundo compartilhada no Instituto Saíra.</p>
-            <p className="mb-3">Então, será muito bom ter você como uma pessoa associada.</p>
+            <p className="mb-3">O fato de você estar aqui é uma demosntração da compatibilidade entre a sua visão com, toda ou parte, da visão de mundo compartilhada no Instituto Saíra.</p>
             <p className="mb-3">Não há custo financeiro para a associação e nem obrigação de ajuda financeira estipulada.</p>
             <p className="mb-3">Como membro, você tem voz nas decisões, maior apoio para seus projetos e espera-se que possa contribuir, de alguma forma, para as intervenções na realizadade propostas pelo Instituto.</p>
             <p>O processo de associação é feito pela plataforma e segue estes passos:</p>

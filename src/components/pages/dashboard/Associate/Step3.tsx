@@ -27,36 +27,60 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     type TypeState = {
         id: number,
         name: string,
+        uf: string,
     }
 
     const [countries, setCountries] = useState<TypeCountry[] | null>(null);
+    const [countryIdSelected, setCountryIdSelected] = useState<number | null>(null);
+
     const [cities, setCities] = useState<TypeCity[]  | null>(null);
     const [states, setStates] = useState<TypeState[] | null>(null);
     const [errorMessage, setErrorMessage] = useState<string| null>(null);
 
 
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, setValue } = useForm();
+
+    function handleStateChange(stateId:number) {
+        api.get('model/city/get-cities', { 
+            params: {stateId}
+        })
+        .then(response => {
+            setCities(response.data);
+        })
+        .catch(error=>{
+            setErrorMessage(error.message);
+        });
+    }
 
 
     useEffect( () => {
-        // api.get('model/contry/get-countries', {
-        // })
-        // .then(response => {
-        //     setCountries(response.data.countries);
-        // })
-        // .catch(error=>{
-        //     setErrorMessage(error.message);
-        // });
+        api.get('model/country/get-countries', {
+        })
+        .then(response => {
+            setCountries(response.data);
+        })
+        .catch(error=>{
+            setErrorMessage(error.message);
+        });
 
-        // api.get('model/state/get-states', {
-        // })
-        // .then(response => {
-        //     setStates(response.data.states);
-        // })
-        // .catch(error=>{
-        //     setErrorMessage(error.message);
-        // });
+        api.get('model/state/get-states', {
+        })
+        .then(response => {
+            let statesFromDB = response.data;
+            function compare(a:TypeState,b:TypeState) {
+                if (a.name < b.name)
+                   return -1;
+                if (a.name > b.name)
+                  return 1;
+                return 0;
+              }
+            statesFromDB.sort(compare);
+            setStates(statesFromDB);
+        })
+        .catch(error=>{
+            setErrorMessage(error.message);
+        });
 
       }, []);
 
@@ -68,7 +92,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
     
     
-
+    console.log(countries);
    
     return (
 
@@ -83,22 +107,57 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
             <p className="text-xl font-semibold mb-8">Quase acabando :) . Agora só falta preencher e enviar os dados abaixo:
             </p>
 
+            {/* {countries ? countries.map((country) => <p key={country.id}>{country.id}</p> ) : null} */}
+            
             <form className="flex flex-col">
                
              
                 
+                <label>País
+                    <select {...register('countryId', {
+                            onChange: (e) => { setCountryIdSelected(e.target.value)
+                                               if(e.target.value != 33){
+                                                   setValue('stateId',null);
+                                                   setValue('cityId', null);
+                                               } 
+                            },
+                        })}
+                        id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        {!countries ? null : countries.map(function(country) {
+                            return <option selected={country.id==33} value={country.id}>{country.namePt}</option>
+                        })}
+                    </select>
+                </label>
+
+                <label className={`${countryIdSelected==33 ? null : 'hidden'}`}>Estado
+                    <select {...register('stateId', {
+                            onChange: (e) => { handleStateChange(e.target.value)},
+                        })}
+                        id="states" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        {!states ? null : states.map(function(state) {
+                            return <option value={state.id}>{state.name}</option>
+                        })}
+                    </select>
+                </label>
+
+
+                <label className={`${countryIdSelected==33 ? null : 'hidden'}`}>Cidade
+                    <select {...register('cityId', {
+                            // onChange: (e) => { setCountryIdSelected(e.target.value)},
+                        })}
+                        id="cities" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        {!cities ? null : cities.map(function(city) {
+                            return <option value={city.id}>{city.name}</option>
+                        })}
+                    </select>
+                </label>
+
+
+              
+
+
                 
-                <p>Endereço</p>
-                <select {...register('stateId', {
-                        onChange: (e) => { console.log(e.target.value)},
-                    })}
-                    id="countries" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected>Escolha um estado</option>
-                    <option value="RS">Rio Grande do Sul</option>
-                    <option value="PR">Paraná</option>
-                    <option value="SC">Santa Catarina</option>
-                    <option value="SP">São Paulo</option>
-                </select>
+
 
                 <div>
                     <p>Mostra a mudança dinamica... repopular select das cidades</p>

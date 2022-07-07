@@ -1,5 +1,3 @@
-import { IncomingForm } from 'formidable';
-import sharp from 'sharp';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {authVerify} from '../auth/lib/authVerify';
 import { client } from '../lib/prisma/client';

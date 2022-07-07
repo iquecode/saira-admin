@@ -1,7 +1,7 @@
 import { client } from '../../lib/prisma/client';
 
 export async function getAll()   {
-        const countries = client.country.findMany({
+        const countries = await client.country.findMany({
             select: {
                 id: true,
                 namePt: true,

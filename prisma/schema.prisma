@@ -151,7 +151,7 @@ model Country {
 model State {
   id        Int       @id
   name      String
-  uf        String
+  uf        String    @unique
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
   cities    City[]

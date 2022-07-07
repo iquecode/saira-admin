@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getFromState } from './helpers';
+import { getFromState, getFromUf } from './helpers';
 
 
 export default handler;
@@ -10,6 +10,11 @@ function handler(req: NextApiRequest, res: NextApiResponse) {
         case 'GET':
 
             //console.log(req.query);
+            const uf  = req.query.uf as string;
+            if (uf) {
+                return getCitiesUf(uf);
+            }
+
             const stateId  = parseInt(req.query.stateId as string);
             if (!stateId) {
                 res.status(405).end(`params requerid`);
@@ -21,6 +26,10 @@ function handler(req: NextApiRequest, res: NextApiResponse) {
 
     async function getCities(stateId: number) {
         const cities = await getFromState(stateId);
+        return res.json(cities);
+    }
+    async function getCitiesUf(uf: string) {
+        const cities = await getFromUf(uf);
         return res.json(cities);
     }
 }

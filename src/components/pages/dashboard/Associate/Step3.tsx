@@ -1,7 +1,7 @@
 import { LockSimple } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { UserNormalized } from "../../../../model/User"
-import { api } from "../../../../services/api"
+import { api, apiSSR } from "../../../../services/api"
 import Form from "../../../Form"
 import { Input } from "../../../Input"
 import { useForm, Controller, useFormContext } from "react-hook-form";
@@ -23,6 +23,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     type TypeCity = {
         id: number,
         name: string,
+        stateId: number,
     }
     type TypeState = {
         id: number,
@@ -31,7 +32,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     }
 
     const [countries, setCountries] = useState<TypeCountry[] | null>(null);
-    const [countryIdSelected, setCountryIdSelected] = useState<number | null>(null);
+    const [countryIdSelected, setCountryIdSelected] = useState<number | null>(33);
 
     const [cities, setCities] = useState<TypeCity[]  | null>(null);
     const [states, setStates] = useState<TypeState[] | null>(null);
@@ -41,12 +42,34 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
     const { register, handleSubmit, setValue } = useForm();
 
-    function handleStateChange(stateId:number) {
+    function handleStateChange(uf:string, city?:string) {
         api.get('model/city/get-cities', { 
-            params: {stateId}
+            params: {uf}
         })
         .then(response => {
+            console.log(cities);
             setCities(response.data);
+            if(city) {
+                setValue('cityId', city);
+            }
+        })
+        .catch(error=>{
+            setErrorMessage(error.message);
+        });
+    }
+
+
+    function  handleCepChange(cep:string) {
+        apiSSR.get(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => {
+            console.log(response.data);
+            setValue('stateId', response.data.uf);
+            handleStateChange(response.data.uf, response.data.ibge);
+            //pegar uf da city e setar no select do estado
+            //
+
+
+
         })
         .catch(error=>{
             setErrorMessage(error.message);
@@ -129,13 +152,27 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                     </select>
                 </label>
 
+
+             
+                <label className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Cep
+                    <input {...register('cep', {
+                            onBlur: (e) => { handleCepChange(e.target.value)},
+                        })} 
+                    type="text" id="cep" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </label>
+
+
+                
+
+
+
                 <label className={`${countryIdSelected==33 ? null : 'hidden'}`}>Estado
                     <select {...register('stateId', {
                             onChange: (e) => { handleStateChange(e.target.value)},
                         })}
                         id="states" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         {!states ? null : states.map(function(state) {
-                            return <option value={state.id}>{state.name}</option>
+                            return <option value={state.uf}>{state.name}</option>
                         })}
                     </select>
                 </label>
@@ -147,7 +184,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                         })}
                         id="cities" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         {!cities ? null : cities.map(function(city) {
-                            return <option value={city.id}>{city.name}</option>
+                            return <option value={city.id}>{city.name}-{city.id}</option>
                         })}
                     </select>
                 </label>

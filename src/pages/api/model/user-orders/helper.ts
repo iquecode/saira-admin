@@ -7,11 +7,13 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         const {linkedin, github, instagram, facebook, whatsapp, telegram, alternativeEmail,
                cityId, stateId, countryId, documentTypeId,   
              ...dataUserFromForm} = data;
-        const dataToUpdate = {...dataUserFromForm, 
-                              city:{ connect: {id: parseInt(cityId)}}, 
+        let dataToUpdate = {...dataUserFromForm, 
                               country: { connect: {id:parseInt(countryId)}},
                               documentType: { connect: {id:parseInt(documentTypeId)}}
                             }
+        if(countryId==33) { //Brasil
+          dataToUpdate = {...dataToUpdate, city:{ connect: {id: parseInt(cityId)}} }
+        }
                               
         const userUpdate = await client.user.update({
             where: {
@@ -23,13 +25,13 @@ export async function updateUserWithDataForm(id:string, data:any)   {
             throw new Error("Erro ao realizar update dos dados do usuário na base de dados.");
         }
         let contacts = [];
-        if (!!alternativeEmail) contacts.push({name: 'Email alternativo', value: alternativeEmail });
-        if (!!linkedin)  contacts.push({userId: id, name: 'LinkedIn',     value: linkedin });
-        if (!!github)    contacts.push({userId: id, name: 'GitHub',       value: github });
-        if (!!instagram) contacts.push({userId: id, name: 'Instagram',    value: instagram });
-        if (!!facebook)  contacts.push({userId: id, name: 'Facebook',     value: facebook });
-        if (!!whatsapp)  contacts.push({userId: id, name: 'Whatsapp',     value: whatsapp });
-        if (!!telegram)  contacts.push({userId: id, name: 'Telegram',     value: telegram });
+        if (!!linkedin)  contacts.push({name: 'LinkedIn', value: linkedin, userId: id });
+        if (!!alternativeEmail) contacts.push({name: 'Email alternativo', value: alternativeEmail, userId: id  });
+        if (!!github)    contacts.push({name: 'GitHub',       value: github, userId: id  });
+        if (!!instagram) contacts.push({name: 'Instagram',    value: instagram, userId: id  });
+        if (!!facebook)  contacts.push({name: 'Facebook',     value: facebook, userId: id  });
+        if (!!whatsapp)  contacts.push({name: 'Whatsapp',     value: whatsapp, userId: id  });
+        if (!!telegram)  contacts.push({name: 'Telegram',     value: telegram, userId: id  });
         if (contacts.length > 0) {
           const newContactsUser = await client.contact.createMany({
               data: contacts, 

@@ -1,54 +1,22 @@
-import { LockSimple, YoutubeLogo } from "phosphor-react"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { UserNormalized } from "../../../../model/User"
 import { api, apiSSR } from "../../../../services/api"
-import Form from "../../../Form"
-import { Input } from "../../../Input"
-import { useForm, Controller, useFormContext, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { InputError } from "../../../InputErros"
-import { responseSymbol } from "next/dist/server/web/spec-compliant/fetch-event"
-
-
 
 type AssocieteProps = {
     user: UserNormalized
     setCurrentStep:Dispatch<SetStateAction<number>>
   }
+
 export default function Step3({user, setCurrentStep}:AssocieteProps) {
     
-    const [mode, setMode] = useState<'bra' | 'ext'  >('bra');
-
-    interface IForm {
-        name: string,
-        socialName: string, 
-        nickname: string,
-        birthDate:string,
-        occupation: string,
-        motherName: string,
-        fatherName: string,
-        cpf: string,
-        documentTypeId: string,
-        documentNumber: string,
-        countryId: number,
-        cep: string,
-        stateId: number,
-        cityId: number,
-        addressLine1: string,
-        addressLine2: string,
-        alternativeEmail:  string,
-        telegram: string,
-        whatsapp: string,
-        facebook: string,
-        instagram: string,
-        github: string,
-        linkedin: string,
-        bio: string
-    }
-
-   
+    
+    const [countries, setCountries] = useState<TypeCountry[] | null>(null);
+    const [countryIdSelected, setCountryIdSelected] = useState<number | null>(33);
 
     const schema = yup.object({
             name: yup.string().minWords(2).required(),
@@ -61,10 +29,10 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             cpf: yup.string().required(),
             documentTypeId: yup.string().required(),
             documentNumber: yup.string().required(),
-            countryId: yup.number().required(),
-            cep: mode=='bra' ? yup.string().required() : yup.string(),
-            stateId: mode=='bra' ? yup.string().required() : yup.string(),
-            cityId: mode=='bra' ? yup.number().required() : yup.number(),
+            countryId: yup.string().required(),
+            cep: countryIdSelected == 33 ? yup.string().required() : yup.string(),
+            stateId: countryIdSelected == 33 ? yup.string().required() : yup.mixed(),
+            cityId: countryIdSelected == 33 ? yup.number().required() : yup.mixed(),
             addressLine1: yup.string().required(),
             addressLine2: yup.string(),
             alternativeEmail:  yup.string().email(),
@@ -77,16 +45,9 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             bio: yup.string()
         });
    
-
-
-
-
     const resolver = {resolver:yupResolver<yup.AnyObjectSchema>(schema)};
     //const methods = useForm(resolver);
     const { register, handleSubmit, setValue, formState:{errors} } = useForm(resolver);
-
-
-    
 
     type TypeCountry = {
         id: number,
@@ -108,8 +69,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
         name: string,
     }
 
-    const [countries, setCountries] = useState<TypeCountry[] | null>(null);
-    const [countryIdSelected, setCountryIdSelected] = useState<number | null>(33);
+    
 
     const [cities, setCities] = useState<TypeCity[]  | null>(null);
     const [states, setStates] = useState<TypeState[] | null>(null);
@@ -117,7 +77,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
 
     const [typesDocuments, setTypesDocuments] = useState<TypeDocument[] | null>(null);
 
-   
+    
 
     //const onSubmit: SubmitHandler<IForm> = data => console.log(data);
 
@@ -125,7 +85,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
     // no backend tratar e gravar os dados
     // gravar um pedido de associação - requerimento
     // retornar para a tela onde 
-    const onSubmit = async data => {
+    const onSubmit = async (data: any) => {
         try {
         const response = await api.post('model/user-orders/new-associate-order', {
             data,
@@ -143,16 +103,6 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             alert("Ops. Ocorreu um erro: " + error.message);
         }
       };
-
-    //const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    // const onSubmit = async data => {
-    //     await sleep(2000);
-    //     //if (data.username === "bill") {
-    //       alert(JSON.stringify(data));
-    //     //} else {
-    //       //alert("There is an error");
-    //     //}
-    //   };
 
     function onError(error:any) {
         console.log(error);
@@ -176,7 +126,6 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
         });
     }
 
-
     function  handleCepChange(cep:string) {
         apiSSR.get(`https://viacep.com.br/ws/${cep}/json/`)
         .then(response => {
@@ -184,11 +133,6 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             setValue('stateId', response.data.uf);
             setValue('addressLine1', response.data.logradouro);
             handleStateChange(response.data.uf, response.data.ibge);
-            //pegar uf da city e setar no select do estado
-            //
-
-
-
         })
         .catch(error=>{
             setErrorMessage(error.message);
@@ -196,14 +140,12 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
     }
 
 
-    
-
-
     useEffect( () => {
         api.get('model/country/get-countries', {
         })
         .then(response => {
             setCountries(response.data);
+            setValue('countryId', 33);
         })
         .catch(error=>{
             setErrorMessage(error.message);
@@ -232,31 +174,20 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             {id:1, name:'Carteira de Identidade'},
             {id:2, name:'CNH'},
             {id:3, name:'Passaporte'},
-        ])
-
+        ]);
+        setValue('documentTypeId', '1');
 
 
       }, []);
 
-
-      useEffect( () => {
-        
-
-      }, []);
-
     
-    
-    console.log(countries);
    
     return (
 
     <>
-        <p className="text-brandBlue-500 font-bold p-4">3. Cadastro para submeter o pedido de associação.</p>
-
-
-      
-        <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
-          
+    <p className="text-brandBlue-500 font-bold p-4">3. Cadastro para submeter o pedido de associação.</p>
+    <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
+        
         <div className="mt-6">
             <p className="text-lg font-semibold mb-8">Quase acabando :) . Agora só falta preencher e enviar os dados abaixo, 
                 para finalizar seu pedido de associação ao instituto. 
@@ -265,7 +196,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                 Dados com * são obrigatórios - é necessário um pouco de burocracia para garantir que tudo esteja juridicamente bem na sua associação.
             </p>
 
-           
+        
 
             {/* {countries ? countries.map((country) => <p key={country.id}>{country.id}</p> ) : null} */}
             
@@ -294,7 +225,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                 <label className="label-input-form">Como quer ser chamad@?
                     <input {...register('nickname')} 
                     type="text" id="nickname" className="input-form" placeholder='primeiro nome ou algum apelido carinhoiso? :)' />
-                   <InputError type={errors?.nickname?.type? errors['nickName'].type : null} field={'nickName'} />
+                <InputError type={errors?.nickname?.type? errors['nickName'].type : null} field={'nickName'} />
                 </label>
 
                 <label className="label-input-form">Profissão / ocupação*
@@ -308,7 +239,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                     type="date" id="birthDate" className="input-form" />
                     <InputError type={errors?.birthDate?.type? errors['birthDate'].type : null} field={'birthDate'} />
                 </label>
-               
+            
                 <label className="label-input-form">Nome da mãe*
                     <input {...register('motherName')} 
                     type="text" id="motherName" className="input-form" />
@@ -327,10 +258,10 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                     type="text" id="cpf" className="input-form"  placeholder='caso seja estrangeir@ e não possua, complete com zeros' />
                     <InputError type={errors?.cpf?.type? errors['cpf'].type : null} field={'cpf'} />
                 </label>
-               
+            
 
                 <label className="label-input-form">Tipo do documento*
-                      <select {...register('documentTypeId')}
+                    <select {...register('documentTypeId')}
                             id="documentTypeId" className="input-form">
                             {!typesDocuments ? null : typesDocuments.map(function(typeDocument) {
                                 return <option value={typeDocument.id}>{typeDocument.name}</option>
@@ -341,7 +272,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                     <InputError type={errors?.documentTypeId?.type? errors['documentTypeId'].type : null} field={'documentTypeId'} />
                 </label>
                 
-              
+            
                 <label className="label-input-form">Nº do documento*
                     <input {...register('documentNumber')} 
                     type="text" id="documentNumber" className="input-form"  placeholder='documento que você enviou no passo anterior' />
@@ -376,7 +307,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                         type="text" id="cep" className="input-form" placeholder="Informe o cep para localização automática" />
                         <InputError type={errors?.cep?.type? errors['cep'].type : null} field={'cep'} />
                     </label>
-                   
+                
 
                     <label className={`${countryIdSelected==33 ? null : 'hidden'} label-input-form`}>Estado*
                         <select {...register('stateId', {
@@ -423,13 +354,13 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
                         <InputError type={errors?.alternativeEmail?.type? errors['alternativeEmail'].type : null} field={'alternativeEmail'} />
                     </label>
                     
-                   
+                
                     <label className="label-input-form">Telegram
                         <input {...register('telegram')} 
                         type="text" id="telegram" className="input-form" />
-                         <InputError type={errors?.telegram?.type? errors['telegram'].type : null} field={'telegram'} />
+                        <InputError type={errors?.telegram?.type? errors['telegram'].type : null} field={'telegram'} />
                     </label>
-                   
+                
                     <label className="label-input-form">WhatsApp
                         <input {...register('whatsapp')} 
                         type="text" id="whatsapp" className="input-form" />
@@ -485,15 +416,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             </form>
         </div>
             
-          
-            
-           
-        </div>
-
-        
-       
+    </div>
     </>  
     )
-          
 }
-

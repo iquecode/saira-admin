@@ -221,7 +221,7 @@ model DataUserOrder {
 
 model UserOrder {
   id                 String        @id @default(uuid())
-  userId             String        @map("user_id") @unique
+  userId             String        @map("user_id")
   user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   typeUserOrderId    String        @map("type_user_order_id")
   type               TypeUserOrder @relation(fields: [typeUserOrderId], references: [id])

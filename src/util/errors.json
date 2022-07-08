@@ -13,6 +13,13 @@
     },
     "passwordConfirm": {
       "oneOf": "Senha e confirmar senha não conferem"
+    },
+    "name": {
+      "required": "nome completo é um campo obrigatório",
+      "minWords": "informe seu nome completo"
+    },
+    "standardTypes" : {
+      "required": "campo obrigatório"
     }
      
   }

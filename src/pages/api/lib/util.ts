@@ -42,6 +42,17 @@ export const sanitizeInputs = (inputs:{}) => {
 }
 
 
+export const sanitizeObjectReq = (obj:{}) => {
+    let sanitizedInputs = {};
+
+    for (const property in obj) {
+        sanitizedInputs[property] = DOMPurify.sanitize(obj[property]);
+        //console.log(key + ' ' + value);
+      }
+    return sanitizedInputs;
+}
+
+
 export function sendMailNodeMailer(from: string, to: string, subject: string, html?:string, text?:string) {
 
 

@@ -13,6 +13,7 @@ model User {
   email                  String        @unique
   password               String
   name                   String?
+  cpf                    String?
   socialName             String?       @map("social_name")
   nickname               String?
   note                   String?
@@ -30,6 +31,7 @@ model User {
   documentTypeId         Int?          @map("document_type_id")
   fatherName             String?       @map("father_name")
   motherName             String?       @map("mother_name")
+  bio                    String?       
   updatedAt              DateTime?     @updatedAt @map("updated_at")
   active                 Boolean       @default(true)
   deletable              Boolean       @default(true)
@@ -40,7 +42,7 @@ model User {
   loginBlockedReason     String?       @map("login_blocked_reason")
   type                   String?       @default("user")
   associated             Boolean       @default(false) 
-  birthDate              Int?          @map("birth_date")
+  birthDate              String?       @map("birth_date")
   loginBlockedExpiration Int?          @map("login_blocked_expiration")
   tokenEmailVerify       String?       @unique @map("token_email_verify")
   tokenResetPassword     String?       @unique @map("token_reset_password")
@@ -51,7 +53,7 @@ model User {
   contacts               Contact[]
   roles                  Role[]
   tokensHash             TokenHash[]
-  Applications           UserApplication[]
+  Orders                 UserOrder[]
   circles                Circle[]
 
   @@map("users")
@@ -189,7 +191,7 @@ model TokenHash {
 
 //Ex. Pedido de associação ao instituto 
 //
-model TypeUserApplication {
+model TypeUserOrder {
   id          String    @id @default(uuid())
   name        String    
   note        String?
@@ -197,34 +199,36 @@ model TypeUserApplication {
   updatedAt   DateTime? @updatedAt @map("updated_at")
   deletable   Boolean   @default(true)
   deleted     Boolean   @default(false)
-  userApplications UserApplication[]
+  userOrders  UserOrder[]
+
+  @@map("types_user_orders")
 }
 
 //Ex. compromisso com os princípios fundamentais em
 // dispositivo compromisso com os princípios fundamentais
 //ip compromisso com os princípios fundamentais
-model DataUserApplication {
-  id      String    @id @default(uuid())
-  name    String
-  value   String
-  userApplicationId String @map("user_application_id")
-  createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  deletable             Boolean   @default(true)
-  deleted               Boolean   @default(false)
-  userApplication UserApplication @relation(fields: [userApplicationId], references: [id], onDelete: Cascade)
+model DataUserOrder {
+  id              String    @id @default(uuid())
+  name            String
+  value           String
+  userOrderId     String    @map("user_order_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+  deletable       Boolean   @default(true)
+  deleted         Boolean   @default(false)
+  userOrder       UserOrder @relation(fields: [userOrderId], references: [id], onDelete: Cascade)
 }
 
-model UserApplication {
-  id                    String    @id @default(uuid())
-  userId                String    @map("user_id") @unique
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  typeUserApplicationId String    @map("type_user_application_id")
-  type                  TypeUserApplication @relation(fields: [typeUserApplicationId], references: [id])
-  status                String    @map("status")
-  DataUserApplication   DataUserApplication[]
-  createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime? @updatedAt @map("updated_at")
-  deletable             Boolean   @default(true)
-  deleted               Boolean   @default(false)
+model UserOrder {
+  id                 String        @id @default(uuid())
+  userId             String        @map("user_id") @unique
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  typeUserOrderId    String        @map("type_user_order_id")
+  type               TypeUserOrder @relation(fields: [typeUserOrderId], references: [id])
+  status             String        @map("status")
+  DataUserOrder      DataUserOrder[]
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime? @updatedAt @map("updated_at")
+  deletable          Boolean   @default(true)
+  deleted            Boolean   @default(false)
 }

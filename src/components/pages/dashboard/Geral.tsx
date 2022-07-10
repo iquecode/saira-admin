@@ -1,14 +1,17 @@
 
+import { useEffect, useState } from "react";
 import { UserNormalized } from "../../../model/User";
 import { SimpleCard } from "./components/SimpleCard"
+import { UserOrder } from "@prisma/client";
 
 type GeralProps = {
-  user: UserNormalized
+  user: UserNormalized,
+  orderAssociateStatus: string,
 }
 
-export default function Geral({user}:GeralProps) {
+export default function Geral({user, orderAssociateStatus}:GeralProps) {
 
-        console.log(user);
+        //console.log(user);
         return (
     
         <>
@@ -33,8 +36,16 @@ export default function Geral({user}:GeralProps) {
    Se quiser se apresentar, você pode atualizar seus danos em perfil." />  
 }
 
-{ user.associated ? null :
+{ !user.associated && !orderAssociateStatus ?
   <SimpleCard title="Se associe ao Instituto" text="Vai ser muito bom ter você como membro formal. Assim, nos fortalecemos e você terá direito de participar das decisões estratégias :)" />
+  : 
+  null
+}
+
+{ !user.associated && orderAssociateStatus=='pendency' ?
+  <SimpleCard title="Pendência..." text="Existe pendência no seu pedido de associação ao instituto. Verifique..." />
+  : 
+  null
 }
 
 <SimpleCard title="Envie sua sugestão" text="Eu sou uma plataforma que ainda está sendo construída e toda a ajuda é bem vinda para me deixar bem legal e inteligente..." />

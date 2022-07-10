@@ -4,6 +4,7 @@ import route from "next/router";
 import { useEffect } from 'react'
 import useAppData from '../../data/hook/useAppData'
 import useAuth from '../../data/hook/useAuth'
+import Loading from "../Loading";
 import BotaoAlternarTema from './BotaoAlternarTema'
 
 
@@ -21,7 +22,7 @@ interface LayoutProps {
 
 
 export default function Layout(props: LayoutProps) {
-  const { tema, alternarTema, menuIndex} = useAppData()
+  const { tema, alternarTema, menuIndex, loading} = useAppData()
   const { isAuthenticated, getAuthenticatedUser } = useAuth()
   const  { user }  = useAuth();
 
@@ -72,10 +73,12 @@ export default function Layout(props: LayoutProps) {
 
    
       
-      {!user ? null : 
+      {!user ? null :
       
+     
       
-        
+         <>
+          
 
           <div className={`${tema} min-h-screen`}>
 
@@ -105,6 +108,16 @@ export default function Layout(props: LayoutProps) {
           </main>
         </div>
         </div>
+
+
+
+        <div className={`${!loading ? 'hidden' : null} opacity-50 bg-black flex justify-center items-center fixed top-0 left-0 right-0 z-50`}> 
+                
+                <Loading msg="Carregando..."/>
+        
+        </div>
+
+        </>
       
       
       

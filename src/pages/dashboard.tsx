@@ -11,16 +11,35 @@ import Suggestions from '../components/pages/dashboard/Suggestions';
 import Notes from '../components/pages/dashboard/Notes';
 import Preferences from '../components/pages/dashboard/Preferences';
 import Profile from '../components/pages/dashboard/Profile';
+import { UserOrder } from '@prisma/client';
 
 export default function Dashboard(props) {
 
   const  { user }  = useAuth();
 
+  const [orderAssociateStatus, setOrderAssociateStatus] = useState<string | null>(null);
+
+  useEffect( () => {
+    console.log('user orders:');
+    console.log(user?.orders);
+    console.log(user?.orders.length);
+    const orderAssociateArray = user?.orders.filter((obj: UserOrder) => obj.typeUserOrderId == 'associate');
+    //Se associe ao instituto
+    //pendÊncia
+    if (orderAssociateArray?.[0]) {
+      const orderAssociate = orderAssociateArray[0] as UserOrder;
+      setOrderAssociateStatus(orderAssociate.status);
+      console.log('aquiuiudi');
+      console.log(orderAssociateStatus);
+    }
+  }, []);
+
+
   const nav = [
-    { name: 'Geral',  element: <Geral user={user}/>, current: true },
+    { name: 'Geral',  element: <Geral user={user} orderAssociateStatus={orderAssociateStatus}/>, current: true },
     { name: 'Agenda', element: <Schedule user={user}/>, current: false },
     { name: 'Círculos/papeis', element: <CirclesAndRoles user={user}/>, current: false },
-    { name: 'Associe-se', element: <Associate user={user}/>, current: false },
+    { name: 'Associe-se', element: <Associate user={user} orderAssociateStatus={orderAssociateStatus} setOrderAssociateStatus={setOrderAssociateStatus}/>, current: false },
     { name: 'Sugestões', element:<Suggestions user={user} />,current: false },
     { name: 'Anotações', element:<Notes user={user} /> ,current: false },
     { name: 'Preferências', element:<Preferences user={user} />,current: false },
@@ -29,7 +48,7 @@ export default function Dashboard(props) {
   const classNameCurrent = "inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500";
   const classNameNotCurrent = "inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300";
   
-  const elements =  [<Geral user={user}/>,<Schedule user={user}/>];
+  const elements =  [<Geral user={user} orderAssociateStatus={orderAssociateStatus}/>,<Schedule user={user}/>];
 
   const [navigation, setNavigation] = useState(nav);
   const [currentIndex, setCurrentIndex] = useState(0);

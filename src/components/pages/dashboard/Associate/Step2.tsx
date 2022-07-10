@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { UserNormalized } from "../../../../model/User";
 import { api } from "../../../../services/api";
-import Loading from "../../../Loading";
+import useAppData from '../../../../data/hook/useAppData'
+
 
 type AssocieteProps = {
   user: UserNormalized
@@ -46,7 +47,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const [imageBack, setImageBack] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
   const [createObjectURLback, setCreateObjectURLback] = useState(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoading} = useAppData();
   const [base64, setBase64] = useState<string | null>(null);
   
   const uploadToClientFront = (event:any) => {
@@ -95,9 +96,9 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   return (
     <>
 
-    {loading ? <Loading msg='Enviando imagens para o servidor...' />
+    {/* {loading ? <Loading msg='Enviando imagens para o servidor...' />
             
-            :
+            : */}
     
     
             <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
@@ -201,7 +202,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     
     
     
-    }
+    {/* } */}
 
 
 

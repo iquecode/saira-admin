@@ -30,37 +30,67 @@ Você pode verificar o estatuto, na íntegra aqui.
 
 
 
-
-
-
-
 */
 
-import { useState } from "react"
+import { UserOrder } from "@prisma/client";
+import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { UserNormalized } from "../../../../model/User"
 import Step0 from "./Step0";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
 import Step4 from "./Step4";
+import Step5Pendency from "./Step5Pendency";
+import Step6Accept from "./Step6Accept";
+import Step7Denied from "./Step7Denied";
 
 
 type AssocieteProps = {
     user: UserNormalized
+    orderAssociateStatus: string
+    setOrderAssociateStatus: Dispatch<SetStateAction<string>>
   }
-export default function Associate({user}:AssocieteProps) {
+export default function Associate({user, orderAssociateStatus, setOrderAssociateStatus}:AssocieteProps) {
 
-    const [currentStep, setCurrentStep] = useState<number>(0);
+    const [currentStep, setCurrentStep] = useState<number>(-1);
     const steps = [ <Step0 user={user} setCurrentStep={setCurrentStep}/>,
                     <Step1 user={user} setCurrentStep={setCurrentStep}/>,
                     <Step2 user={user} setCurrentStep={setCurrentStep}/>,
-                    <Step3 user={user} setCurrentStep={setCurrentStep}/>,
-                    <Step4 user={user} setCurrentStep={setCurrentStep}/>];
+                    <Step3 user={user} setCurrentStep={setCurrentStep} setOrderAssociateStatus={setOrderAssociateStatus}/>,
+                    <Step4 user={user} setCurrentStep={setCurrentStep}/>,
+                    <Step5Pendency user={user} setCurrentStep={setCurrentStep}/>,
+                    <Step6Accept user={user} setCurrentStep={setCurrentStep}/>,
+                    <Step7Denied user={user} setCurrentStep={setCurrentStep}/>
+                  ];
+
+
+    useEffect( () => {
+     
+     
+      switch (orderAssociateStatus) {
+        case 'created':
+        case 'under-debat':
+          setCurrentStep(4);
+          break;
+        case 'pendency':
+          setCurrentStep(5);
+          break;
+        case 'accept':
+          setCurrentStep(6);
+          break;
+        case 'denied':
+          setCurrentStep(7);
+          break;
+        default:
+          setCurrentStep(0);
+          break;
+      }
+    }, []);
 
        
     return (
     <>
-       {steps[currentStep]}
+       {currentStep>=0 ? steps[currentStep] : null } 
     </>  
     )
           

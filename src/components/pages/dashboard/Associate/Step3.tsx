@@ -6,13 +6,21 @@ import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { InputError } from "../../../InputErros"
+import useAppData from '../../../../data/hook/useAppData'
+import useAuth from "../../../../data/hook/useAuth";
+
+
 
 type AssocieteProps = {
     user: UserNormalized
     setCurrentStep:Dispatch<SetStateAction<number>>
+    setOrderAssociateStatus: Dispatch<SetStateAction<string>>
   }
 
-export default function Step3({user, setCurrentStep}:AssocieteProps) {
+export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:AssocieteProps) {
+    const {  getAuthenticatedUser } = useAuth();
+    
+    const { setLoading} = useAppData()
     
     
     const [countries, setCountries] = useState<TypeCountry[] | null>(null);
@@ -87,6 +95,7 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
     // retornar para a tela onde 
     const onSubmit = async (data: any) => {
         try {
+        setLoading(true);
         const response = await api.post('model/user-orders/new-associate-order', {
             data,
         });
@@ -94,12 +103,23 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
             alert("Eba, deu certo. Seu pedido de associação foi enviado com sucesso ao Círculo Gestor. O tratamento do pedido será comunicado por email e na plataforma");
             console.log('aqui... front pegou response');
             console.log(response.data.orderAssociate);
+
+            //const updatedUser = await getAuthenticatedUser();
+            setOrderAssociateStatus('created');
+            
+            //console.log('####updated user:');
+            //console.log(updatedUser.data.user);
+            setLoading(false);
+            setCurrentStep(4);
+           
             // setar usuário com o pedido de associação. 
             //ir à página 0
         } else {
+            setLoading(false);
             alert("Ops. Ocorreu um erro no processamento. Tente reenviar");
         }
         } catch(error) {
+            setLoading(false);
             alert("Ops. Ocorreu um erro: " + error.message);
         }
       };

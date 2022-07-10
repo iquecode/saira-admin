@@ -7,6 +7,8 @@ interface AppContextProps {
     alternarTema?: () => void
     menuIndex?: number
     setMenuIndex?: Dispatch<number>
+    loading?: boolean
+    setLoading?: Dispatch<boolean>
 }
 
 const AppContext = createContext<AppContextProps>({})
@@ -28,6 +30,7 @@ export function AppProvider(props) {
     
     const [tema, setTema] = useState('dark');
     const [menuIndex, setMenuIndex] = useState(0);
+    const [loading, setLoading] = useState<boolean>(false);
 
     function alternarTema() {
         const novoTema = tema === 'ligth' ? 'dark' : 'ligth'
@@ -50,7 +53,9 @@ export function AppProvider(props) {
             tema,
             alternarTema,
             menuIndex,
-            setMenuIndex
+            setMenuIndex,
+            loading,
+            setLoading
         }}>
             {props.children}
         </AppContext.Provider>

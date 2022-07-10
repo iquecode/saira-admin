@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { InputError } from "../../../InputErros"
 import useAppData from '../../../../data/hook/useAppData'
 import useAuth from "../../../../data/hook/useAuth";
+import resetPassword from "../../../../pages/api/auth/reset-password";
+import { getDataDBtoForm, populateFormWithDataUser } from "./helper";
 
 
 
@@ -20,7 +22,9 @@ type AssocieteProps = {
 export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:AssocieteProps) {
     const {  getAuthenticatedUser } = useAuth();
     
-    const { setLoading} = useAppData()
+    const { setLoading} = useAppData();
+
+    //const [formData, setFormData] = useState(null);
     
     
     const [countries, setCountries] = useState<TypeCountry[] | null>(null);
@@ -55,7 +59,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
    
     const resolver = {resolver:yupResolver<yup.AnyObjectSchema>(schema)};
     //const methods = useForm(resolver);
-    const { register, handleSubmit, setValue, formState:{errors} } = useForm(resolver);
+    const { register, reset, handleSubmit, setValue, formState:{errors} } = useForm(resolver);
 
     type TypeCountry = {
         id: number,
@@ -161,44 +165,22 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
 
 
     useEffect( () => {
-        api.get('model/country/get-countries', {
+        getDataDBtoForm()
+        .then( data => {
+            setCountries(data.countries);
+            setStates(data.states);
+            setTypesDocuments(data.typeDocuments);
+            reset(populateFormWithDataUser(user));
+            handleStateChange(user.city.state.uf, user.cityId as unknown as string);
+            if(!user.countryId) setValue('countryId', 33);
+            if(!user.documentTypeId)  setValue('documentTypeId', '1');
         })
-        .then(response => {
-            setCountries(response.data);
-            setValue('countryId', 33);
-        })
-        .catch(error=>{
-            setErrorMessage(error.message);
-        });
-
-        api.get('model/state/get-states', {
-        })
-        .then(response => {
-            let statesFromDB = response.data;
-            function compare(a:TypeState,b:TypeState) {
-                if (a.name < b.name)
-                   return -1;
-                if (a.name > b.name)
-                  return 1;
-                return 0;
-              }
-            statesFromDB.sort(compare);
-            setStates(statesFromDB);
-        })
-        .catch(error=>{
-            setErrorMessage(error.message);
-        });
-
-
-        setTypesDocuments([
-            {id:1, name:'Carteira de Identidade'},
-            {id:2, name:'CNH'},
-            {id:3, name:'Passaporte'},
-        ]);
-        setValue('documentTypeId', '1');
-
-
+        .catch( error =>
+            alert("asda " + error.message)    
+        )
       }, []);
+
+
 
     
    
@@ -274,7 +256,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
                 
 
                 <label className="label-input-form">CPF*
-                    <InputMask mask="999.999.999-99" {...register('cpf')} 
+                    <InputMask mask="999.999.999-99" value={user.cpf} {...register('cpf')} 
                     type="text" id="cpf" className="input-form"  placeholder='caso seja estrangeir@ e não possua, complete com zeros' />
                     <InputError type={errors?.cpf?.type? errors['cpf'].type : null} field={'cpf'} />
                 </label>
@@ -321,7 +303,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
                     </label>
                     
                     <label className={`${countryIdSelected==33 ? null : 'hidden'} label-input-form`}>Cep*
-                        <InputMask mask="99999-999" {...register('cep', {
+                        <InputMask mask="99999-999" value={user.cep} {...register('cep', {
                                 onBlur: (e) => { handleCepChange(e.target.value)},
                             })} 
                         type="text" id="cep" className="input-form" placeholder="Informe o cep para localização automática" />

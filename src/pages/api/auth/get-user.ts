@@ -50,6 +50,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           circles: true,
           roles: true,
           orders: true,
+          city: {
+            include: {
+              state: true,
+            }
+          }
         }
       });
 

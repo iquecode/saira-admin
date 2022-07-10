@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { UserNormalized } from "../../../../model/User";
 import { api } from "../../../../services/api";
-import Loading from "../../../Loading";
+import useAppData from '../../../../data/hook/useAppData'
+
 
 type AssocieteProps = {
   user: UserNormalized
@@ -46,13 +47,13 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const [imageBack, setImageBack] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
   const [createObjectURLback, setCreateObjectURLback] = useState(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { setLoading} = useAppData();
   const [base64, setBase64] = useState<string | null>(null);
   
   const uploadToClientFront = (event:any) => {
     if (event.target.files && event.target.files[0]) {
       const fileInput = event.target.files[0];
-      setBase64(createImageCanvas(fileInput));
+      createImageCanvas(fileInput);
       console.log('Filename: ' + fileInput.name);
       console.log('Type: ' + fileInput.type);
       console.log('Size: ' + fileInput.size);
@@ -64,6 +65,9 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const uploadToClientBack = (event:any) => {
     if (event.target.files && event.target.files[0]) {
       const i = event.target.files[0];
+      createImageCanvas(i,480,"canvas2");
+      
+      //setBase64(createImageCanvas(fileInput));
       setImageBack(i);
       setCreateObjectURLback(URL.createObjectURL(i));
     }
@@ -74,7 +78,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     console.log('canvas-base64: ' + createImageCanvas(imageFront));
     const response = await api.post('upload/upload', {
       documentPhotoURL1: createImageCanvas(imageFront),
-      documentPhotoURL2: createImageCanvas(imageBack),
+      documentPhotoURL2: createImageCanvas(imageBack, 480, "canvas2"),
     })
 
 
@@ -92,9 +96,9 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   return (
     <>
 
-    {loading ? <Loading msg='Enviando imagens para o servidor...' />
+    {/* {loading ? <Loading msg='Enviando imagens para o servidor...' />
             
-            :
+            : */}
     
     
             <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
@@ -159,6 +163,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                             name="documentPhoto1" 
                             id='documentPhoto1' 
                             onChange={uploadToClientBack} 
+                            accept="image/jpeg, image/png, image/gif, image/webp"
                             className="hidden w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       />
                 </label>
@@ -181,7 +186,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
                     ${!(createObjectURLfront && createObjectURLback) ? 'opacity-30' : null }
                     `}
                     type="submit"
-                    onClick={uploadToServer}
+                    onClick={createObjectURLfront && createObjectURLback ? uploadToServer : null}
                   >
                     ENVIAR IMAGENS E CONTINUAR
                   </button>  
@@ -189,6 +194,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
 
                 <canvas id="canvas" width={480} height={480} className="hidden"></canvas>
+                <canvas id="canvas2" width={480} height={480} className="hidden"></canvas>
                 
             </div> 
     
@@ -196,7 +202,7 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
     
     
     
-    }
+    {/* } */}
 
 
 

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserNormalized } from "../../../../model/User";
 import { api } from "../../../../services/api";
 import useAppData from '../../../../data/hook/useAppData'
@@ -49,6 +49,12 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
   const [createObjectURLback, setCreateObjectURLback] = useState(null);
   const { setLoading} = useAppData();
   const [base64, setBase64] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    setCreateObjectURLfront(user.documentPhotoURL1);
+    setCreateObjectURLback(user.documentPhotoURL2);
+  }, [])
   
   const uploadToClientFront = (event:any) => {
     if (event.target.files && event.target.files[0]) {
@@ -75,10 +81,12 @@ export default function Step2({user, setCurrentStep}:AssocieteProps) {
 
   const uploadToServer = async () => {        
     setLoading(true);
-    console.log('canvas-base64: ' + createImageCanvas(imageFront));
+    //console.log('canvas-base64: ' + createImageCanvas(imageFront));
+    const img1 = imageFront ? createImageCanvas(imageFront) : user.documentPhotoURL1;
+    const img2 = imageBack ?  createImageCanvas(imageBack, 480, "canvas2") : user.documentPhotoURL2;
     const response = await api.post('upload/upload', {
-      documentPhotoURL1: createImageCanvas(imageFront),
-      documentPhotoURL2: createImageCanvas(imageBack, 480, "canvas2"),
+      documentPhotoURL1: img1,
+      documentPhotoURL2: img2,
     })
 
 

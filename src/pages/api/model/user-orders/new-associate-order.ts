@@ -28,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             //console.log('backend data:');
             //console.log(data);
             const userUpdate     = await updateUserWithDataForm(userId as string,data);
-            const orderAssociate = await createUserOrderAssociate(userId as string);
+            const orderAssociate = await createUserOrderAssociate(userUpdate);
             //const orderAssociate = data;
             return res.status(200).json({success: true, orderAssociate});
 

@@ -1,7 +1,9 @@
 
 
+import { User } from '@prisma/client';
 import { ParsedUrlQueryInput } from 'querystring';
 import { client } from '../../lib/prisma/client';
+import { generateMessageToSendMail, sendMail } from '../../lib/util';
 
 export async function updateUserWithDataForm(id:string, data:any)   {
         const {linkedin, github, instagram, facebook, whatsapp, telegram, alternativeEmail,
@@ -56,13 +58,13 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         //       data: contacts, 
         //   });
         // }
-        return userUpdate.id;
+        return userUpdate;
 }
 
-export async function createUserOrderAssociate(userId:string)   {
+export async function createUserOrderAssociate(user: User)   {
     const newUserOrderAssociate = await client.userOrder.create({
         data: {
-          userId,
+          userId: user.id,
           typeUserOrderId: 'associate',
           status: 'created',  //created, pendency, denied, under_debate, accept     
         },
@@ -70,5 +72,10 @@ export async function createUserOrderAssociate(userId:string)   {
       if(!newUserOrderAssociate) {
         throw new Error("Erro ao realizar criação do pedido de associação na base de dados.");
       }
+      let template = await generateMessageToSendMail('order-associate-apply.html');
+      template = template.replace('{ID}', newUserOrderAssociate.id);
+      //template = template.replace('{DADOS}', {name});
+      const emailSended = await sendMail('mailer@institutosaira.org',user.email,
+                'Instituto Saíra - redefinição de senha', template );
       return newUserOrderAssociate.id;
 }

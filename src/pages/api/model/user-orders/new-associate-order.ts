@@ -4,6 +4,7 @@ import { client } from '../../lib/prisma/client';
 import { sanitizeInputs, sanitizeObjectReq } from '../../lib/util';
 import DOMPurify from 'isomorphic-dompurify';
 import { createUserOrderAssociate, updateUserWithDataForm } from './helper';
+import requestIp from 'request-ip'
 
 
 export default handler;
@@ -13,6 +14,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case 'POST':
             const { cookies } = req;
+            const detectedIp = requestIp.getClientIp(req);
+            const dispositive = req.headers['user-agent'];
+            
             const jwt = cookies.OursiteJWT;
             if (!jwt) {
             return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false });
@@ -28,7 +32,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             //console.log('backend data:');
             //console.log(data);
             const userUpdate     = await updateUserWithDataForm(userId as string,data);
-            const orderAssociate = await createUserOrderAssociate(userUpdate);
+            const orderAssociate = await createUserOrderAssociate(userUpdate, detectedIp, dispositive);
+            //const dataOrderAssociate = await createDataOrderAssociate(orderAssociate);
             //const orderAssociate = data;
             return res.status(200).json({success: true, orderAssociate});
 

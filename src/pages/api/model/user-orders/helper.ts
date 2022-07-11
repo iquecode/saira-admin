@@ -1,7 +1,9 @@
 
 
-import { User } from '@prisma/client';
+import { User, UserOrder } from '@prisma/client';
 import { ParsedUrlQueryInput } from 'querystring';
+import { isPromise } from 'util/types';
+import { normalizedUser } from '../../auth/lib/normalizedUser';
 import { client } from '../../lib/prisma/client';
 import { generateMessageToSendMail, sendMail } from '../../lib/util';
 
@@ -61,12 +63,19 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         return userUpdate;
 }
 
-export async function createUserOrderAssociate(user: User)   {
+
+export async function createUserOrderAssociate(user: User, ip: string, dispositive: string)   {
     const newUserOrderAssociate = await client.userOrder.create({
         data: {
           userId: user.id,
           typeUserOrderId: 'associate',
           status: 'created',  //created, pendency, denied, under_debate, accept     
+          DataUserOrder: {
+            create: [
+              {name: 'ip', value: ip},
+              {name: 'dispositive', value: dispositive},
+            ]
+          }
         },
       })
       if(!newUserOrderAssociate) {
@@ -74,8 +83,55 @@ export async function createUserOrderAssociate(user: User)   {
       }
       let template = await generateMessageToSendMail('order-associate-apply.html');
       template = template.replace('{ID}', newUserOrderAssociate.id);
-      //template = template.replace('{DADOS}', {name});
+      const dataOrder = await getDataOrderAssociate(newUserOrderAssociate, ip, dispositive);
+      template = template.replace('{DADOS}', dataOrder );
       const emailSended = await sendMail('mailer@institutosaira.org',user.email,
-                'Instituto Saíra - redefinição de senha', template );
+                'Instituto Saíra - seu pedido de associação foi recebido :)', template );
       return newUserOrderAssociate.id;
+}
+
+
+
+async function getDataOrderAssociate(order: UserOrder, ip: string, dispositive: string) {
+
+
+
+  const user = await client.user.findUnique({
+    where: {
+      id: order.userId,
+    },
+    include: {
+      circles: true,
+      roles: true,
+      orders: {
+        include: {
+          DataUserOrder: true,
+        }
+      },
+      documentType: true,
+      city: {
+        include: {
+          state: true,
+        }
+      }
+    }
+  });
+
+  let data = '<pre>';
+  data += 'Momento da solicitação....: ' + order.createdAt + '<br/>'; 
+  data +=    'Usuário solicitante.......: ' + user.email + '<br/>';
+  data +=    'IP da solicitação.........: ' + ip  + '<br/>';
+  data +=    'Dispositivo da solicitação: ' + dispositive  + '<br/>';
+  data +=    '-------------------------------------------- <br/><br/>'
+  data +=    'Dados cadastrais enviados:<br/>'
+  data +=    '-------------------------------------------- <br/>'
+  data +=    'Nome..............: ' + user.name + '<br/>';
+  data +=    'CPF...............: ' + user.cpf + '<br/>';
+  data +=    'Doc. identificação: ' + user.documentType.name + ' ' + user.documentNumber +  '<br/>';
+  data +=    'Ocupação..........: ' + user.occupation + '<br/>';
+  data +=    'Endereço..........: ' + user.addressLine1 + ' ' + user.addressLine2 + ' ' + user.city.name + ' ' + user.city.state.uf + '<br/>';
+  data +=    'Filiação..........: ' + user.motherName + ' | ' + user.fatherName + '<br/>';
+  data +=    'Data nascimento...: ' + user.birthDate + '<br/>';
+  
+  return data;
 }

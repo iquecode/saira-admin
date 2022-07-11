@@ -10,8 +10,8 @@ import Associate from '../components/pages/dashboard/Associate/Associete';
 import Suggestions from '../components/pages/dashboard/Suggestions';
 import Notes from '../components/pages/dashboard/Notes';
 import Preferences from '../components/pages/dashboard/Preferences';
-import Profile from '../components/pages/dashboard/Profile';
 import { UserOrder } from '@prisma/client';
+import Profile from '../components/pages/dashboard/components/Profile/Profile';
 
 export default function Dashboard(props) {
 
@@ -33,10 +33,11 @@ export default function Dashboard(props) {
       console.log(orderAssociateStatus);
     }
   }, []);
-
+  
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const nav = [
-    { name: 'Geral',  element: <Geral user={user} orderAssociateStatus={orderAssociateStatus}/>, current: true },
+    { name: 'Geral',  element: <Geral user={user} orderAssociateStatus={orderAssociateStatus} setCurrent={setCurrent}/>, current: true },
     { name: 'Agenda', element: <Schedule user={user}/>, current: false },
     { name: 'Círculos/papeis', element: <CirclesAndRoles user={user}/>, current: false },
     { name: 'Associe-se', element: <Associate user={user} orderAssociateStatus={orderAssociateStatus} setOrderAssociateStatus={setOrderAssociateStatus}/>, current: false },
@@ -45,13 +46,13 @@ export default function Dashboard(props) {
     { name: 'Preferências', element:<Preferences user={user} />,current: false },
     { name: 'Perfil', element: <Profile user={user} />, current: false },
   ]; 
+  const [navigation, setNavigation] = useState(nav);
   const classNameCurrent = "inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500";
   const classNameNotCurrent = "inline-block p-4 rounded-t-lg hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300";
   
-  const elements =  [<Geral user={user} orderAssociateStatus={orderAssociateStatus}/>,<Schedule user={user}/>];
+  //const elements =  [<Geral user={user} orderAssociateStatus={orderAssociateStatus} setCurrentIndex={setCurrentIndex}/>,<Schedule user={user}/>];
 
-  const [navigation, setNavigation] = useState(nav);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  
   
   console.log(navigation);
 

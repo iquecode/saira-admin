@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserNormalized } from "../../../model/User";
 import { SimpleCard } from "./components/SimpleCard"
 import { UserOrder } from "@prisma/client";
@@ -7,9 +7,10 @@ import { UserOrder } from "@prisma/client";
 type GeralProps = {
   user: UserNormalized,
   orderAssociateStatus: string,
+  setCurrent: Dispatch<SetStateAction<number>>;
 }
 
-export default function Geral({user, orderAssociateStatus}:GeralProps) {
+export default function Geral({user, orderAssociateStatus, setCurrent}:GeralProps) {
 
         //console.log(user);
         return (
@@ -33,22 +34,32 @@ export default function Geral({user, orderAssociateStatus}:GeralProps) {
   </div>
 : 
    <SimpleCard title={`Olá ${user.email} :)`} text="...bom, chamei você pelo seu email, pois não sei seu nome hehe.
-   Se quiser se apresentar, você pode atualizar seus danos em perfil." />  
+   Se quiser se apresentar, você pode atualizar seus danos em perfil."
+               action={()=>setCurrent(7)}  
+   />  
 }
 
 { !user.associated && !orderAssociateStatus ?
-  <SimpleCard title="Se associe ao Instituto" text="Vai ser muito bom ter você como membro formal. Assim, nos fortalecemos e você terá direito de participar das decisões estratégias :)" />
+  <SimpleCard title="Se associe ao Instituto" 
+              text="Vai ser muito bom ter você como membro formal. Assim, nos fortalecemos e você terá direito de participar das decisões estratégias :)" 
+              action={()=>setCurrent(3)}          
+  />
   : 
   null
 }
 
 { !user.associated && orderAssociateStatus=='pendency' ?
-  <SimpleCard title="Pendência..." text="Existe pendência no seu pedido de associação ao instituto. Verifique..." />
+  <SimpleCard title="Pendência..." text="Existe pendência no seu pedido de associação ao instituto. Verifique..."
+              action={()=>setCurrent(3)}  
+  />
+              
   : 
   null
 }
 
-<SimpleCard title="Envie sua sugestão" text="Eu sou uma plataforma que ainda está sendo construída e toda a ajuda é bem vinda para me deixar bem legal e inteligente..." />
+<SimpleCard title="Envie sua sugestão" text="Eu sou uma plataforma que ainda está sendo construída e toda a ajuda é bem vinda para me deixar bem legal e inteligente..."
+            action={()=>setCurrent(4)}  
+/>
 
 
 </div>

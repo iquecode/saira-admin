@@ -32,11 +32,30 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         if (!!facebook)  contacts.push({name: 'Facebook',     value: facebook, userId: id  });
         if (!!whatsapp)  contacts.push({name: 'Whatsapp',     value: whatsapp, userId: id  });
         if (!!telegram)  contacts.push({name: 'Telegram',     value: telegram, userId: id  });
-        if (contacts.length > 0) {
-          const newContactsUser = await client.contact.createMany({
-              data: contacts, 
-          });
+        
+        if(contacts.length > 0) {
+          contacts.forEach( async (item) => {
+            const newContactUser = await client.contact.upsert({
+                     where: {
+                      unique_contact_user: {name: item.name, userId: id},
+                     },
+                     update : {
+                      value: item.value,
+                     },
+                     create: {
+                       name: item.name,
+                       value: item.value,
+                       userId: id
+                     }
+            });
+          })
         }
+        
+        // if (contacts.length > 0) {
+        //   const newContactsUser = await client.contact.createMany({
+        //       data: contacts, 
+        //   });
+        // }
         return userUpdate.id;
 }
 

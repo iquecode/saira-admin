@@ -146,7 +146,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
             }
         })
         .catch(error=>{
-            setErrorMessage(error.message);
+            console.log(error);
         });
     }
 
@@ -171,7 +171,9 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
             setStates(data.states);
             setTypesDocuments(data.typeDocuments);
             reset(populateFormWithDataUser(user));
-            handleStateChange(user.city.state.uf, user.cityId as unknown as string);
+            if(user.city) {
+                handleStateChange(user.city?.state.uf, user.cityId as unknown as string);
+            }
             if(!user.countryId) setValue('countryId', 33);
             if(!user.documentTypeId)  setValue('documentTypeId', '1');
         })

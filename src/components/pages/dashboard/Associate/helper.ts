@@ -63,6 +63,23 @@ export function populateFormWithDataUser(user: UserNormalized) {
 }
 
 
+
+export function populateFormInfoProfileWithDB(user: UserNormalized) {
+    const formData = {
+        name: user.name,
+        socialName: user.socialName, 
+        nickname: user.nickname,
+        birthDate: user.birthDate?.substring(0,10),
+        occupation: user.occupation,
+        countryId: 33,
+        stateId: user.city?.state?.uf,
+        cityId: user.cityId as unknown as string,
+        bio: user.bio,
+    };
+    return formData as TypeFormData;
+}
+
+
 export async function getDataDBtoForm() {
     const contries = await api.get('model/country/get-countries');
     const states = await api.get('model/state/get-states');

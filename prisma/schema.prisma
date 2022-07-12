@@ -31,7 +31,7 @@ model User {
   documentTypeId         Int?          @map("document_type_id")
   fatherName             String?       @map("father_name")
   motherName             String?       @map("mother_name")
-  bio                    String?       
+  bio                    String?
   updatedAt              DateTime?     @updatedAt @map("updated_at")
   active                 Boolean       @default(true)
   deletable              Boolean       @default(true)
@@ -41,12 +41,13 @@ model User {
   loginBlocked           Boolean       @default(false) @map("login_blocked")
   loginBlockedReason     String?       @map("login_blocked_reason")
   type                   String?       @default("user")
-  associated             Boolean       @default(false) 
+  associated             Boolean       @default(false)
   birthDate              String?       @map("birth_date")
   loginBlockedExpiration Int?          @map("login_blocked_expiration")
   tokenEmailVerify       String?       @unique @map("token_email_verify")
   tokenResetPassword     String?       @unique @map("token_reset_password")
   tokenSignUpFlow        String?       @unique @map("token_signup_flow")
+  personalNotes          String?       @map("personal_notes")
   city                   City?         @relation(fields: [cityId], references: [id])
   country                Country?      @relation(fields: [countryId], references: [id])
   documentType           DocumentType? @relation(fields: [documentTypeId], references: [id])
@@ -55,6 +56,7 @@ model User {
   tokensHash             TokenHash[]
   orders                 UserOrder[]
   circles                Circle[]
+  suggestions            Suggestion[]
 
   @@map("users")
 }
@@ -111,7 +113,7 @@ model Role {
 
 model Contact {
   id        String    @id @default(uuid())
-  name      String    
+  name      String
   value     String
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
@@ -120,8 +122,8 @@ model Contact {
   deleted   Boolean   @default(false)
   user      User      @relation(fields: [userId], references: [id])
 
+  @@unique([name, userId], name: "unique_contact_user")
   @@map("contacts")
-  @@unique([name, userId], name:"unique_contact_user")
 }
 
 model DocumentType {
@@ -188,19 +190,17 @@ model TokenHash {
   @@map("tokens_hash")
 }
 
-
-
-//Ex. Pedido de associação ao instituto 
+//Ex. Pedido de associação ao instituto
 //
 model TypeUserOrder {
-  id          String    @id @default(uuid())
-  name        String    
-  note        String?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-  deletable   Boolean   @default(true)
-  deleted     Boolean   @default(false)
-  userOrders  UserOrder[]
+  id         String      @id @default(uuid())
+  name       String
+  note       String?
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime?   @updatedAt @map("updated_at")
+  deletable  Boolean     @default(true)
+  deleted    Boolean     @default(false)
+  userOrders UserOrder[]
 
   @@map("types_user_orders")
 }
@@ -209,29 +209,46 @@ model TypeUserOrder {
 // dispositivo compromisso com os princípios fundamentais
 //ip compromisso com os princípios fundamentais
 model DataUserOrder {
-  id              String    @id @default(uuid())
-  name            String
-  value           String
-  userOrderId     String    @map("user_order_id")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime? @updatedAt @map("updated_at")
-  deletable       Boolean   @default(true)
-  deleted         Boolean   @default(false)
-  userOrder       UserOrder @relation(fields: [userOrderId], references: [id], onDelete: Cascade)
+  id          String    @id @default(uuid())
+  name        String
+  value       String
+  userOrderId String    @map("user_order_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletable   Boolean   @default(true)
+  deleted     Boolean   @default(false)
+  userOrder   UserOrder @relation(fields: [userOrderId], references: [id], onDelete: Cascade)
+
   @@map("data_user_orders")
 }
 
 model UserOrder {
-  id                 String        @id @default(uuid())
-  userId             String        @map("user_id")
-  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  typeUserOrderId    String        @map("type_user_order_id")
-  type               TypeUserOrder @relation(fields: [typeUserOrderId], references: [id])
-  status             String        @map("status")
-  DataUserOrder      DataUserOrder[]
-  createdAt          DateTime  @default(now()) @map("created_at")
-  updatedAt          DateTime? @updatedAt @map("updated_at")
-  deletable          Boolean   @default(true)
-  deleted            Boolean   @default(false)
+  id              String          @id @default(uuid())
+  userId          String          @map("user_id")
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  typeUserOrderId String          @map("type_user_order_id")
+  type            TypeUserOrder   @relation(fields: [typeUserOrderId], references: [id])
+  status          String          @map("status")
+  DataUserOrder   DataUserOrder[]
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime?       @updatedAt @map("updated_at")
+  deletable       Boolean         @default(true)
+  deleted         Boolean         @default(false)
+
   @@map("user_orders")
+}
+
+model Suggestion {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String
+  type        String?
+  image       String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+  deletable   Boolean   @default(true)
+  deleted     Boolean   @default(false)
+
+  @@map("suggestions")
 }

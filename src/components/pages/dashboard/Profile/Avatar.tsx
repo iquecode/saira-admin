@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserNormalized } from "../../../../model/User";
 import { api } from "../../../../services/api";
-import useAppData from '../../../../data/hook/useAppData'
+import useAppData from '../../../../data/hook/useAppData';
+import useAuth from '../../../../data/hook/useAuth';
 
 
 type AvatarProps = {
@@ -45,6 +46,7 @@ export default function Avatar({user}:AvatarProps) {
   const [imageFront, setImageFront] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
   const { setLoading} = useAppData();
+  const { getAuthenticatedUser } = useAuth();
 
 
 
@@ -78,6 +80,7 @@ export default function Avatar({user}:AvatarProps) {
     console.log('respose.data:');
     console.log(response.data);
     if (response.data.success) {
+      const userUpdate = getAuthenticatedUser();
       setLoading(false);
     } else {
       setLoading(false);

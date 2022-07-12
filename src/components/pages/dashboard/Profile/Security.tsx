@@ -1,4 +1,5 @@
-import { UserNormalized } from "../../../../../model/User"
+import { UserNormalized } from "../../../../model/User"
+
 
 
 type NotesProps = {
@@ -12,6 +13,9 @@ export default function Security({user}:NotesProps) {
 
     <>
         <h1>Segurança - Em construção</h1>
+
+        *botão para receber email para redefinição de senha
+        *lista com os dispositivos conectados, possibilitando deslogar
    
     </>  
     )

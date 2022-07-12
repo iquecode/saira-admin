@@ -1,14 +1,12 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { UserNormalized } from "../../../../model/User"
-import { api, apiSSR } from "../../../../services/api"
+import { api } from "../../../../services/api"
 import { useForm } from "react-hook-form";
-import InputMask from "react-input-mask";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup"
 import { InputError } from "../../../InputErros"
 import useAppData from '../../../../data/hook/useAppData'
 import useAuth from "../../../../data/hook/useAuth";
-import resetPassword from "../../../../pages/api/auth/reset-password";
 import { getDataDBtoForm, populateFormInfoProfileWithDB } from "../Associate/helper";
 
 type InfosProps = {
@@ -22,15 +20,15 @@ export default function Infos({user}:InfosProps) {
     const [countryIdSelected, setCountryIdSelected] = useState<number | null>(33);
 
     const schema = yup.object({
-            name: yup.string().minWords(2),
-            socialName: yup.string(), 
-            nickname: yup.string(),
-            birthDate:yup.date(),
-            occupation: yup.string(),
-            countryId: yup.string(),
-            stateId: countryIdSelected == 33 ? yup.string() : yup.mixed(),
-            cityId: countryIdSelected == 33 ? yup.number() : yup.mixed(),
-            bio: yup.string()
+            name: yup.string().minWords(2).nullable(),
+            socialName: yup.string().nullable(), 
+            nickname: yup.string().nullable(),
+            
+            occupation: yup.string().nullable(),
+            countryId: yup.string().nullable(),
+            stateId: countryIdSelected == 33 ? yup.string().nullable() : yup.mixed().nullable(),
+            cityId: countryIdSelected == 33 ? yup.number().nullable() : yup.mixed().nullable(),
+            bio: yup.string().nullable()
         });
    
     const resolver = {resolver:yupResolver<yup.AnyObjectSchema>(schema)};
@@ -62,7 +60,8 @@ export default function Infos({user}:InfosProps) {
                 data,
             });
             if (response.data.userUpdate) {
-                alert("Eba, deu certo.");
+                const userUpdate = getAuthenticatedUser();
+                alert("Tudo certo, perfil atualizado. : )");
                 console.log('aqui... front pegou response');
                 console.log(response.data.userUpdate);
                 setLoading(false);
@@ -103,7 +102,8 @@ export default function Infos({user}:InfosProps) {
         getDataDBtoForm()
         .then( data => {
             setCountries(data.countries);
-            setStates(data.states);
+            const states = [{id:null, name: 'Selecione...', uf: null}, ...data.states]
+            setStates(states);
             reset(populateFormInfoProfileWithDB(user));
             if(user.city) {
                 handleStateChange(user.city?.state.uf, user.cityId as unknown as string);

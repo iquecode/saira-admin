@@ -71,7 +71,7 @@ export function populateFormInfoProfileWithDB(user: UserNormalized) {
         nickname: user.nickname,
         birthDate: user.birthDate?.substring(0,10),
         occupation: user.occupation,
-        countryId: 33,
+        countryId: user.countryId ? user.countryId : 33,
         stateId: user.city?.state?.uf,
         cityId: user.cityId as unknown as string,
         bio: user.bio,

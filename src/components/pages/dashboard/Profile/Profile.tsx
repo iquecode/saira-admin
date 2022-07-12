@@ -20,7 +20,6 @@ export default function Profile({user}:ProfileProps) {
     const nav = [
         { name: 'Avatar',  element: <Avatar user={user}/>, current: true },
         { name: 'Infos pessoais', element: <Infos user={user}/>, current: false },
-        { name: 'Endereço', element: <Address user={user}/>, current: false },
         { name: 'Segurança', element: <Security user={user} />, current: false },
     ]; 
     const [navigation, setNavigation] = useState(nav);

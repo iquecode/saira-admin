@@ -9,7 +9,6 @@ import CirclesAndRoles from '../components/pages/dashboard/CirclesAndRoles';
 import Associate from '../components/pages/dashboard/Associate/Associete';
 import Suggestions from '../components/pages/dashboard/Suggestions';
 import Notes from '../components/pages/dashboard/Notes';
-import Preferences from '../components/pages/dashboard/Preferences';
 import { UserOrder } from '@prisma/client';
 import Profile from '../components/pages/dashboard/Profile/Profile';
 
@@ -43,7 +42,6 @@ export default function Dashboard(props) {
     { name: 'Associe-se', element: <Associate user={user} orderAssociateStatus={orderAssociateStatus} setOrderAssociateStatus={setOrderAssociateStatus}/>, current: false },
     { name: 'Sugestões', element:<Suggestions user={user} />,current: false },
     { name: 'Anotações', element:<Notes user={user} /> ,current: false },
-    { name: 'Preferências', element:<Preferences user={user} />,current: false },
     { name: 'Perfil', element: <Profile user={user} />, current: false },
   ]; 
   const [navigation, setNavigation] = useState(nav);

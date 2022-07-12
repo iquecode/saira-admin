@@ -11,7 +11,7 @@ import Suggestions from '../components/pages/dashboard/Suggestions';
 import Notes from '../components/pages/dashboard/Notes';
 import Preferences from '../components/pages/dashboard/Preferences';
 import { UserOrder } from '@prisma/client';
-import Profile from '../components/pages/dashboard/components/Profile/Profile';
+import Profile from '../components/pages/dashboard/Profile/Profile';
 
 export default function Dashboard(props) {
 

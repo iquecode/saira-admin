@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UserNormalized } from "../../../../../model/User";
+import { UserNormalized } from "../../../../model/User";
 import Address from "./Address";
 import Avatar from "./Avatar";
 import Infos from "./Infos";

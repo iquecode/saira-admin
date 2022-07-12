@@ -4,16 +4,12 @@ import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import Link from 'next/link';
 import useAppData from '../../../data/hook/useAppData';
 import useAuth from '../../../data/hook/useAuth';
+import { UserNormalized } from "../../../model/User";
 
 
 
 
-const user = {
-    name: 'Fulano de Tal',
-    email: 'fulano@tal.com',
-    imageUrl:
-      'https://avatars.githubusercontent.com/iquecode',
-  }
+
 
 
   const nav = [
@@ -46,10 +42,19 @@ interface HeaderProps {
 
 
 
+// const user = {
+//   name: 'Fulano de Tal',
+//   email: 'fulano@tal.com',
+//   imageUrl:
+//     'https://avatars.githubusercontent.com/iquecode',
+// }
+
+
+
 export function Header({menuIndex}) {
 
     const { setMenuIndex } = useAppData();
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
     useEffect(() => {
       if( menuIndex == 0 ) {
@@ -134,7 +139,7 @@ export function Header({menuIndex}) {
                         <div>
                           <Menu.Button className="max-w-xs dark:bg-zinc-900     rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                            <img className="h-8 w-8 rounded-full" src={user.avatarURL ? user.avatarURL : '/images/avatar.svg'} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -212,10 +217,10 @@ export function Header({menuIndex}) {
               
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img className="h-10 w-10 rounded-full" src={user.avatarURL ? user.avatarURL : '/images/avatar.svg'} alt="" />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">{user.name}</div>
+                      <div className="text-base font-medium leading-none text-white">{user.nickname ? user.nickname : user.socialName ? user.socialName : user.name}</div>
                       <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
                     </div>
                     <button
@@ -240,9 +245,11 @@ export function Header({menuIndex}) {
                     ))}
                   </div>
                 </div>
+                
               </Disclosure.Panel>
             </>
           )}
+          
         </Disclosure>
 
 

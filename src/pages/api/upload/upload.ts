@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     
 
-    const { documentPhotoURL1, documentPhotoURL2} = req.body;
+    const { documentPhotoURL1, documentPhotoURL2, avatarURL} = req.body;
 
     const jwt = cookies.OursiteJWT;
     if (!jwt) {
@@ -27,15 +27,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false })
     }
 
-
+    let data = {} as any;
+    data.documentPhotoURL1 = documentPhotoURL1 ? documentPhotoURL1 : undefined;
+    data.documentPhotoURL2 = documentPhotoURL2 ? documentPhotoURL2 : undefined;
+    data.avatarURL = avatarURL ? avatarURL : undefined;
     const userUpdate = await client.user.update({
         where: {
             id: <string>userId ,
         },
-        data: {
-            documentPhotoURL1,
-            documentPhotoURL2,
-        },
+        data,
         });
     if(!userUpdate) {
         return res.json({ error:"error store db!" , message: "error store db!", success:false })

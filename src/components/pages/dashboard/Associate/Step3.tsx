@@ -190,7 +190,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
 
     <>
     <p className="text-brandBlue-500 font-bold p-4">3. Cadastro para submeter o pedido de associação.</p>
-    <div className="p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
+    <div className="p-1 sm:p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
         
         <div className="mt-6">
             <p className="text-lg font-semibold mb-8">Quase acabando :) . Agora só falta preencher e enviar os dados abaixo, 
@@ -208,7 +208,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
 
 
 
-            <div className="border-dotted border-2 p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
+            <div className="border-dotted border-2 p-1 sm:p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
                     <p className="text-base text-zinc-400 font-semibold">Dados de identificação*</p>
 
 
@@ -285,7 +285,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
                 </div>
 
     
-                <div className="border-dotted border-2 p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
+                <div className="border-dotted border-2 p-1 sm:p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
                     <p className="text-base text-zinc-400 font-semibold">Onde você mora?*</p>
                     <label className="label-input-form">País*
                         <select {...register('countryId', {
@@ -350,7 +350,7 @@ export default function Step3({user, setCurrentStep, setOrderAssociateStatus}:As
                     </label>
                 </div>
                 
-                <div className="border-dotted border-2 p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
+                <div className="border-dotted border-2 p-1 sm:p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
                     <p className="text-base text-zinc-400 font-semibold"><span className="text-brandBlue-500">Informações Opcionais:</span> se quiser informe outros dados de contato e/ou uma biografia de apresenação : )</p>
                     <label className="label-input-form">Email Alternativo
                         <input {...register('alternativeEmail')} 

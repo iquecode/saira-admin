@@ -56,14 +56,14 @@ export function Suggestions({user}:InfosProps) {
     <>
 
 
-<div className="mt-6 p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
+<div className="mt-6 p-3 sm:p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
 <RoadMap />
 </div>
 
 
 
      
-    <div className="mt-6 p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
+    <div className="mt-6 p-1 sm:p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
         
 
 
@@ -79,9 +79,9 @@ export function Suggestions({user}:InfosProps) {
 
 
             <form className="flex flex-col" onSubmit={handleSubmit}>
-            <p className="text-brandBlue-500 font-bold">Sugestões ou relato de erro</p>
+            <p className="text-brandBlue-500 font-bold text-center sm:text-left">Sugestões ou relato de erro</p>
 
-            <div className="border-dotted border-2 p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
+            <div className="border-dotted border-2 p-1 sm:p-3 dark:border-gray-700 border-gray-300 rounded-lg mt-6">
                 {/* <p className="text-base text-zinc-400 font-semibold">Informe as infos que quiser :)</p> */}
                 <label className={`label-input-form`}>Tipo
                     <select 

@@ -20,7 +20,7 @@ export default function Infos() {
 
 
     const schema = yup.object({
-            name: yup.string().minWords(2).nullable(),
+            name: yup.string().nullable(),
             socialName: yup.string().nullable(), 
             nickname: yup.string().nullable(),
             
@@ -142,7 +142,8 @@ export default function Infos() {
 
                 <label className="label-input-form">Nome completo
                     <input {...register('name')} 
-                    type="text" id="name" className="input-form" placeholder='conforme seu documento' />
+                    readOnly={user.associated}
+                    type="text" id="name" className={`input-form ${user.associated ? 'cursor-not-allowed' : null}`} placeholder='conforme seu documento' />
                     <InputError type={errors?.name?.type? errors['name'].type : null} field={'name'} />
                 </label>
                 {/* {!errors? null : errors['name']?.type && <InputError type={errors['name'].type} field={'name'} />} */}
@@ -168,7 +169,8 @@ export default function Infos() {
                 
                 <label className="label-input-form">Data de nascimento
                     <input {...register('birthDate')} 
-                    type="date" id="birthDate" className="input-form" />
+                    readOnly={user.associated}
+                    type="date" id="birthDate" className={`input-form ${user.associated ? 'cursor-not-allowed' : null}`} />
                     <InputError type={errors?.birthDate?.type? errors['birthDate'].type : null} field={'birthDate'} />
                 </label>
             

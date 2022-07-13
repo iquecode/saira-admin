@@ -35,7 +35,7 @@ export default function Geral({user, orderAssociateStatus, setCurrent}:GeralProp
 : 
    <SimpleCard title={`Olá ${user.email} :)`} text="...bom, chamei você pelo seu email, pois não sei seu nome hehe.
    Se quiser se apresentar, você pode atualizar seus danos em perfil."
-               action={()=>setCurrent(7)}  
+               action={()=>setCurrent(6)}  
    />  
 }
 

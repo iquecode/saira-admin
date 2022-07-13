@@ -136,7 +136,7 @@ export default function Step1({user, setCurrentStep}:AssocieteProps) {
             
             <p className="mt-8 mb-8 font-semibold">Vamos continuar? : )</p>
             
-            <div className="flex w-full justify-center gap-4">
+            <div className="flex flex-col-reverse sm:flex-row w-full justify-center gap-4">
                 <button className="bg-red-400 
                                     p-3 hover:brightness-110 
                                     duration-200 

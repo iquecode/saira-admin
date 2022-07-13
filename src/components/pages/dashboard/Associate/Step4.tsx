@@ -18,17 +18,17 @@ export default function Step3({user, setCurrentStep}:AssocieteProps) {
           
 
             <ul className="ml-8">
-                <li>1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias.</li>
-                <li>2. Você preenche os dados requeridos e submete seu pedido de associação.</li>
-                <li className="bg-brandGreen-500 font-bold">3. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.</li>
+                {/* <li>1. Você assume o compromisso com os principios fudamentais e demais disposições estatutárias.</li>
+                <li>2. Você preenche os dados requeridos e submete seu pedido de associação.</li> */}
+                {/* <li className="bg-brandGreen-500 font-bold">3. O Círculo Gestor Analisa o pedido e o defere se estiver tudo ok.</li> */}
             </ul>
             
-            <p className="mt-8 mb-8 font-semibold">Vamos continuar? : )</p>
+            <p className="mt-8 mb-8 font-semibold">Seu pedido de associação está em análise. Logo, logo você receberá retorno : ).</p>
             
-            <div className="flex w-full justify-center text-brandOrange-500 font-semibold">
+            {/* <div className="flex w-full justify-center text-brandOrange-500 font-semibold">
                 
                         ESPERAR RESPOSTA
-            </div>
+            </div> */}
         </div>
     </>  
     )

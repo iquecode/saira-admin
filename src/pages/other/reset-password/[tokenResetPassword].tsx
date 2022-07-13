@@ -145,27 +145,6 @@ export default function ResetPassword({email, tokenResetPassword}) {
                                 REDEFINIR SENHA
                             </button>
 
-                            <button type='button' className='mt-6 
-                                            w-full 
-                                            bg-saira-blue 
-                                            text-white
-                                            font-bold
-                                            rounded-sm
-                                            h-12
-                                            hover:brightness-110
-                                            duration-200'
-                                    onClick={() => {
-                                        setToggleResetForm(!toggleResetForm);;
-                                        //setResetForm(false);
-                                    }}
-                            >
-                                RESET
-                            </button>
-
-
-
-
-
                             <div className='mt-5'>
                                 <span className='dark:text-zinc-300 text-zinc-700'>
                                     Já redefiniu a senha?  

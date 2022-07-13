@@ -7,10 +7,13 @@ import  Geral  from '../components/pages/dashboard/Geral';
 import Schedule from '../components/pages/dashboard/Schedule';
 import CirclesAndRoles from '../components/pages/dashboard/CirclesAndRoles';
 import Associate from '../components/pages/dashboard/Associate/Associete';
-import Suggestions from '../components/pages/dashboard/Suggestions';
+
 import Notes from '../components/pages/dashboard/Notes';
 import { UserOrder } from '@prisma/client';
 import Profile from '../components/pages/dashboard/Profile/Profile';
+import { Suggestions } from '../components/pages/dashboard/Suggestions';
+
+
 
 export default function Dashboard(props) {
 

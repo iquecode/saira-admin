@@ -137,3 +137,22 @@ export async function generateMessageToSendMail(file?:string):Promise<string>  {
     }
        
 }
+
+
+
+export async function generateTemplateHTML(file?:string):Promise<string>  {
+    
+    const fileTemplate = file ? file : 'validate.txt';
+    const dirRelative = 'templatesHTML';
+    const dir = path.resolve('./src', dirRelative);
+    const fileWithDir = dir + '/' + fileTemplate;
+    
+    try {
+        const data = await fs.readFile(fileWithDir, 'utf8');
+        return data;
+    } catch (error) {
+        return error.message;
+    }
+       
+}
+

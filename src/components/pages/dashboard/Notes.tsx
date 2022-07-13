@@ -5,7 +5,7 @@ type SuggestionsProps = {
   }
 
 
-export default function Suggestions({user}:SuggestionsProps) {
+export default function Notes({user}:SuggestionsProps) {
        
     return (
 

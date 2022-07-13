@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
-import useAppData from '../../../data/hook/useAppData'
-import useAuth from "../../../data/hook/useAuth";
-import { UserNormalized } from "../../../model/User";
-import { api } from "../../../services/api";
+import useAppData from '../../../../data/hook/useAppData'
+import useAuth from "../../../../data/hook/useAuth";
+import { UserNormalized } from "../../../../model/User";
+import { api } from "../../../../services/api";
+import { RoadMap } from "./RoadMap";
 
 
 type InfosProps = {
     user: UserNormalized
   }
 
-export default function Suggestions({user}:InfosProps) {
+export function Suggestions({user}:InfosProps) {
     const {  getAuthenticatedUser } = useAuth();
     const { setLoading} = useAppData();
 
@@ -53,11 +54,30 @@ export default function Suggestions({user}:InfosProps) {
 
     return (
     <>
-    
+
+
+<div className="mt-6 p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
+<RoadMap />
+</div>
+
+
+
+     
     <div className="mt-6 p-6 w-full text-justify bg-white rounded-lg border border-gray-200 shadow-md dark:bg-zinc-800 dark:border-gray-700 font-normal text-gray-700 dark:text-gray-300">
         
+
+
+        
+       
+        
+    
+
         <div>
             
+
+
+
+
             <form className="flex flex-col" onSubmit={handleSubmit}>
             <p className="text-brandBlue-500 font-bold">Sugestões ou relato de erro</p>
 
@@ -103,6 +123,7 @@ export default function Suggestions({user}:InfosProps) {
         </div>
             
     </div>
+    
     </>  
     )
 }

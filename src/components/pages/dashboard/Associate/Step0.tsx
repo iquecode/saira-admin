@@ -51,11 +51,11 @@ export default function Step0({user, setCurrentStep}:AssocieteProps) {
             {/* <p>aqui {user.documentPhotoURL1}</p> */}
             {/* <img src='https://avatars.githubusercontent.com/u/71681665?v=4' /> */}
 
-            <p>Imagem1</p>
+            {/* <p>Imagem1</p>
             <img src={user.documentPhotoURL1} />
 
             <p className="mt-6">Imagem2</p>
-            <img src={user.documentPhotoURL2} />
+            <img src={user.documentPhotoURL2} /> */}
         </div>
     </>  
     )

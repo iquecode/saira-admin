@@ -1,0 +1,38 @@
+<pre>
+Essa é a versão beta da plataforma, ainda em desenvolvimento.
+Por enquanto está plenamente funcional o cadastramento de novos usuários e o fluxo de novas associações ao Instituto.
+
+Toda a ajuda é bem vinda para construirmos um sistema bem legal para dar suporte ao Instituto, aos projetos, às pessoas associadas e aos usuários.
+
+No final desta página, você pode encaminhar sugestões e/ou relato de erros, para subsidiar a equipe de desenvolvimento.
+
+Abaixo, a lista de implementações que estão no "radar" para serem lançadas em breve:
+
+1. Integração com meio de pagamento e split de pagamento
+Integração com o pagar.me (Instituto já possue conta), possibilitando doações  por pix e cartão de crédito, de forma única ou recorreente (mensal).
+Possibilitar doação para o Instituto como um todo ou para custeio de projetos específicos (com split de pagamento).
+
+2. Implementação das funcionalidades das áreas dos menus Projetos, Governança, Biblioteca, Blog e Faq
+Projetos: área que reunirá informações sobre os projetos, com possibilidade dos usuários submeterem projetos para análise do Instituto, comforme estatuto.
+Governança: detalhes da estrutura Governança do isntituto, documentos de Governança, lista dos círculos e membros, área dos círculos.
+Biblioteca: conteúdo da biblioteca que já temos no Drive.
+Blog: área para cadastro de postagens para o blog público, com integração com o site.
+FAQ: perguntas e respostas.
+
+3.Segurança
+Foi criado um sistema próprio de autenticação para a plataforma com acesso por senha criptografada.
+Quando o usuário informa a senha e email, o sistema gera um Token de autenticação no formato JWT armazenado em cokies com a diretiva httpOnly, possibilitando a leitura apenas pelo servidor (impedindo a possibilidade de sequestro do token em ataques do lado do cliente).
+Uma infomação refetente a este token também é criptografada e armazenada no banco de dados com a indetificação do dispositivo conectado.
+A partir daí, o usuário não precisará mais digitar email e senha para se logar no respectivo dispositivo, pois o sistema o autenticará, validando o token presente no dispositivo com a informação criptografada no banco de dados.
+A cada acesso, o token é recriado e atualizado com outros valores.
+Se o usuário não acessar por 30 dias pelo dispositivo, precisará informar email e senha novamente.
+
+As implementações que estão no "radar": 
+Listagem dos dispositivos conectados para que o usuário posso desconetar pelo seu painel.
+Implementação de dois fatores de autenticação no primeiro acesso a novo dispositivo, exigindo, além de email e senha, 
+o acesso a um email de confirmação enviado pelo sistema. 
+
+4.Conveniência na autenticação
+Talvez seja interessante integrar com o sistema de autenticação com o Google, para que o usuário possa se logar com o Google, sempre que desejar.
+(isso é fácil de fazer, mas decidimos realizar um sistema próprio antes, por questão de autonomia)
+</pre>

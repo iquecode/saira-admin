@@ -42,7 +42,7 @@ export default function Dashboard(props) {
     { name: 'Associe-se', element: <Associate user={user} orderAssociateStatus={orderAssociateStatus} setOrderAssociateStatus={setOrderAssociateStatus}/>, current: false },
     { name: 'Sugestões', element:<Suggestions user={user} />,current: false },
     { name: 'Anotações', element:<Notes user={user} /> ,current: false },
-    { name: 'Perfil', element: <Profile user={user} />, current: false },
+    { name: 'Perfil', element: <Profile  />, current: false },
   ]; 
   const [navigation, setNavigation] = useState(nav);
   const classNameCurrent = "inline-block p-4 text-blue-600 bg-gray-100 rounded-t-lg active dark:bg-gray-800 dark:text-blue-500";

@@ -24,8 +24,8 @@ import { UserNormalized } from "../../../model/User";
 
 
 const userNavigation = [
-    { name: 'Seu Perfil', href: '#' },
-    { name: 'Preferências', href: '#' },
+    // { name: 'Seu Perfil', href: '#' },
+    // { name: 'Preferências', href: '#' },
     { name: 'Sair', href: '#'  },
   ]
   
@@ -126,20 +126,20 @@ export function Header({menuIndex}) {
                   <div className="hidden md:block">
                     <div className="ml-4 flex items-center md:ml-6">
                     
-                      <button
+                      {/* <button
                         type="button"
                         className="bg-zinc-50 dark:bg-zinc-800 p-1 rounded-full text-gray-400 dark:hover:text-white hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                       >
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
+                      </button> */}
 
                       {/* Profile dropdown */}
                       <Menu  as="div" className="ml-3 relative">
                         <div>
                           <Menu.Button className="max-w-xs dark:bg-zinc-900     rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                             <span className="sr-only">Open user menu</span>
-                            <img className="h-8 w-8 rounded-full" src={user.avatarURL ? user.avatarURL : '/images/avatar.svg'} alt="" />
+                            <img className="h-10 w-10 rounded-full" src={user.avatarURL ? user.avatarURL : '/images/avatar.svg'} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -192,7 +192,7 @@ export function Header({menuIndex}) {
 
               <Disclosure.Panel  className="md:hidden">
                 <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                  {navigation.map((item) => (
+                  {navigation.map((item,index) => (
 
                    
                     <Link href={item.href}>
@@ -200,7 +200,7 @@ export function Header({menuIndex}) {
                       key={item.name}
                       as="a"
                       // href={item.href}
-                      //onClick={async () =>logout()}
+                      onClick={()=>setMenuIndex(index)}
                       className={classNames(
                         item.current ? 'bg-saira-blue text-white' : 'dark:text-gray-400 text-zinc-600 dark:hover:bg-gray-700 dark:hover:text-white hover:bg-zinc-200',
                         'block px-3 py-2 rounded-md text-base font-medium'
@@ -223,13 +223,13 @@ export function Header({menuIndex}) {
                       <div className="text-base font-medium leading-none text-white">{user.nickname ? user.nickname : user.socialName ? user.socialName : user.name}</div>
                       <div className="text-sm font-medium leading-none text-gray-400">{user.email}</div>
                     </div>
-                    <button
+                    {/* <button
                       type="button"
                       className="ml-auto dark:bg-zinc-900 flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
+                    </button> */}
                   </div>
                   <div className="mt-3 px-2 space-y-1">
                     {userNavigation.map((item) => (

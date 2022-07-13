@@ -9,15 +9,15 @@ import useAppData from '../../../../data/hook/useAppData'
 import useAuth from "../../../../data/hook/useAuth";
 import { getDataDBtoForm, populateFormInfoProfileWithDB } from "../Associate/helper";
 
-type InfosProps = {
-    user: UserNormalized
-  }
 
-export default function Infos({user}:InfosProps) {
+export default function Infos() {
     const {  getAuthenticatedUser } = useAuth();
     const { setLoading} = useAppData();
     const [countries, setCountries] = useState<TypeCountry[] | null>(null);
     const [countryIdSelected, setCountryIdSelected] = useState<number | null>(33);
+    const  { user }  = useAuth();
+    
+
 
     const schema = yup.object({
             name: yup.string().minWords(2).nullable(),
@@ -60,7 +60,12 @@ export default function Infos({user}:InfosProps) {
                 data,
             });
             if (response.data.userUpdate) {
-                const userUpdate = getAuthenticatedUser();
+                const upDateAuth = await getAuthenticatedUser();
+                console.log('@@@aqui');
+                //console.log(upDateAuth.data.user);
+                //setUserUpdate(upDateAuth.data.user);
+                
+                //reset(populateFormInfoProfileWithDB(userUpdate.data.user));
                 alert("Tudo certo, perfil atualizado. : )");
                 console.log('aqui... front pegou response');
                 console.log(response.data.userUpdate);
@@ -104,17 +109,21 @@ export default function Infos({user}:InfosProps) {
             setCountries(data.countries);
             const states = [{id:null, name: 'Selecione...', uf: null}, ...data.states]
             setStates(states);
+            
+
             reset(populateFormInfoProfileWithDB(user));
             if(user.city) {
                 handleStateChange(user.city?.state.uf, user.cityId as unknown as string);
             }
             if(!user.countryId) setValue('countryId', 33);
             if(!user.documentTypeId)  setValue('documentTypeId', '1');
+            setValue('bio', user.bio);
+            console.log('aqui', user.bio);
         })
         .catch( error =>
             alert("asda " + error.message)    
         )
-      }, []);
+      }, [,user]);
 
 
     return (

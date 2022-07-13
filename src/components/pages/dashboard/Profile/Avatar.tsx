@@ -5,12 +5,9 @@ import useAppData from '../../../../data/hook/useAppData';
 import useAuth from '../../../../data/hook/useAuth';
 
 
-type AvatarProps = {
-  user: UserNormalized
-}
-
 
 function createImageCanvas(fileInput:any, maxSize=480, elementId="canvas"): string | null{
+
   
   let base64 = null;
   let url = null;
@@ -42,7 +39,10 @@ function createImageCanvas(fileInput:any, maxSize=480, elementId="canvas"): stri
 
 
 
-export default function Avatar({user}:AvatarProps) {
+export default function Avatar() {
+
+
+  const  { user }  = useAuth();
   const [imageFront, setImageFront] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
   const { setLoading} = useAppData();
@@ -107,7 +107,7 @@ export default function Avatar({user}:AvatarProps) {
                                   justify-center
                                   items-center 
                                   bg-white 
-                                  rounded-full 
+                                  rounded-xl 
                                   border-dashed
                                   border 
                                   
@@ -123,7 +123,7 @@ export default function Avatar({user}:AvatarProps) {
                        
                           <div className={`w-72 h-72 p-6 flex text-center justify-center items-center`}>Selecione uma imagem ou tire uma foto para o seu avatar.</div>
                         :  
-                          <img className="rounded-full w-72" src={createObjectURLfront} height='auto' alt="" />
+                          <img className="rounded-xl w-72" src={createObjectURLfront} height='auto' alt="" />
                        }  
                       <input type="file" 
                             name="documentPhoto1" 
@@ -161,7 +161,7 @@ export default function Avatar({user}:AvatarProps) {
                 </div>
 
 
-                <canvas id="canvas" width={480} height={480} className="hidden"></canvas>
+                <canvas id="canvas" width={240} height={240} className="hidden"></canvas>
               
                 
             </div> 

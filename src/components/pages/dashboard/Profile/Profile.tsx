@@ -1,26 +1,20 @@
 import { useState } from "react";
 import { UserNormalized } from "../../../../model/User";
-import Address from "./Address";
 import Avatar from "./Avatar";
 import Infos from "./Infos";
 import Security from "./Security";
-
-
-type ProfileProps = {
-    user: UserNormalized
-  }
+import useAuth from "../../../../data/hook/useAuth";
 
 
 
+export default function Profile() {
 
-export default function Profile({user}:ProfileProps) {
-
-
+    const { user } = useAuth();
 
     const nav = [
-        { name: 'Avatar',  element: <Avatar user={user}/>, current: true },
-        { name: 'Infos pessoais', element: <Infos user={user}/>, current: false },
-        { name: 'Segurança', element: <Security user={user} />, current: false },
+        { name: 'Avatar',  element: <Avatar />, current: true },
+        { name: 'Infos pessoais', element: <Infos />, current: false },
+        { name: 'Segurança', element: <Security />, current: false },
     ]; 
     const [navigation, setNavigation] = useState(nav);
     const classNameCurrent = "inline-block py-3 px-4 text-white bg-brandBlue-500 rounded-lg active";

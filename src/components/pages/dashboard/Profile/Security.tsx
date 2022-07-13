@@ -1,13 +1,7 @@
-import { UserNormalized } from "../../../../model/User"
 
 
 
-type NotesProps = {
-    user: UserNormalized
-  }
-
-
-export default function Security({user}:NotesProps) {
+export default function Security() {
        
     return (
 

@@ -85,8 +85,11 @@ export async function createUserOrderAssociate(user: User, ip: string, dispositi
       template = template.replace('{ID}', newUserOrderAssociate.id);
       const dataOrder = await getDataOrderAssociate(newUserOrderAssociate, ip, dispositive);
       template = template.replace('{DADOS}', dataOrder );
+      const template2 = '<h1>NOVO PEDIDO DE ASSOCIAÇÃO PELO SISTEMA:</h1><br/><br/>' + template;
       const emailSended = await sendMail('mailer@institutosaira.org',user.email,
                 'Instituto Saíra - seu pedido de associação foi recebido :)', template );
+      const emailSended2 = await sendMail('mailer@institutosaira.org','institutosaira@gmail.com',
+      'Instituto Saíra - novo pedido de associação', template2 );
       return newUserOrderAssociate.id;
 }
 

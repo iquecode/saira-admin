@@ -68,13 +68,17 @@ export function Header({menuIndex}) {
 
 
     function setCurrent(index: number) {
+        // let newNavigation2 = []
+        // nav.forEach((item, i) => {
+        //   if(index===i) newNavigation2.push({ name: item.name, href: item.href, current: true });
+        //     else newNavigation2.push({name: item.name, href: item.href, current: false });
+        // })
         const newNavigation = nav.map((item, i) =>{
             if (index === i) return { name: item.name, href: item.href, current: true };
             return  {name: item.name, href: item.href, current: false };
         });
         //console.log("olá!!!");
         setNavigation(newNavigation);
-
     }
 
 
@@ -103,7 +107,6 @@ export function Header({menuIndex}) {
                         
 
                         navigation.map((item, index) => (
-                         
                           <Link 
                             key={item.name}
                             href={item.href}>
@@ -195,7 +198,7 @@ export function Header({menuIndex}) {
                   {navigation.map((item,index) => (
 
                    
-                    <Link href={item.href}>
+                    <Link key={item.name} href={item.href}>
                     <Disclosure.Button
                       key={item.name}
                       as="a"

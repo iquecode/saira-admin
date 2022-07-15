@@ -36,7 +36,7 @@ export default function Governance() {
                 <p>Link para área/app dos Círculos.</p>
             </div>
 
-            {/* <DataGrid columns={columns} data={data} action={test}/> */}
+            <DataGrid columns={columns} data={data} action={test}/>
             
         </Layout>
     )

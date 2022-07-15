@@ -7,7 +7,7 @@ import { UserOrder } from "@prisma/client";
 type GeralProps = {
   user: UserNormalized,
   orderAssociateStatus: string,
-  setCurrent: Dispatch<SetStateAction<number>>;
+  setCurrent?: Dispatch<SetStateAction<number>>;
 }
 
 export default function Geral({user, orderAssociateStatus, setCurrent}:GeralProps) {

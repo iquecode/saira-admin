@@ -12,7 +12,7 @@ import { UserNormalized } from "../../../model/User";
 
 
 
-  const nav = [
+  const standardNav = [
     { name: 'Painel', href: '/dashboard', current: true },
     { name: 'Projetos', href: '/projects', current: false },
     { name: 'Governança', href: '/governance', current: false },
@@ -53,12 +53,23 @@ interface HeaderProps {
 
 export function Header({menuIndex}) {
 
-    const { setMenuIndex } = useAppData();
-    const { logout, user } = useAuth();
+    
+
+  const { setMenuIndex } = useAppData();
+  const { logout, user } = useAuth();
+
+  function nav() {
+    if(user?.circles[1].code=='cg') {
+      return [...standardNav,{ name: 'Círculo Gestor', href: '/admin', current: false }];
+    } 
+    return standardNav;
+  }  
+
+    console.log(user);
 
     useEffect(() => {
       if( menuIndex == 0 ) {
-        setNavigation(nav);
+        setNavigation(nav());
       }
      setCurrent(menuIndex)
      setMenuIndex(menuIndex)
@@ -73,7 +84,7 @@ export function Header({menuIndex}) {
         //   if(index===i) newNavigation2.push({ name: item.name, href: item.href, current: true });
         //     else newNavigation2.push({name: item.name, href: item.href, current: false });
         // })
-        const newNavigation = nav.map((item, i) =>{
+        const newNavigation = nav().map((item, i) =>{
             if (index === i) return { name: item.name, href: item.href, current: true };
             return  {name: item.name, href: item.href, current: false };
         });
@@ -83,6 +94,8 @@ export function Header({menuIndex}) {
 
 
     return (
+
+    
 
 
         <Disclosure as="nav" className="bg-white dark:bg-zinc-800">

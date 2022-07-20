@@ -5,8 +5,8 @@ export default function Blog() {
 
     return (
         <Layout 
-            titulo='Blog' 
-            subtitulo='Informações sobre os projetos!'
+            title='Blog' 
+            subtitle='Informações sobre os projetos!'
             page='blog'
             
         >

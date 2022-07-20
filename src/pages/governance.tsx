@@ -22,8 +22,8 @@ export default function Governance() {
 
     return (
         <Layout 
-            titulo='Governança' 
-            subtitulo='Informações sobre os projetos!'
+            title='Governança' 
+            subtitle='Informações sobre os projetos!'
             page='governance'
             
         >

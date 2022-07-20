@@ -5,23 +5,8 @@ import Link from 'next/link';
 import useAppData from '../../../data/hook/useAppData';
 import useAuth from '../../../data/hook/useAuth';
 import { UserNormalized } from "../../../model/User";
-
-
-
-
-
-
-
-  const standardNav = [
-    { name: 'Painel', href: '/dashboard', current: true },
-    { name: 'Projetos', href: '/projects', current: false },
-    { name: 'Governança', href: '/governance', current: false },
-    { name: 'Biblioteca', href: '/library', current: false },
-    { name: 'Blog', href: '/blog', current: false },
-    { name: 'FAQ', href: '/faq', current: false },
-  ]; 
-
-
+import { Circle } from '@prisma/client';
+import { adminNav, standardNav } from './navs'
 
 const userNavigation = [
     // { name: 'Seu Perfil', href: '#' },
@@ -34,32 +19,21 @@ const userNavigation = [
   }
 
 
-
-
 interface HeaderProps {
-    menuIndex: number
+  menuIndex: number;
+  nav?: {name: string, href: string, current: boolean}[];
 }
 
-
-
-// const user = {
-//   name: 'Fulano de Tal',
-//   email: 'fulano@tal.com',
-//   imageUrl:
-//     'https://avatars.githubusercontent.com/iquecode',
-// }
-
-
-
-export function Header({menuIndex}) {
+export function Header({menuIndex, nav=standardNav} : HeaderProps) {
 
     
-
   const { setMenuIndex } = useAppData();
   const { logout, user } = useAuth();
 
-  function nav() {
-    if(user?.circles[1].code=='cg') {
+  function TESTnav() {
+    const circleCG = user?.circles.filter((circle:Circle) => circle.code == 'cg');
+    console.log("aqui..") 
+    if(circleCG.length) {
       return [...standardNav,{ name: 'Círculo Gestor', href: '/admin', current: false }];
     } 
     return standardNav;
@@ -69,7 +43,7 @@ export function Header({menuIndex}) {
 
     useEffect(() => {
       if( menuIndex == 0 ) {
-        setNavigation(nav());
+        setNavigation(nav);
       }
      setCurrent(menuIndex)
      setMenuIndex(menuIndex)
@@ -84,7 +58,7 @@ export function Header({menuIndex}) {
         //   if(index===i) newNavigation2.push({ name: item.name, href: item.href, current: true });
         //     else newNavigation2.push({name: item.name, href: item.href, current: false });
         // })
-        const newNavigation = nav().map((item, i) =>{
+        const newNavigation = nav.map((item, i) =>{
             if (index === i) return { name: item.name, href: item.href, current: true };
             return  {name: item.name, href: item.href, current: false };
         });

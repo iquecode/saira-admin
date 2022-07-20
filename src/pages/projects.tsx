@@ -5,8 +5,8 @@ export default function Projects() {
 
     return (
         <Layout 
-            titulo='Projetos' 
-            subtitulo='Informações sobre os projetos!'
+            title='Projetos' 
+            subtitle='Informações sobre os projetos!'
             page='projects'
             
         >

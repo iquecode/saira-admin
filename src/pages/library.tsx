@@ -5,8 +5,8 @@ export default function Library() {
 
     return (
         <Layout 
-            titulo='Biblioteca' 
-            subtitulo='Informações sobre os projetos!'
+            title='Biblioteca' 
+            subtitle='Informações sobre os projetos!'
             page='library'
             
         >

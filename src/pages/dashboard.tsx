@@ -54,7 +54,7 @@ export default function Dashboard(props) {
     <>
 
       
-    <Layout titulo='Seu painel' subtitulo='template em construção' page='dashboard'>
+    <Layout title='Seu painel' subtitle='template em construção' page='dashboard'>
       { user ? 
        <Tab nav={nav}/>
        : null}

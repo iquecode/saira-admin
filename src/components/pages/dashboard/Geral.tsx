@@ -1,8 +1,9 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserNormalized } from "../../../model/User";
-import { SimpleCard } from "./components/SimpleCard"
-import { UserOrder } from "@prisma/client";
+import { SimpleCard } from "../../SimpleCard"
+import { Circle, UserOrder } from "@prisma/client";
+import route from "next/router";
 
 type GeralProps = {
   user: UserNormalized,
@@ -11,6 +12,15 @@ type GeralProps = {
 }
 
 export default function Geral({user, orderAssociateStatus, setCurrent}:GeralProps) {
+
+  function isAdmin() {
+    const circleCG = user?.circles.filter((circle:Circle) => circle.code == 'cg');
+    console.log("aqui..") 
+    if(circleCG.length >= 1) {
+      return true;
+    }
+    return false;
+  }  
 
         //console.log(user);
         return (
@@ -60,6 +70,19 @@ export default function Geral({user, orderAssociateStatus, setCurrent}:GeralProp
 <SimpleCard title="Envie sua sugestão" text="Eu sou uma plataforma que ainda está sendo construída e toda a ajuda é bem vinda para me deixar bem legal e inteligente..."
             action={()=>setCurrent(4)}  
 />
+
+{
+  isAdmin() ? 
+  <SimpleCard title={`Círculo Gestor`} text="...clique aqui para ir à área de gestão."
+               action={()=>route.push('/admin/dashboard')}  
+   />  
+  :
+  null
+
+
+
+
+}
 
 
 </div>

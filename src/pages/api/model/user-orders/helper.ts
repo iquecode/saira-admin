@@ -94,10 +94,49 @@ export async function createUserOrderAssociate(user: User, ip: string, dispositi
 }
 
 
+export async function getAssociateOrders(skip=0, take=10) {
+  const [associateOrders, total] = await client.$transaction([
+    prisma.userOrder.findMany({
+      skip,
+      take,
+      where: {
+        typeUserOrderId:'associate',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            name: true,
+          },
+        },
+        type: true,
+        DataUserOrder: true,
+      }
+    }),
+    client.userOrder.count({
+      where: {
+        typeUserOrderId:'associate',
+      }
+    })
+  ])
+  
+  return {associateOrders: normalizeAssociateOrders(associateOrders), total};
+}
+
+function normalizeAssociateOrders(associateOrders) {
+  const normalized = associateOrders.map((order) => {
+    return {id: order.id, name:order.user.name, email: order.user.email, status: order.status, createdAt: order.createdAt};
+  })
+  return normalized;
+}
+
+
 
 async function getDataOrderAssociate(order: UserOrder, ip: string, dispositive: string) {
-
-
 
   const user = await client.user.findUnique({
     where: {
@@ -138,3 +177,5 @@ async function getDataOrderAssociate(order: UserOrder, ip: string, dispositive: 
   
   return data;
 }
+
+

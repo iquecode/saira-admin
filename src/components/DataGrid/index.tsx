@@ -9,12 +9,6 @@ interface DataGridProps {
 
 export function DataGrid({columns, data, action} : DataGridProps) {
 
-
-useEffect(() => {
-  
-
-} , [])
-
 return (
 
     <div className="overflow-x-auto relative shadow-md sm:rounded-lg">

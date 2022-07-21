@@ -1,4 +1,5 @@
 import { DataGrid } from "../components/DataGrid";
+import { Pagination } from "../components/Pagination";
 import Layout from "../components/template/Layout";
 
 export default function Governance() {
@@ -36,7 +37,13 @@ export default function Governance() {
                 <p>Link para área/app dos Círculos.</p>
             </div>
 
-            <DataGrid columns={columns} data={data} action={test}/>
+            <div className="w-full">
+                <DataGrid columns={columns} data={data} action={test}/>
+                <div className="flex mt-9 justify-center w-ful">
+                    <Pagination />
+                </div>
+            </div>
+            
             
         </Layout>
     )

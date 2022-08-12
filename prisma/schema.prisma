@@ -40,7 +40,7 @@ model User {
   loginAttempts          Int           @default(0) @map("login_attempts")
   loginBlocked           Boolean       @default(false) @map("login_blocked")
   loginBlockedReason     String?       @map("login_blocked_reason")
-  type                   String?       @default("user")
+  type                   String?       @default("user") //member  manager  admin
   associated             Boolean       @default(false)
   birthDate              String?       @map("birth_date")
   loginBlockedExpiration Int?          @map("login_blocked_expiration")

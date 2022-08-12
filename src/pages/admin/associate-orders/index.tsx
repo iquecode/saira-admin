@@ -1,8 +1,9 @@
-import Layout from "../../components/template/Layout";
-import { adminNav } from '../../components/template/Header/navs'
+import Layout from "../../../components/template/Layout";
+import { adminNav } from '../../../components/template/Header/navs'
 import { useEffect, useState } from "react";
-import { api } from "../../services/api";
-import { DataGrid } from "../../components/DataGrid";
+import { api } from "../../../services/api";
+import { DataGrid } from "../../../components/DataGrid";
+import route from "next/router";
 
 export default function AssociateOrders() {
 
@@ -56,7 +57,7 @@ export default function AssociateOrders() {
                 <p>Pedidos de associação</p>
 
                 {orders ?
-                    <DataGrid columns={columns} data={orders} action={(id)=>alert('ID: ' + id)} />
+                    <DataGrid columns={columns} data={orders} action={(id)=>route.push('/admin/associate-orders/'+id)} />
                     :
                  null
                 }

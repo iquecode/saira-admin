@@ -1,4 +1,5 @@
 
+import { normalizedUser } from '../../auth/lib/normalizedUser';
 import { client } from '../../lib/prisma/client';
 
 export async function updateUserWithDataForm(id:string, data:any)   {
@@ -35,4 +36,46 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         }
        
         return userUpdate;
+}
+
+
+async function getUserIdFromOrderId(orderId: string) {
+  const order = await client.userOrder.findUnique({
+      where: {
+          id: orderId,
+      },
+      select: {
+          userId: true,
+      }
+  })  
+  return order.userId;  
+}
+
+export async function getUser(id: string) {
+
+    // let userId = id;
+    // if (id.substring(0,7) == 'orderid') {
+    //     userId = await getUserIdFromOrderId(id); 
+    // }
+    const userId = id.substring(0,7) != 'orderid' ? id : await getUserIdFromOrderId(id.replace('orderid', ''));  
+    const user = await client.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          circles: true,
+          roles: true,
+          orders: true,
+          city: {
+            include: {
+              state: true,
+            }
+          }
+        }
+      });
+    if (!user) {
+        return false;
+    }
+    return normalizedUser(user);  
+    //console.log('aqui ID do post: ' + id);
 }

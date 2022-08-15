@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {authVerify} from '../auth/lib/authVerify';
 import { client } from '../lib/prisma/client';
+import { sanitizeInputs } from '../lib/util';
 
 
 // export const config = {
@@ -22,10 +23,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
        return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false });
     }
 
-    const userId = await authVerify(jwt);
-    if(!userId) {
+    const {id}:any =  sanitizeInputs(req.body);
+    const userIdAuthenticate = await authVerify(jwt);
+    if(!userIdAuthenticate) {
         return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false })
     }
+    const userId = id ? id : userIdAuthenticate;
 
     let data = {} as any;
     data.documentPhotoURL1 = documentPhotoURL1 ? documentPhotoURL1 : undefined;

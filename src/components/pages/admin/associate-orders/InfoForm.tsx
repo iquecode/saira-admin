@@ -99,11 +99,13 @@ export function InfoForm({user}:InfoFormProps) {
     const onSubmit = async (data: any) => {
         try {
         setLoading(true);
-        const response = await api.post('model/user-orders/new-associate-order', {
+        const response = await api.post('model/user/update', {
             data,
+            id: user.id,
+            type: 'complete',
         });
-        if (response.data.orderAssociate) {
-            alert("Eba, deu certo. Seu pedido de associação foi enviado com sucesso ao Círculo Gestor. O tratamento do pedido será comunicado por email e na plataforma");
+        if (response.data.userUpdate) {
+            alert("Dados alterados com sucesso.");
             console.log('aqui... front pegou response');
             console.log(response.data.orderAssociate);
 

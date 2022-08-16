@@ -3,7 +3,7 @@ import { authVerify } from '../../auth/lib/authVerify';
 import { client } from '../../lib/prisma/client';
 import { sanitizeInputs, sanitizeObjectReq } from '../../lib/util';
 import requestIp from 'request-ip'
-import { updateUserWithDataForm } from './helper';
+import { updateUserWithDataFormLimitedFields, updateUserWithDataForm } from './helper';
 
 export default handler;
 
@@ -18,13 +18,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             if (!jwt) {
             return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false });
             }
-            const userId = await authVerify(jwt);
-            if(!userId) {
+
+
+            const {id, type}:any   =  sanitizeInputs(req.body);
+            const userIdAuthenticate = await authVerify(jwt);
+            if(!userIdAuthenticate) {
                 return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false })
             }
+            const userId = id ? id : userIdAuthenticate;
+
+            // const userId = await authVerify(jwt);
+            // if(!userId) {
+            //     return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false })
+            // }
           
             const data =  sanitizeInputs(req.body.data);
-            const userUpdate     = await updateUserWithDataForm(userId as string,data);
+            const userUpdate = type == 'complele' ? await updateUserWithDataForm(userId as string,data) :  await updateUserWithDataFormLimitedFields(userId as string,data);
+
             return res.status(200).json({success: true, userUpdate});
 
         default:

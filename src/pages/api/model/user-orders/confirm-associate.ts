@@ -3,7 +3,7 @@ import { authVerify } from '../../auth/lib/authVerify';
 import { client } from '../../lib/prisma/client';
 import { sanitizeInputs, sanitizeObjectReq } from '../../lib/util';
 import DOMPurify from 'isomorphic-dompurify';
-import { createUserOrderAssociate } from './helper';
+import { ConfirmAssociateOrder, createUserOrderAssociate, userCanChangeData } from './helper';
 import requestIp from 'request-ip'
 import { updateUserWithDataForm } from '../user/helper';
 
@@ -26,17 +26,25 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             if(!userId) {
                 return res.json({ error:"Invalid token!" , message: "Invalid token!", success:false })
             }
+          
             //const data = req.body;
            
-            const data =  sanitizeInputs(req.body.data);
+            const {userIdFromOrder, orderId}: any =  sanitizeInputs(req.body);
             //const data = req.body;
             //console.log('backend data:');
             //console.log(data);
-            const userUpdate     = await updateUserWithDataForm(userId as string,data);
-            const orderAssociate = await createUserOrderAssociate(userUpdate, detectedIp, dispositive);
+            const associateUpdate = await ConfirmAssociateOrder(userIdFromOrder, userId as string, orderId, detectedIp, dispositive );
+            //const orderAssociate = await createUserOrderAssociate(userUpdate, detectedIp, dispositive);
             //const dataOrderAssociate = await createDataOrderAssociate(orderAssociate);
             //const orderAssociate = data;
-            return res.status(200).json({success: true, orderAssociate});
+
+            const {error, order, user} = associateUpdate;
+
+            if (error) {
+                return  res.status(200).json({error: error, message: error, success: false});
+            }
+
+            return res.status(200).json({success: true, order, user});
 
         default:
             return res.status(405).end(`Method ${req.method} Not Allowed`)

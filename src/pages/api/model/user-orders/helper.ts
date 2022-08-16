@@ -1,67 +1,69 @@
 
 
 import { User, UserOrder } from '@prisma/client';
+import { networkInterfaces } from 'os';
 import { ParsedUrlQueryInput } from 'querystring';
 import { isPromise } from 'util/types';
+import { UserNormalized } from '../../../../model/User';
 import { normalizedUser } from '../../auth/lib/normalizedUser';
 import { client } from '../../lib/prisma/client';
 import { generateMessageToSendMail, sendMail } from '../../lib/util';
 
-export async function updateUserWithDataForm(id:string, data:any)   {
-        const {linkedin, github, instagram, facebook, whatsapp, telegram, alternativeEmail,
-               cityId, stateId, countryId, documentTypeId,   
-             ...dataUserFromForm} = data;
-        let dataToUpdate = {...dataUserFromForm, 
-                              country: { connect: {id:parseInt(countryId)}},
-                              documentType: { connect: {id:parseInt(documentTypeId)}}
-                            }
-        if(countryId==33) { //Brasil
-          dataToUpdate = {...dataToUpdate, city:{ connect: {id: parseInt(cityId)}} }
-        }
+// export async function updateUserWithDataForm(id:string, data:any)   {
+//         const {linkedin, github, instagram, facebook, whatsapp, telegram, alternativeEmail,
+//                cityId, stateId, countryId, documentTypeId,   
+//              ...dataUserFromForm} = data;
+//         let dataToUpdate = {...dataUserFromForm, 
+//                               country: { connect: {id:parseInt(countryId)}},
+//                               documentType: { connect: {id:parseInt(documentTypeId)}}
+//                             }
+//         if(countryId==33) { //Brasil
+//           dataToUpdate = {...dataToUpdate, city:{ connect: {id: parseInt(cityId)}} }
+//         }
                               
-        const userUpdate = await client.user.update({
-            where: {
-                id,
-            },
-            data: dataToUpdate,
-        });
-        if(!userUpdate) {
-            throw new Error("Erro ao realizar update dos dados do usuário na base de dados.");
-        }
-        let contacts = [];
-        if (!!linkedin)  contacts.push({name: 'LinkedIn', value: linkedin, userId: id });
-        if (!!alternativeEmail) contacts.push({name: 'Email alternativo', value: alternativeEmail, userId: id  });
-        if (!!github)    contacts.push({name: 'GitHub',       value: github, userId: id  });
-        if (!!instagram) contacts.push({name: 'Instagram',    value: instagram, userId: id  });
-        if (!!facebook)  contacts.push({name: 'Facebook',     value: facebook, userId: id  });
-        if (!!whatsapp)  contacts.push({name: 'Whatsapp',     value: whatsapp, userId: id  });
-        if (!!telegram)  contacts.push({name: 'Telegram',     value: telegram, userId: id  });
+//         const userUpdate = await client.user.update({
+//             where: {
+//                 id,
+//             },
+//             data: dataToUpdate,
+//         });
+//         if(!userUpdate) {
+//             throw new Error("Erro ao realizar update dos dados do usuário na base de dados.");
+//         }
+//         let contacts = [];
+//         if (!!linkedin)  contacts.push({name: 'LinkedIn', value: linkedin, userId: id });
+//         if (!!alternativeEmail) contacts.push({name: 'Email alternativo', value: alternativeEmail, userId: id  });
+//         if (!!github)    contacts.push({name: 'GitHub',       value: github, userId: id  });
+//         if (!!instagram) contacts.push({name: 'Instagram',    value: instagram, userId: id  });
+//         if (!!facebook)  contacts.push({name: 'Facebook',     value: facebook, userId: id  });
+//         if (!!whatsapp)  contacts.push({name: 'Whatsapp',     value: whatsapp, userId: id  });
+//         if (!!telegram)  contacts.push({name: 'Telegram',     value: telegram, userId: id  });
         
-        if(contacts.length > 0) {
-          contacts.forEach( async (item) => {
-            const newContactUser = await client.contact.upsert({
-                     where: {
-                      unique_contact_user: {name: item.name, userId: id},
-                     },
-                     update : {
-                      value: item.value,
-                     },
-                     create: {
-                       name: item.name,
-                       value: item.value,
-                       userId: id
-                     }
-            });
-          })
-        }
+//         if(contacts.length > 0) {
+//           contacts.forEach( async (item) => {
+//             const newContactUser = await client.contact.upsert({
+//                      where: {
+//                       unique_contact_user: {name: item.name, userId: id},
+//                      },
+//                      update : {
+//                       value: item.value,
+//                      },
+//                      create: {
+//                        name: item.name,
+//                        value: item.value,
+//                        userId: id
+//                      }
+//             });
+//           })
+//         }
         
-        // if (contacts.length > 0) {
-        //   const newContactsUser = await client.contact.createMany({
-        //       data: contacts, 
-        //   });
-        // }
-        return userUpdate;
-}
+//         // if (contacts.length > 0) {
+//         //   const newContactsUser = await client.contact.createMany({
+//         //       data: contacts, 
+//         //   });
+//         // }
+//         return userUpdate;
+// }
 
 
 export async function createUserOrderAssociate(user: User, ip: string, dispositive: string)   {
@@ -179,3 +181,58 @@ async function getDataOrderAssociate(order: UserOrder, ip: string, dispositive: 
 }
 
 
+export async function ConfirmAssociateOrder(userIdFromOrder: string, userId: string, orderId: string, detectedIp: string, dispositive: string) {
+
+  const userSignIn = await client.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      type: true,
+      name: true,
+      email: true,
+    }
+  });
+
+  const type = userSignIn.type;
+
+  if (type != 'admin' && type != 'mananger' && type != 'cg' ){
+    return {error: 'usuário sem autorização para manutenção de dados.'};
+  }
+
+  const order = await prisma.userOrder.update({
+    where: {
+      id: orderId,
+    },
+    data: {
+      status: 'approved',
+      DataUserOrder: {
+        create: [
+          {name: 'approved-user-id', value: userId},
+          {name: 'approved-date', value: Date.now().toString()},
+          {name: 'approved-ip', value: detectedIp},
+          {name: 'approved-dispositive', value: dispositive},
+        ]
+      }
+    }
+  });
+
+  const user = await prisma.user.update({
+    where: {
+      id: userIdFromOrder,
+    },
+    data: {
+      type: 'member',
+      associated: true,
+      circles: {
+        connect: [
+          {id: 'ag'},
+        ]
+      }
+    }
+  });
+
+  return {success: true, order, user};
+
+
+}

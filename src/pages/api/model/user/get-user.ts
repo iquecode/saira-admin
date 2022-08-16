@@ -3,7 +3,7 @@ import { authVerify } from '../../auth/lib/authVerify';
 import { client } from '../../lib/prisma/client';
 import { sanitizeInputs, sanitizeObjectReq } from '../../lib/util';
 import requestIp from 'request-ip'
-import { getUser, updateUserWithDataForm } from './helper';
+import { getUser } from './helper';
 
 export default handler;
 

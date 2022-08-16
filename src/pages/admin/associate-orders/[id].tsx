@@ -11,6 +11,20 @@ import { ArrowDown, ArrowUp } from "phosphor-react";
 import { InfoForm } from "../../../components/pages/admin/associate-orders/InfoForm";
 
 export default function Order() {
+
+
+    async function handleConfirmOrderAssociate(userIdFromOrder, orderId ) {
+        
+        const response = await api.post('model/user-orders/confirm-associate', {
+            userIdFromOrder,
+            orderId,
+        })
+        console.log("aprovação associação");
+        console.log(response.data);
+        
+        const {error, message, success, order, user} = response.data;
+        //alert('Confirmar pedido de associação ID: ' + id);
+    }
     
     useEffect (() => {
         api.post('model/user/get-user', {
@@ -57,6 +71,10 @@ export default function Order() {
                         {user ?  <InfoForm user={user} /> : null }
                     </div>
                 </div>
+
+                <button onClick={()=>handleConfirmOrderAssociate(user.id, id)}>
+                    Confirmar pedido de associação
+                </button>
 
 
             </div>

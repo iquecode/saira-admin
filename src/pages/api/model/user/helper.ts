@@ -2,7 +2,7 @@
 import { normalizedUser } from '../../auth/lib/normalizedUser';
 import { client } from '../../lib/prisma/client';
 
-export async function updateUserWithDataForm(id:string, data:any)   {
+export async function updateUserWithDataFormLimitedFields(id:string, data:any)   {
       
         // console.log('###data: ');
         // console.log(data);
@@ -36,6 +36,62 @@ export async function updateUserWithDataForm(id:string, data:any)   {
         }
        
         return userUpdate;
+}
+
+export async function updateUserWithDataForm(id:string, data:any)   {
+  const {linkedin, github, instagram, facebook, whatsapp, telegram, alternativeEmail,
+         cityId, stateId, countryId, documentTypeId,   
+       ...dataUserFromForm} = data;
+  let dataToUpdate = {...dataUserFromForm, 
+                        country: { connect: {id:parseInt(countryId)}},
+                        documentType: { connect: {id:parseInt(documentTypeId)}}
+                      }
+  if(countryId==33) { //Brasil
+    dataToUpdate = {...dataToUpdate, city:{ connect: {id: parseInt(cityId)}} }
+  }
+                        
+  const userUpdate = await client.user.update({
+      where: {
+          id,
+      },
+      data: dataToUpdate,
+  });
+  if(!userUpdate) {
+      throw new Error("Erro ao realizar update dos dados do usuário na base de dados.");
+  }
+  let contacts = [];
+  if (!!linkedin)  contacts.push({name: 'LinkedIn', value: linkedin, userId: id });
+  if (!!alternativeEmail) contacts.push({name: 'Email alternativo', value: alternativeEmail, userId: id  });
+  if (!!github)    contacts.push({name: 'GitHub',       value: github, userId: id  });
+  if (!!instagram) contacts.push({name: 'Instagram',    value: instagram, userId: id  });
+  if (!!facebook)  contacts.push({name: 'Facebook',     value: facebook, userId: id  });
+  if (!!whatsapp)  contacts.push({name: 'Whatsapp',     value: whatsapp, userId: id  });
+  if (!!telegram)  contacts.push({name: 'Telegram',     value: telegram, userId: id  });
+  
+  if(contacts.length > 0) {
+    contacts.forEach( async (item) => {
+      const newContactUser = await client.contact.upsert({
+               where: {
+                unique_contact_user: {name: item.name, userId: id},
+               },
+               update : {
+                value: item.value,
+               },
+               create: {
+                 name: item.name,
+                 value: item.value,
+                 userId: id
+               }
+      });
+    })
+  }
+  
+  // if (contacts.length > 0) {
+  //   const newContactsUser = await client.contact.createMany({
+  //       data: contacts, 
+  //   });
+  // }
+  return userUpdate;
 }
 
 

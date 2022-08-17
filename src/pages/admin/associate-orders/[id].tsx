@@ -9,22 +9,42 @@ import { UserNormalized } from "../../../model/User";
 import { DocumentsForm } from "../../../components/pages/admin/associate-orders/DocumentsForm";
 import { ArrowDown, ArrowUp } from "phosphor-react";
 import { InfoForm } from "../../../components/pages/admin/associate-orders/InfoForm";
+import { ButtonBack } from "../../../components/ButtonBack";
+import { DialogConfirm } from "../../../components/DialogConfirm";
 
 export default function Order() {
 
+   
 
-    async function handleConfirmOrderAssociate(userIdFromOrder, orderId ) {
+
+    
+    // async function onConfirmOrderAssociate(userIdFromOrder, orderId ) {
+    //     const response = await api.post('model/user-orders/confirm-associate', {
+    //         userIdFromOrder,
+    //         orderId,
+    //     })
+    //     console.log("aprovação associação");
+    //     console.log(response.data);
         
-        const response = await api.post('model/user-orders/confirm-associate', {
-            userIdFromOrder,
-            orderId,
-        })
-        console.log("aprovação associação");
-        console.log(response.data);
+    //     const {error, message, success, order, user} = response.data;
+    //     //alert('Confirmar pedido de associação ID: ' + id);
+    // }
+    
+    // async function handleConfirmOrderAssociate(userIdFromOrder, orderId ) {
+
+
+
         
-        const {error, message, success, order, user} = response.data;
-        //alert('Confirmar pedido de associação ID: ' + id);
-    }
+    //     const response = await api.post('model/user-orders/confirm-associate', {
+    //         userIdFromOrder,
+    //         orderId,
+    //     })
+    //     console.log("aprovação associação");
+    //     console.log(response.data);
+        
+    //     const {error, message, success, order, user} = response.data;
+    //     //alert('Confirmar pedido de associação ID: ' + id);
+    // }
     
     useEffect (() => {
         api.post('model/user/get-user', {
@@ -40,6 +60,8 @@ export default function Order() {
     const [user, setUser] = useState<null | UserNormalized>(null); 
     const [showDocumentsForm, setShowDocumentsForm] = useState<boolean>(false);
     const [showInfoForm, setShowInfoForm] = useState<boolean>(false);
+
+    const [showDialog, setShowDialog] = useState<boolean>(false);
 
     return (
         <Layout 
@@ -72,9 +94,31 @@ export default function Order() {
                     </div>
                 </div>
 
-                <button onClick={()=>handleConfirmOrderAssociate(user.id, id)}>
-                    Confirmar pedido de associação
-                </button>
+
+                <div className="mt-8">
+                
+                    <button
+                            onClick={()=>setShowDialog(!showDialog)}
+                            className="font-semibold mt-4 p-4 text-white bg-brandGreen-500 hover:opacity-90 rounded-lg text-sm text-center items-center "
+                            data-modal-toggle="popup-dialog"
+                    >
+                        Confirmar pedido de associaçãosf
+                    </button>
+                </div>
+                
+                <div className="mt-10 w-full flex justify-end">
+                    <ButtonBack path='/admin/associate-orders' text='Listagem' />
+                </div>
+
+                <DialogConfirm 
+                    action={()=>alert('sds')} 
+                    dataModalTog="popup-dialog" 
+                    labelNegative="Sim" 
+                    labelPositive="Não"
+                    textDialog="Confirma a aprovação da associação?" 
+                    showDialog={showDialog}
+                />
+               
 
 
             </div>
@@ -83,3 +127,6 @@ export default function Order() {
     )
 }
   
+// a
+// onClick={()=>handleConfirmOrderAssociate(user.id, id)}
+// a

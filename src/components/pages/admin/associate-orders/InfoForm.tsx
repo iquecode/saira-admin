@@ -16,9 +16,10 @@ import { getDataDBtoForm, populateFormWithDataUser } from "../../dashboard/Assoc
 
 type InfoFormProps = {
     user: UserNormalized
+    onlyRead?:boolean
 }
 
-export function InfoForm({user}:InfoFormProps) {
+export function InfoForm({user, onlyRead=false}:InfoFormProps) {
     const {  getAuthenticatedUser } = useAuth();
     
     const { setLoading} = useAppData();
@@ -210,7 +211,7 @@ export function InfoForm({user}:InfoFormProps) {
 
                 <label className="label-input-form">Nome completo*
                     <input {...register('name')} 
-                    type="text" id="name" className="input-form" placeholder='conforme seu documento' />
+                    type="text" id="name" className="input-form" placeholder='conforme seu documento' disabled={onlyRead} />
                     <InputError type={errors?.name?.type? errors['name'].type : null} field={'name'} />
                 </label>
                 {/* {!errors? null : errors['name']?.type && <InputError type={errors['name'].type} field={'name'} />} */}
@@ -218,51 +219,51 @@ export function InfoForm({user}:InfoFormProps) {
                 
                 <label className="label-input-form">Nome social
                     <input {...register('socialName')} 
-                    type="text" id="socialName" className="input-form" placeholder='se for o caso' />
+                    type="text" id="socialName" className="input-form" placeholder='se for o caso' disabled={onlyRead} />
                     <InputError type={errors?.socialName?.type? errors['socialName'].type : null} field={'socialName'} />
                 </label>
 
                 <label className="label-input-form">Como quer ser chamad@?
                     <input {...register('nickname')} 
-                    type="text" id="nickname" className="input-form" placeholder='primeiro nome ou algum apelido carinhoiso? :)' />
+                    type="text" id="nickname" className="input-form" placeholder='primeiro nome ou algum apelido carinhoiso? :)' disabled={onlyRead} />
                 <InputError type={errors?.nickname?.type? errors['nickName'].type : null} field={'nickName'} />
                 </label>
 
                 <label className="label-input-form">Profissão / ocupação*
                     <input {...register('occupation')} 
-                    type="text" id="occupation" className="input-form" />
+                    type="text" id="occupation" className="input-form" disabled={onlyRead} />
                     <InputError type={errors?.occupation?.type? errors['occupation'].type : null} field={'occupation'} />
                 </label>
                 
                 <label className="label-input-form">Data de nascimento*
                     <input {...register('birthDate')} 
-                    type="date" id="birthDate" className="input-form" />
+                    type="date" id="birthDate" className="input-form" disabled={onlyRead} />
                     <InputError type={errors?.birthDate?.type? errors['birthDate'].type : null} field={'birthDate'} />
                 </label>
             
                 <label className="label-input-form">Nome da mãe*
                     <input {...register('motherName')} 
-                    type="text" id="motherName" className="input-form" />
+                    type="text" id="motherName" className="input-form" disabled={onlyRead} />
                     <InputError type={errors?.motherName?.type? errors['motherName'].type : null} field={'motherName'} />
                 </label>
                 
                 <label className="label-input-form">Nome do pai
                     <input {...register('fatherName')} 
-                    type="text" id="fatherName" className="input-form" />
+                    type="text" id="fatherName" className="input-form" disabled={onlyRead} />
                     <InputError type={errors?.fatherName?.type? errors['fatherName'].type : null} field={'fatherName'} />
                 </label>
                 
 
                 <label className="label-input-form">CPF*
                     <InputMask mask="999.999.999-99" value={user.cpf} {...register('cpf')} 
-                    type="text" id="cpf" className="input-form"  placeholder='caso seja estrangeir@ e não possua, complete com zeros' />
+                    type="text" id="cpf" className="input-form"  placeholder='caso seja estrangeir@ e não possua, complete com zeros' disabled={onlyRead}/>
                     <InputError type={errors?.cpf?.type? errors['cpf'].type : null} field={'cpf'} />
                 </label>
             
 
                 <label className="label-input-form">Tipo do documento*
                     <select {...register('documentTypeId')}
-                            id="documentTypeId" className="input-form">
+                            id="documentTypeId" className="input-form" disabled={onlyRead}>
                             {!typesDocuments ? null : typesDocuments.map(function(typeDocument) {
                                 return <option value={typeDocument.id}>{typeDocument.name}</option>
                             })}
@@ -275,7 +276,7 @@ export function InfoForm({user}:InfoFormProps) {
             
                 <label className="label-input-form">Nº do documento*
                     <input {...register('documentNumber')} 
-                    type="text" id="documentNumber" className="input-form"  placeholder='documento que você enviou no passo anterior' />
+                    type="text" id="documentNumber" className="input-form"  placeholder='documento que você enviou no passo anterior' disabled={onlyRead} />
                     <InputError type={errors?.documentNumber?.type? errors['documentNumber'].type : null} field={'documentNumber'} />
                 </label>           
                 </div>
@@ -292,7 +293,7 @@ export function InfoForm({user}:InfoFormProps) {
                                                 } 
                                 },
                             })}
-                            id="countries" className="input-form">
+                            id="countries" className="input-form" disabled={onlyRead}>
                             {!countries ? null : countries.map(function(country) {
                                 return <option selected={country.id==33} value={country.id}>{country.namePt}</option>
                             })}
@@ -304,7 +305,7 @@ export function InfoForm({user}:InfoFormProps) {
                         <InputMask mask="99999-999" value={user.cep} {...register('cep', {
                                 onBlur: (e) => { handleCepChange(e.target.value)},
                             })} 
-                        type="text" id="cep" className="input-form" placeholder="Informe o cep para localização automática" />
+                        type="text" id="cep" className="input-form" placeholder="Informe o cep para localização automática" disabled={onlyRead} />
                         <InputError type={errors?.cep?.type? errors['cep'].type : null} field={'cep'} />
                     </label>
                 
@@ -313,7 +314,7 @@ export function InfoForm({user}:InfoFormProps) {
                         <select {...register('stateId', {
                                 onChange: (e) => { handleStateChange(e.target.value)},
                             })}
-                            id="states" className="input-form">
+                            id="states" className="input-form" disabled={onlyRead}>
                             {!states ? null : states.map(function(state) {
                                 return <option value={state.uf}>{state.name}</option>
                             })}
@@ -325,7 +326,7 @@ export function InfoForm({user}:InfoFormProps) {
                         <select {...register('cityId', {
                                 // onChange: (e) => { setCountryIdSelected(e.target.value)},
                             })}
-                            id="cities" className="input-form">
+                            id="cities" className="input-form" disabled={onlyRead}>
                             {!cities ? null : cities.map(function(city) {
                                 return <option value={city.id}>{city.name}</option>
                             })}
@@ -335,13 +336,13 @@ export function InfoForm({user}:InfoFormProps) {
                     
                     <label className="label-input-form">Endereço - Linha 1*
                         <input {...register('addressLine1')} 
-                        type="text" id="addressLine1" className="input-form" />
+                        type="text" id="addressLine1" className="input-form" disabled={onlyRead} />
                         <InputError type={errors?.addressLine1?.type? errors['addressLine1'].type : null} field={'addressLine1'} />
                     </label>
                     
                     <label className="label-input-form">Endereço - Linha 2
                         <input {...register('addressLine2')} 
-                        type="text" id="addressLine2" className="input-form"  placeholder='complemento...' />
+                        type="text" id="addressLine2" className="input-form"  placeholder='complemento...' disabled={onlyRead}/>
                         <InputError type={errors?.addressLine2?.type? errors['addressLine2'].type : null} field={'addressLine2'} />
                     </label>
                 </div>
@@ -350,51 +351,51 @@ export function InfoForm({user}:InfoFormProps) {
                     <p className="text-base text-zinc-400 font-semibold"><span className="text-brandBlue-500">Informações Opcionais:</span> se quiser informe outros dados de contato e/ou uma biografia de apresenação : )</p>
                     <label className="label-input-form">Email Alternativo
                         <input {...register('alternativeEmail')} 
-                        type="text" id="alternativeEmail" className="input-form" placeholder='email diferente do usado na conta' />
+                        type="text" id="alternativeEmail" className="input-form" placeholder='email diferente do usado na conta' disabled={onlyRead}/>
                         <InputError type={errors?.alternativeEmail?.type? errors['alternativeEmail'].type : null} field={'alternativeEmail'} />
                     </label>
                     
                 
                     <label className="label-input-form">Telegram
                         <input {...register('telegram')} 
-                        type="text" id="telegram" className="input-form" />
+                        type="text" id="telegram" className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.telegram?.type? errors['telegram'].type : null} field={'telegram'} />
                     </label>
                 
                     <label className="label-input-form">WhatsApp
                         <input {...register('whatsapp')} 
-                        type="text" id="whatsapp" className="input-form" />
+                        type="text" id="whatsapp" className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.whatsapp?.type? errors['whatsapp'].type : null} field={'whatsapp'} />
                     </label>
                     
                     <label className="label-input-form">Facebook
                         <input {...register('facebook')} 
-                        type="text" id="facebook" className="input-form" />
+                        type="text" id="facebook" className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.facebook?.type? errors['facebook'].type : null} field={'facebook'} />
                     </label>
                     
                     <label className="label-input-form">Instagram
                         <input {...register('instagram')} 
-                        type="text" id="instagram" className="input-form" />
+                        type="text" id="instagram" className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.instagram?.type? errors['instagram'].type : null} field={'instagram'} />
                     </label>
                     
                     <label className="label-input-form">Github
                         <input {...register('github')} 
-                        type="text" id="github" className="input-form" />
+                        type="text" id="github" className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.github?.type? errors['github'].type : null} field={'github'} />
                     </label>
                     
                     <label className="label-input-form">Linkedin
                         <input {...register('linkedin')} 
-                        type="text" id='linkedin' className="input-form" />
+                        type="text" id='linkedin' className="input-form" disabled={onlyRead}/>
                         <InputError type={errors?.linkedin?.type? errors['linkedin'].type : null} field={'linkedin'} />
                     </label>
                     
                     <label className="label-input-form">Biografia pública (se você quiser, pode escrever uma bio para se apresentar aos membros e usuários da plataforma).
                         <textarea {...register('bio')} 
-                        id='bio' className="text-area-form" />
-                        <InputError type={errors?.bio?.type? errors['bio'].type : null} field={'bio'} />
+                        id='bio' className="text-area-form" disabled={onlyRead}/>
+                        <InputError type={errors?.bio?.type? errors['bio'].type : null} field={'bio'}/>
                     </label>  
                 </div>
 
@@ -408,6 +409,7 @@ export function InfoForm({user}:InfoFormProps) {
                                         text-white 
                                         font-bold"
                                         type="submit"
+                                        disabled={onlyRead}
                             // onClick={()=>setCurrentStep(3)}
                     >
                             ATUALIZAR DADOS

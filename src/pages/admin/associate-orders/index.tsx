@@ -19,7 +19,7 @@ export default function AssociateOrders() {
 
     useEffect (() => {
         api.get('model/user-orders/get-associate-orders', { 
-            params: {skip: 0, take: 10}
+            params: {skip: 0, take: 1000}
         })
         .then(response => {
             console.log('### pedidos de associação:');

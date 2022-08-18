@@ -6,6 +6,7 @@ import useAppData from '../../../../data/hook/useAppData'
 
 type DocumentsFormProps = {
   user: UserNormalized
+  onlyRead?:boolean
 }
 
 
@@ -41,7 +42,7 @@ function createImageCanvas(fileInput:any, maxSize=480, elementId="canvas"): stri
 
 
 
-export function DocumentsForm({user}:DocumentsFormProps) {
+export function DocumentsForm({user, onlyRead=false}:DocumentsFormProps) {
   const [imageFront, setImageFront] = useState(null);
   const [imageBack, setImageBack] = useState(null);
   const [createObjectURLfront, setCreateObjectURLfront] = useState(null);
@@ -142,6 +143,7 @@ export function DocumentsForm({user}:DocumentsFormProps) {
                             id='documentPhoto1' 
                             onChange={uploadToClientFront} 
                             accept="image/jpeg, image/png, image/gif, image/webp"
+                            disabled={onlyRead}
                             className="hidden w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       />
                 </label>
@@ -171,6 +173,7 @@ export function DocumentsForm({user}:DocumentsFormProps) {
                             id='documentPhoto1' 
                             onChange={uploadToClientBack} 
                             accept="image/jpeg, image/png, image/gif, image/webp"
+                            disabled={onlyRead}
                             className="hidden w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                       />
                 </label>
@@ -194,6 +197,7 @@ export function DocumentsForm({user}:DocumentsFormProps) {
                     `}
                     type="submit"
                     onClick={createObjectURLfront && createObjectURLback ? uploadToServer : null}
+                    disabled={onlyRead}
                   >
                     ATUALIZAR IMAGENS
                   </button>  

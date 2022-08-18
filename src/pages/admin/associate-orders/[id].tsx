@@ -30,21 +30,31 @@ export default function Order() {
     //     //alert('Confirmar pedido de associação ID: ' + id);
     // }
     
-    // async function handleConfirmOrderAssociate(userIdFromOrder, orderId ) {
+    async function handleConfirmOrderAssociate(userIdFromOrder, orderId ) {
 
 
+        //setShowDialog(true);
 
         
-    //     const response = await api.post('model/user-orders/confirm-associate', {
-    //         userIdFromOrder,
-    //         orderId,
-    //     })
-    //     console.log("aprovação associação");
-    //     console.log(response.data);
+        const response = await api.post('model/user-orders/confirm-associate', {
+            userIdFromOrder,
+            orderId,
+        })
+        console.log("aprovação associação");
+        console.log(response.data);
         
-    //     const {error, message, success, order, user} = response.data;
-    //     //alert('Confirmar pedido de associação ID: ' + id);
-    // }
+        const {error, message, success, order, user} = response.data;
+
+        setShowDialog(false);
+        if(error) {
+            alert('Erro no processamento: ' + message);
+            return;
+        }
+        alert('Associação aprovada');
+        route.push('/admin/associate-orders');
+
+        //alert('Confirmar pedido de associação ID: ' + id);
+    }
     
     useEffect (() => {
         api.post('model/user/get-user', {
@@ -98,11 +108,11 @@ export default function Order() {
                 <div className="mt-8">
                 
                     <button
-                            onClick={()=>setShowDialog(!showDialog)}
+                            onClick={()=>setShowDialog(true)}
                             className="font-semibold mt-4 p-4 text-white bg-brandGreen-500 hover:opacity-90 rounded-lg text-sm text-center items-center "
                             data-modal-toggle="popup-dialog"
                     >
-                        Confirmar pedido de associaçãosf
+                        Confirmar pedido de associação
                     </button>
                 </div>
                 
@@ -111,12 +121,13 @@ export default function Order() {
                 </div>
 
                 <DialogConfirm 
-                    action={()=>alert('sds')} 
+                    action={()=>handleConfirmOrderAssociate(user.id, id)} 
                     dataModalTog="popup-dialog" 
-                    labelNegative="Sim" 
-                    labelPositive="Não"
+                    labelNegative="Não" 
+                    labelPositive="Sim"
                     textDialog="Confirma a aprovação da associação?" 
                     showDialog={showDialog}
+                    set={setShowDialog}
                 />
                
 

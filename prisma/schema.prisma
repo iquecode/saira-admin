@@ -229,7 +229,7 @@ model UserOrder {
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   typeUserOrderId String          @map("type_user_order_id")
   type            TypeUserOrder   @relation(fields: [typeUserOrderId], references: [id])
-  status          String          @map("status") //approved 
+  status          String          @map("status") //approved created outstanding rejected 
   DataUserOrder   DataUserOrder[]
   createdAt       DateTime        @default(now()) @map("created_at")
   updatedAt       DateTime?       @updatedAt @map("updated_at")

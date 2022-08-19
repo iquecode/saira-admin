@@ -116,13 +116,18 @@ export default function Order() {
 
                 <div className="mt-8">
                 
-                    <button
+                    {orderStatus === 'created' || orderStatus === 'outstanding' ? 
+                        <button
                             onClick={()=>setShowDialog(true)}
                             className="font-semibold mt-4 p-4 text-white bg-brandGreen-500 hover:opacity-90 rounded-lg text-sm text-center items-center "
                             data-modal-toggle="popup-dialog"
-                    >
-                        Confirmar pedido de associação
-                    </button>
+                        >
+                            Confirmar pedido de associação
+                        </button>
+                        :
+                        null
+                    }               
+                    
                 </div>
                 
                 <div className="mt-10 w-full flex justify-end">

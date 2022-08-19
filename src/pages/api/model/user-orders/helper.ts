@@ -136,7 +136,44 @@ function normalizeAssociateOrders(associateOrders) {
   return normalized;
 }
 
+async function getDataApprovedAssociate(order: UserOrder, ip: string, dispositive: string, userIdFromOrder: string, userIdApprove: string) {
+  
+  const [userFromOrder, userApprove] = await client.$transaction([
+    client.user.findUnique({
+      where: {
+        id: userIdFromOrder,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      }
+    }),
+    client.user.findUnique({
+      where: {
+        id: userIdApprove,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      }
+    })
+  ]); 
 
+  let data = '<pre>';
+  data +=    'Momento da aprovação......: ' + order.createdAt + '<br/>'; 
+  data +=    'Usuário aprovador.........: ' + userApprove.email + ' | ' + userApprove.name + ' | Id: ' + userApprove.id + '<br/>';
+  data +=    'IP da aprovação...........: ' + ip  + '<br/>';
+  data +=    'Dispositivo da aprovação..: ' + dispositive  + '<br/><br/>';
+  data +=    '-------------------------------------------- <br/>'
+  data +=    'Usuário aprovado como nova pessoa associada:<br/>'
+  data +=    '-------------------------------------------- <br/>'
+  data +=    'e-mail / ID.......: ' + userFromOrder.email + ' | Id: ' + userFromOrder.id + '<br/>';
+  data +=    'Nome..............: ' + userFromOrder.name + '<br/>';
+  
+  return {data, email: userFromOrder.email};
+}
 
 async function getDataOrderAssociate(order: UserOrder, ip: string, dispositive: string) {
 
@@ -200,37 +237,83 @@ export async function ConfirmAssociateOrder(userIdFromOrder: string, userId: str
     return {error: 'usuário sem autorização para manutenção de dados.'};
   }
 
-  const order = await client.userOrder.update({
-    where: {
-      id: orderId,
-    },
-    data: {
-      status: 'approved',
-      DataUserOrder: {
-        create: [
-          {name: 'approved-user-id', value: userId},
-          {name: 'approved-date', value: Date.now().toString()},
-          {name: 'approved-ip', value: detectedIp},
-          {name: 'approved-dispositive', value: dispositive},
-        ]
-      }
-    }
-  });
 
-  const user = await client.user.update({
-    where: {
-      id: userIdFromOrder,
-    },
-    data: {
-      type: 'member',
-      associated: true,
-      circles: {
-        connect: [
-          {id: 'ag'},
-        ]
+  const [order, user] = await client.$transaction([
+    client.userOrder.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: 'approved',
+        DataUserOrder: {
+          create: [
+            {name: 'approved-user-id', value: userId},
+            {name: 'approved-date', value: Date.now().toString()},
+            {name: 'approved-ip', value: detectedIp},
+            {name: 'approved-dispositive', value: dispositive},
+          ]
+        }
       }
-    }
-  });
+    }),
+    client.user.update({
+      where: {
+        id: userIdFromOrder,
+      },
+      data: {
+        type: 'member',
+        associated: true,
+        circles: {
+          connect: [
+            {id: 'ag'},
+          ]
+        }
+      }
+    })
+  ]);
+
+
+  let template = await generateMessageToSendMail('order-associate-approved.html');
+  template = template.replace('{ID}', order.id);
+  const {data, email} = await getDataApprovedAssociate(order, detectedIp, dispositive, userIdFromOrder, userId);
+  template = template.replace('{DADOS}', data );
+  const template2 = '<h1>APROVAÇÃO DE NOVA ASSOCIAÇÃO:</h1><br/><br/>' + template;
+  const emailSended = await sendMail('mailer@institutosaira.org',email,
+            'Instituto Saíra - seu pedido de associação foi APROVADO :)', template );
+  const emailSended2 = await sendMail('mailer@institutosaira.org','institutosaira@gmail.com',
+  'Instituto Saíra - pedido de associação APROVADO', template2 );
+
+
+  // const order = await client.userOrder.update({
+  //   where: {
+  //     id: orderId,
+  //   },
+  //   data: {
+  //     status: 'approved',
+  //     DataUserOrder: {
+  //       create: [
+  //         {name: 'approved-user-id', value: userId},
+  //         {name: 'approved-date', value: Date.now().toString()},
+  //         {name: 'approved-ip', value: detectedIp},
+  //         {name: 'approved-dispositive', value: dispositive},
+  //       ]
+  //     }
+  //   }
+  // });
+
+  // const user = await client.user.update({
+  //   where: {
+  //     id: userIdFromOrder,
+  //   },
+  //   data: {
+  //     type: 'member',
+  //     associated: true,
+  //     circles: {
+  //       connect: [
+  //         {id: 'ag'},
+  //       ]
+  //     }
+  //   }
+  // });
 
   return {success: true, order, user};
 

@@ -90,7 +90,8 @@ export default function Associate({user, orderAssociateStatus, setOrderAssociate
        
     return (
     <>
-       {currentStep>=0 ? steps[currentStep] : null } 
+       { user.associated ? <h1>Você já é associada/o ao Instituto. : )</h1> : null }
+       {currentStep>=0 && !user.associated ? steps[currentStep] : null } 
     </>  
     )
           

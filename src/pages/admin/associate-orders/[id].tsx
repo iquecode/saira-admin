@@ -65,12 +65,12 @@ export default function Order() {
         api.post('model/user-orders/get-order', {
             orderId:id,
         })
-        .then(response => (console.log(response.data)))
+        .then(response => {
+                console.log('###Aqui: Order from get-order:');
+                console.log(response.data);
+                setOrderStatus(response.data.order.status);
+        })
         .catch(error => alert(error.message));
-
-        
-        
-
     },[]);
 
     const router = useRouter()
@@ -80,6 +80,7 @@ export default function Order() {
     const [showInfoForm, setShowInfoForm] = useState<boolean>(false);
 
     const [showDialog, setShowDialog] = useState<boolean>(false);
+    const [orderStatus, setOrderStatus] = useState<string>('');
 
     return (
         <Layout 
@@ -126,6 +127,10 @@ export default function Order() {
                 
                 <div className="mt-10 w-full flex justify-end">
                     <ButtonBack path='/admin/associate-orders' text='Listagem' />
+                </div>
+
+                <div>
+                    <h1>Situação da solicitação: {orderStatus}</h1>
                 </div>
 
                 <DialogConfirm 

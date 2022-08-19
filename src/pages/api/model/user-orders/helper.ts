@@ -335,9 +335,9 @@ export async function getOrder(Orderid: string, userIdSignIn: string) {
 
   const type = userSignIn.type;
 
-  // if (type != 'admin' && type != 'mananger' && type != 'cg' ){
-  //   return {sucess: false, error: 'usuário sem autorização para manutenção de dados.'};
-  // }
+  if (type != 'admin' && type != 'mananger' && type != 'cg' ){
+     return {sucess: false, error: 'usuário sem autorização para manutenção de dados.'};
+  }
   const order = await client.userOrder.findUnique({
     where: {
       id: Orderid,

@@ -60,7 +60,15 @@ export default function Order() {
         api.post('model/user/get-user', {
             id:'orderid'+id,
         }).
-        then(response => (setUser(response.data.user)))
+        then(response => (setUser(response.data.user)));
+
+        api.post('model/user-orders/get-order', {
+            orderId:id,
+        })
+        .then(response => (console.log(response.data)))
+        .catch(error => alert(error.message));
+
+        
         
 
     },[]);

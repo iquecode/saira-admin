@@ -98,7 +98,7 @@ export async function createUserOrderAssociate(user: User, ip: string, dispositi
 
 export async function getAssociateOrders(skip=0, take=10) {
   const [associateOrders, total] = await client.$transaction([
-    prisma.userOrder.findMany({
+    client.userOrder.findMany({
       skip,
       take,
       where: {
@@ -200,7 +200,7 @@ export async function ConfirmAssociateOrder(userIdFromOrder: string, userId: str
     return {error: 'usuário sem autorização para manutenção de dados.'};
   }
 
-  const order = await prisma.userOrder.update({
+  const order = await client.userOrder.update({
     where: {
       id: orderId,
     },
@@ -217,7 +217,7 @@ export async function ConfirmAssociateOrder(userIdFromOrder: string, userId: str
     }
   });
 
-  const user = await prisma.user.update({
+  const user = await client.user.update({
     where: {
       id: userIdFromOrder,
     },
@@ -236,3 +236,31 @@ export async function ConfirmAssociateOrder(userIdFromOrder: string, userId: str
 
 
 }
+
+
+export async function getOrder(Orderid: string, userIdSignIn: string) {
+  const userSignIn = await client.user.findUnique({
+    where: {
+      id: userIdSignIn,
+    },
+    select: {
+      type: true,
+      name: true,
+      email: true,
+    }
+  });
+
+  const type = userSignIn.type;
+
+  // if (type != 'admin' && type != 'mananger' && type != 'cg' ){
+  //   return {sucess: false, error: 'usuário sem autorização para manutenção de dados.'};
+  // }
+  const order = await client.userOrder.findUnique({
+    where: {
+      id: Orderid,
+    }
+  })
+
+  return {sucess: true, order};
+
+} 

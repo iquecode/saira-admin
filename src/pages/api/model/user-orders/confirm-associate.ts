@@ -3,7 +3,7 @@ import { authVerify } from '../../auth/lib/authVerify';
 import { client } from '../../lib/prisma/client';
 import { sanitizeInputs, sanitizeObjectReq } from '../../lib/util';
 import DOMPurify from 'isomorphic-dompurify';
-import { ConfirmAssociateOrder, createUserOrderAssociate, userCanChangeData } from './helper';
+import { ConfirmAssociateOrder, createUserOrderAssociate } from './helper';
 import requestIp from 'request-ip'
 import { updateUserWithDataForm } from '../user/helper';
 
